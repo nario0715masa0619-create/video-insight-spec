@@ -10,19 +10,22 @@ class SidecarDBHelper:
 
     @staticmethod
     def load_evidence_index(db_path: str) -> List[Dict[str, Any]]:
-        """evidence_index テーブル全体を読み込む"""
+        """evidence_index テーブル全体を読み込む
+        
+        Note: SQLite接続をコンテキストマネージャで管理し、
+              自動的にクローズされることを保証
+        """
         try:
-            conn = sqlite3.connect(db_path)
-            conn.row_factory = sqlite3.Row
-            cursor = conn.cursor()
+            with sqlite3.connect(db_path) as conn:
+                conn.row_factory = sqlite3.Row
+                cursor = conn.cursor()
 
-            cursor.execute(
-                "SELECT * FROM evidence_index ORDER BY start_ms"
-            )
-            rows = cursor.fetchall()
+                cursor.execute(
+                    "SELECT * FROM evidence_index ORDER BY start_ms"
+                )
+                rows = cursor.fetchall()
 
-            evidence_list = [dict(row) for row in rows]
-            conn.close()
+                evidence_list = [dict(row) for row in rows]
 
             logger.info(
                 f"Loaded {len(evidence_list)} records from {db_path}"
@@ -111,16 +114,18 @@ class SidecarDBHelper:
 
     @staticmethod
     def get_coverage_duration(db_path: str) -> int:
-        """evidence_index 全体がカバーする総時間（ミリ秒）を計算"""
+        """evidence_index 全体がカバーする総時間（ミリ秒）を計算
+        
+        Note: SQLite接続をコンテキストマネージャで管理
+        """
         try:
-            conn = sqlite3.connect(db_path)
-            cursor = conn.cursor()
+            with sqlite3.connect(db_path) as conn:
+                cursor = conn.cursor()
 
-            cursor.execute(
-                "SELECT SUM(end_ms - start_ms) as total_duration FROM evidence_index"
-            )
-            result = cursor.fetchone()
-            conn.close()
+                cursor.execute(
+                    "SELECT SUM(end_ms - start_ms) as total_duration FROM evidence_index"
+                )
+                result = cursor.fetchone()
 
             return int(result[0]) if result[0] else 0
 

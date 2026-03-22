@@ -88,9 +88,18 @@ class KeywordExtractor:
         }
 
     def _extract_words_simple(self, text: str, min_length: int = 2) -> List[str]:
-        """テキストから単語を簡易抽出（Phase 1）"""
+        """テキストから単語を簡易抽出（Phase 1）
+        
+        Note: 日本語・英語対応
+        - U+3040-U+309F: ひらがな
+        - U+30A0-U+30FF: カタカナ
+        - U+4E00-U+9FFF: 漢字
+        
+        Phase 2 で JANOME/MeCab に置き換え予定
+        """
         english_words = re.findall(r'[A-Za-z]{' + str(min_length) + r',}', text)
 
+        # より安全な日本語正規表現
         japanese_words = re.findall(
             r'[぀-ゟ゠-ヿ一-鿿]{' + str(min_length) + r',}',
             text

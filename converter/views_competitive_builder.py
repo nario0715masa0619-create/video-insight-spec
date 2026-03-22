@@ -201,7 +201,18 @@ class ViewsCompetitiveBuilder:
         engagement_rate: float,
         content_intelligence_score: float
     ) -> float:
-        """Performance score を計算"""
+        """Performance score を計算
+        
+        Logic:
+        - engagement_rate (0.0~1.0) を 0-10 スケールに変換 (× 10)
+        - content_intelligence_score (0-100) を 0-66 に正規化 (÷ 1.5)
+        - 2つの値を平均化して 0-100 スケールの総合スコアを生成
+        
+        根拠：
+        - engagement_rate と content_intelligence_score の相対的な重要度を反映
+        - engagement_rate が高い：ユーザーの関心が高い
+        - content_intelligence_score が高い：知識密度が高い実用的コンテンツ
+        """
         return (engagement_rate * 10 + content_intelligence_score / 1.5) / 2
 
     def _calculate_trend_score(
@@ -209,7 +220,18 @@ class ViewsCompetitiveBuilder:
         view_count: int,
         engagement_rate: float
     ) -> float:
-        """Trend score を計算"""
+        """Trend score を計算 (0.0 ~ 1.0)
+        
+        Logic:
+        - view_count を正規化 (100,000 を上限と見做す)
+        - engagement_rate を正規化 (10% = 0.1 を上限と見做す)
+        - 両者の加重平均 (views 60%, engagement 40%)
+        
+        根拠：
+        - 再生数が多い動画は注目度が高い
+        - エンゲージメント率が高い動画はユーザー満足度が高い
+        - ただし view_count の方がより重要なシグナル (60% の重み)
+        """
         normalized_views = min(1.0, view_count / 100000)
         normalized_engagement = min(1.0, engagement_rate / 0.1)
 

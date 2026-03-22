@@ -11,6 +11,10 @@ class JSONExtractor:
     def __init__(self, json_path: str):
         self.json_path = json_path
         self.center_pins = self._load_center_pins()
+        # パフォーマンス最適化: element_id をキーとした辞書をキャッシング
+        self._element_id_map = {
+            pin.get("element_id"): pin for pin in self.center_pins
+        }
 
     def _load_center_pins(self) -> List[Dict[str, Any]]:
         """Mk2_Core_XX.json を読み込み、center_pins を抽出"""
@@ -103,8 +107,9 @@ class JSONExtractor:
         ]
 
     def get_element_by_id(self, element_id: str) -> Optional[Dict[str, Any]]:
-        """element_id から center_pin を検索"""
-        for pin in self.center_pins:
-            if pin.get("element_id") == element_id:
-                return pin
-        return None
+        """element_id から center_pin を検索
+        
+        パフォーマンス最適化: キャッシュ済みの辞書から O(1) で検索
+        （従来の線形探索 O(n) から改善）
+        """
+        return self._element_id_map.get(element_id)

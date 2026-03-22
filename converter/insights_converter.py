@@ -45,14 +45,27 @@ class InsightsConverter:
 
     @staticmethod
     def save_to_file(insight_spec: Dict[str, Any], output_path: str) -> bool:
-        """JSON をファイルに保存"""
+        """JSON をファイルに保存
+        
+        Note: 出力ディレクトリが存在しない場合、自動作成する
+        """
         try:
+            import os
+            # 出力ディレクトリを確保
+            output_dir = os.path.dirname(output_path)
+            if output_dir and not os.path.exists(output_dir):
+                os.makedirs(output_dir, exist_ok=True)
+                logger.info(f"Created output directory: {output_dir}")
+
             with open(output_path, "w", encoding="utf-8") as f:
                 json.dump(insight_spec, f, ensure_ascii=False, indent=2)
 
             logger.info(f"Saved insight spec to {output_path}")
             return True
 
+        except PermissionError as e:
+            logger.error(f"Permission denied writing to {output_path}: {e}")
+            return False
         except Exception as e:
             logger.error(f"Error saving insight spec: {e}")
             return False
