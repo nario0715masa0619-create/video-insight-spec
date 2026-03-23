@@ -87,18 +87,22 @@ def sample_core_json_file(tmp_path, sample_core_json_data):
     return str(json_file)
 
 
+
+import sqlite3
+
+
+import sqlite3
+
 @pytest.fixture
 def sample_sidecar_db_file(tmp_path):
-    """ダミー SQLite DB を tmp_path に作成して提供"""
+    """Sidecar DB with evidence_index table"""
     db_file = tmp_path / "Mk2_Sidecar_test.db"
-    
     conn = sqlite3.connect(str(db_file))
     cursor = conn.cursor()
     
-    # evidence_index テーブル作成
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS evidence_index (
-            element_id TEXT,
+        CREATE TABLE evidence_index (
+            element_id TEXT PRIMARY KEY,
             start_ms INTEGER,
             end_ms INTEGER,
             visual_text TEXT,
@@ -107,23 +111,25 @@ def sample_sidecar_db_file(tmp_path):
         )
     """)
     
-    # サンプルデータ挿入
-    sample_records = [
-        ("elem_001", 0, 10000, "テスト1", 0.95, "test_video_01.mp4"),
-        ("elem_002", 15000, 25000, "テスト2", 0.85, "test_video_01.mp4"),
-        ("elem_003", 30000, 40000, "テスト3", 0.75, "test_video_01.mp4"),
+    test_data = [
+        ("elem_001", 0, 5000, "テスト1", 0.95, "path/to/video1.mp4"),
+        ("elem_002", 5000, 10000, "テスト2", 0.90, "path/to/video2.mp4"),
+        ("elem_003", 10000, 15000, "テスト3", 0.85, "path/to/video3.mp4"),
     ]
     
-    cursor.executemany(
-        "INSERT INTO evidence_index VALUES (?, ?, ?, ?, ?, ?)",
-        sample_records
-    )
+    for data in test_data:
+        cursor.execute("""
+            INSERT INTO evidence_index 
+            (element_id, start_ms, end_ms, visual_text, visual_score, source_video_path)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, data)
     
     conn.commit()
     conn.close()
     
-    return str(db_file)
-
+    yield str(db_file)
+    if db_file.exists():
+        db_file.unlink()
 
 @pytest.fixture
 def temp_output_file(tmp_path):
@@ -135,3 +141,27 @@ def temp_output_file(tmp_path):
 def lecture_id():
     """テスト用 lecture_id"""
     return TEST_LECTURE_ID
+
+import pytest
+import sqlite3
+
+@pytest.fixture
+def sidecar_db():
+    """一時 evidence_index テーブルを作成"""
+    db_path = ":memory:"
+    conn = sqlite3.connect(db_path)
+    conn.execute("""
+        CREATE TABLE evidence_index (
+            element_id TEXT PRIMARY KEY,
+            start_ms INTEGER,
+            end_ms INTEGER,
+            visual_text TEXT,
+            visual_score REAL,
+            source_video_path TEXT
+        )
+    """)
+    conn.execute("INSERT INTO evidence_index VALUES (?, ?, ?, ?, ?, ?)",
+                 ("BRAIN_CENTERPIN_001", 0, 4920, "Sample visual text", 0.9, "path/to/video.mp4"))
+    conn.commit()
+    yield conn
+    conn.close()
