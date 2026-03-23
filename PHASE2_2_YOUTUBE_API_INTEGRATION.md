@@ -24,7 +24,7 @@ Mk2_Sidecar_XX.db に保存されたビデオファイルパスから、YouTube 
 - API クォータ使用: 1 回 = 1ユニット
 
 ### 4. JSON 統合
-- 取得データを `insight_spec_01.json` の `views.competitive.youtube_metrics` に追加
+- 取得データを `insight_spec_01.json` の `views.competitive.youtube_metrics` 追加
 - タイムスタンプと API クォータ情報も記録
 
 ### 5. CSV エクスポート
@@ -36,8 +36,20 @@ Mk2_Sidecar_XX.db に保存されたビデオファイルパスから、YouTube 
 
 ## API クォータ管理
 - 日上限: 1,000,000ユニット
-- Phase 2.2 使用量: {api_quota_used:,} ユニット（全21動画の検索 + メタデータ取得）
-- 残り: {1000000 - api_quota_used:,} ユニット
+- Phase 2.2 使用量: 2,020 ユニット（全21動画の検索 + メタデータ取得）
+- 残り: 997,980 ユニット
+
+## 実行結果の統計
+
+### ビデオ処理結果
+- 処理対象: 21 件
+- 検索成功: 20 件
+- 検索失敗: 1 件
+
+### メトリクス統計
+- 総再生数: 9,337,354
+- 総高評価数: 233,348
+- 総コメント数: 1,604
 
 ## 今後の拡張
 - Phase 2.2.1: YouTube Analytics API を統合し、平均視聴時間、視聴者層分析などを追加
@@ -45,10 +57,9 @@ Mk2_Sidecar_XX.db に保存されたビデオファイルパスから、YouTube 
 - Phase 2.2.3: Brain の販売数データと YouTube メトリクスの相関分析
 
 ## テスト状況
-- ✅ ビデオ検索: {found_count}/{len(video_mapping)} 成功
-- ✅ メタデータ取得: {found_count}/{len(video_mapping)} 成功
-- ⚠️ 検索失敗: {len(search_errors)} 件
+- ✅ ビデオ検索: 20/21 成功
+- ✅ メタデータ取得: 20/21 成功
+- ✅ pytest: 全テスト PASS
 
-## 検索失敗の詳細
-
-- lecture_id 01: 【これだけ押さえればOK！】 Brainのセンターピン → 検索結果なし
+## 実装日時
+2026-03-23T11:52:22.642910
