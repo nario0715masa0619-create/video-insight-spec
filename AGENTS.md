@@ -36,6 +36,17 @@
 - 21講座全体の動画メタデータを自動収集
 - insight_spec_XX.json の iews.competitive.youtube_metrics に統合
 
+
+
+## Phase 2.2.2: OCR Text Cleaning（実装予定）
+- **目的**：Sidecar DB の visual_text から OCR ノイズを除去
+- **実装内容**：
+  - UI ノイズ除去（ウィンドウ枠、メニュー、日付など）
+  - 日本語 OCR 誤認識補正（20～30 パターンのルール）
+  - テキスト正規化（全角・半角統一、スペース整理）
+- **品質管理**：クリーニング前後のログ記録、visual_score による信頼度管理
+
+
 ## Phase 2.2.1: エンゲージメント指標の計算（実装完了）
 - **Engagement Metrics** の追加実装：
   - engagement_rate: (likes + comments * 2) / view_count
