@@ -1,0 +1,55 @@
+# ========== Environment Variables & Secrets ==========
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ========== API Keys & Credentials ==========
+*.key
+*.pem
+*.p12
+credentials.json
+service-account-key.json
+
+# ========== Python ==========
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ========== Virtual Environment ==========
+venv/
+ENV/
+env/
+.venv
+
+# ========== IDE ==========
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ========== Project-specific ==========
+test_output/
+phase2_2_output/
+quality_validation_results/
+*.db.backup
