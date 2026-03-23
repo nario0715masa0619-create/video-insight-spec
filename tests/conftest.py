@@ -93,6 +93,9 @@ import sqlite3
 
 import sqlite3
 
+
+import sqlite3
+
 @pytest.fixture
 def sample_sidecar_db_file(tmp_path):
     """Sidecar DB with evidence_index table"""
