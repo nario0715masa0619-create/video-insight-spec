@@ -1,13 +1,16 @@
 # JSON設計 v1（video-insight-spec）
 
 ## 基本コンセプト
-- 1 JSON = 1本の動画。
-- 3レイヤー構成：
-  - `video_meta`：動画の汎用メタ情報。
-  - `knowledge_core`：Brain_Marketing_Master.json 準拠の「知恵」。
-  - `views`：用途別ビュー（competitive / self_improvement / education など）。
 
----
+- **1 JSON = 1本の動画**。
+- **3レイヤー構成**：
+  1. `video_meta`：動画の汎用メタ情報。
+  2. `knowledge_core`：Brain_Marketing_Master.json 準拠の「知恵」。
+  3. `views`：用途別ビュー（competitive / self_improvement / education など）。
+
+### 汎用スキーマ設計
+このスキーマは、「競合リサーチ」「社内ナレッジ蓄積・教材化」「YouTube Analytics 連携」など複数のユースケースを想定した汎用設計になっています。
+そのため、`views` セクション内のサブビューを追加・拡張することで、同じ `knowledge_core` データから複数の目的に応じた「見方」を生成できます。
 
 ## スキーマ（抜粋）
 
