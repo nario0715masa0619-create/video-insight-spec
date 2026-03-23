@@ -1,0 +1,521 @@
+{
+  "video_meta": {
+    "video_id": "01",
+    "channel_id": null,
+    "title": "Lecture 01",
+    "url": null,
+    "published_at": null
+  },
+  "knowledge_core": {
+    "center_pins": [
+      {
+        "element_id": "BRAIN_CENTERPIN_001",
+        "type": "FACT",
+        "content": "Brainビジネスにおいて成果を上げるためのセンターピン（最重要マインド）は、「完了主義（完璧主義の排除）」「量産思考」「仕組み化思考」の3つである。",
+        "base_purity_score": 90.0
+      },
+      {
+        "element_id": "BRAIN_CENTERPIN_002",
+        "type": "LOGIC",
+        "content": "Brainのコンテンツ作成において、30%の労力で作ったものと100%の労力で作ったものとで質に大きな差は生まれないため、100%を目指して過剰な時間を費やすことは無駄である。",
+        "base_purity_score": 85.0
+      },
+      {
+        "element_id": "BRAIN_CENTERPIN_003",
+        "type": "SOP",
+        "content": "コンテンツ作成時は完璧主義を捨て、30%の完成度であってもまずは出品して世に出す「完了主義」を徹底すること。",
+        "base_purity_score": 95.0
+      },
+      {
+        "element_id": "BRAIN_CENTERPIN_004",
+        "type": "SOP",
+        "content": "まずはBrainで最初の売上（例：1万円）を作る「0→1」を達成し、その手法の再現性を高めるための分析と改善を行うこと。",
+        "base_purity_score": 90.0
+      },
+      {
+        "element_id": "BRAIN_CENTERPIN_005",
+        "type": "LOGIC",
+        "content": "再現性を高めた「1万円稼ぐ手法」を100回積み上げることで、単純計算で100万円の売上を達成することができる。",
+        "base_purity_score": 95.0
+      },
+      {
+        "element_id": "BRAIN_CENTERPIN_006",
+        "type": "LOGIC",
+        "content": "個人の作業時間と労力には限界があるため、自分1人の力だけでコンテンツを量産し100回積み上げようとすることは事実上不可能である。",
+        "base_purity_score": 85.0
+      },
+      {
+        "element_id": "BRAIN_CENTERPIN_007",
+        "type": "SOP",
+        "content": "再現性のあるノウハウをマニュアル化し、クラウドソーシング等の外注を活用して作業を委託することで、量産のための仕組みを構築すること。",
+        "base_purity_score": 100.0
+      },
+      {
+        "element_id": "BRAIN_CENTERPIN_008",
+        "type": "FACT",
+        "content": "クラウドソーシングを活用すれば、動画の文字起こしやリライトなどの単純作業を1分あたり約30円（30分動画で約900円）という非常に安価なコストで外注できる。",
+        "base_purity_score": 100.0
+      },
+      {
+        "element_id": "BRAIN_CENTERPIN_009",
+        "type": "LOGIC",
+        "content": "インフルエンサービジネスなど、自分がいないと回らない属人的なビジネスはスケールできないため、天性の才能がない凡人が大きく稼ぐことには適していない。",
+        "base_purity_score": 85.0
+      },
+      {
+        "element_id": "BRAIN_CENTERPIN_010",
+        "type": "FACT",
+        "content": "属人性を排除したBrainのコンテンツビジネスは、マニュアル化と外注化を組み合わせることで、自分が稼働しなくても利益を生むフル外注の仕組みを構築可能である。",
+        "base_purity_score": 95.0
+      }
+    ],
+    "knowledge_points": []
+  },
+  "views": {
+    "competitive": {
+      "###_metadata": {
+        "measurement_timestamp": "2026-03-22T10:36:23.952637Z",
+        "data_sources": {
+          "youtube_api": false,
+          "sidecar_db": true,
+          "video_scraper": true
+        },
+        "note": "Phase 1: YouTube API なし。Mk2_Sidecar_XX.db と JSON のみを使用"
+      },
+      "view_count": 0,
+      "impression_count": null,
+      "click_through_rate": null,
+      "average_view_duration_sec": null,
+      "average_view_duration_percent": null,
+      "total_watch_time_hours": null,
+      "unique_viewers": null,
+      "days_since_publish": 0,
+      "daily_average_views": 0.0,
+      "like_count": null,
+      "comment_count": null,
+      "like_to_view_ratio": null,
+      "comment_to_view_ratio": null,
+      "engagement_rate": 0.0,
+      "shares_count": null,
+      "subscriber_gain": null,
+      "subscriber_loss": null,
+      "net_subscriber_gain": null,
+      "trend_score": 0.0,
+      "trend_velocity": null,
+      "momentum_score": null,
+      "primary_traffic_sources": null,
+      "youtube_search_traffic_ratio": null,
+      "external_traffic_ratio": null,
+      "direct_traffic_ratio": null,
+      "knowledge_elements_count": 10,
+      "knowledge_density_per_minute": 11.628,
+      "high_purity_elements_ratio": 1.0,
+      "knowledge_type_distribution": {
+        "FACT": 3,
+        "LOGIC": 4,
+        "SOP": 3,
+        "CASE": 0
+      },
+      "knowledge_coverage_seconds": 51,
+      "knowledge_coverage_ratio": 0.988,
+      "knowledge_distribution_balance": 0.64,
+      "critical_segments_count": 5,
+      "primary_theme_keywords": [
+        "brain",
+        "完了主義",
+        "lecture",
+        "ビジネスにおいて成果を上げるためのセンターピン",
+        "最重要マインド"
+      ],
+      "keyword_mention_frequency": {
+        "zoom": 10,
+        "brain": 48,
+        "mindieis": 15,
+        "mindmeistercomlappimapl": 10,
+        "youtube": 8,
+        "instagram": 7,
+        "nindieis": 5,
+        "instagramt": 3,
+        "ウィンドウ": 10,
+        "のセンターピン": 30,
+        "更新": 10,
+        "アブリ": 8,
+        "チャット": 8,
+        "日決済": 10,
+        "情報販売ツール": 10,
+        "ブラットフォーム": 10,
+        "日テザイン": 3,
+        "契約関係": 10,
+        "迎営": 10,
+        "ココナラ事業": 5,
+        "中業": 3,
+        "事菜": 3,
+        "その池のブックマー": 3,
+        "共有する": 10,
+        "量産思考": 3,
+        "再現性高めて": 3,
+        "回積み上げれば": 6,
+        "万円": 3,
+        "人でできることには限度がある": 5,
+        "を一人で作っていても時間がない": 3,
+        "ら組み化思考": 3,
+        "儀が": 3,
+        "を量産できているのは": 3,
+        "の万円": 5,
+        "緩巣": 4,
+        "日デザイン": 5,
+        "ココナラ中業": 3,
+        "その化のブックマー": 5,
+        "しっかり見極めた上で取り組んだ方がいい": 3,
+        "自分がいないと回らないビジネスで": 5,
+        "スケールできないので": 5,
+        "よほどの才能と天性のセンスがある人のみナ": 3,
+        "大きく称ぐことはほぼ無理": 3,
+        "儀合めてほとんどの人が凡人なので": 3
+      },
+      "keyword_first_appearance_ms": {},
+      "keyword_segment_count": {
+        "instagram": 7,
+        "zoom": 10,
+        "youtube": 8,
+        "mindieis": 10,
+        "mindmeistercomlappimapl": 10,
+        "万円": 3,
+        "儀が": 3,
+        "中業": 3,
+        "契約関係": 10,
+        "を量産できているのは": 3,
+        "事菜": 3,
+        "量産思考": 3,
+        "アブリ": 8,
+        "更新": 10,
+        "ブラットフォーム": 10,
+        "再現性高めて": 3,
+        "日決済": 10,
+        "brain": 10,
+        "のセンターピン": 10,
+        "共有する": 10,
+        "情報販売ツール": 10,
+        "チャット": 8,
+        "ココナラ事業": 5,
+        "その池のブックマー": 3,
+        "人でできることには限度がある": 5,
+        "を一人で作っていても時間がない": 3,
+        "日テザイン": 3,
+        "ら組み化思考": 3,
+        "ウィンドウ": 10,
+        "の万円": 5,
+        "迎営": 10,
+        "回積み上げれば": 3,
+        "中菜": 2,
+        "日デザイン": 5,
+        "緩巣": 4,
+        "その化のブックマー": 5,
+        "ひ回積み上げれば": 2,
+        "youlube": 2,
+        "を一人で作っていても時間がなし": 2,
+        "ココナラ中業": 3,
+        "スケールできないので": 5,
+        "平業": 2,
+        "よほどの才能と天性のセンスがある人のみナ": 3,
+        "その化のブックマ": 2,
+        "業でも": 2,
+        "しっかり見極めた上で取り組んだ方がいい": 3,
+        "自分が居なくても回るビシ町ック": 2,
+        "nindieis": 5,
+        "自分がいないと回らないビジネスで": 5,
+        "大きく禄ぐことはほぼ無理": 2,
+        "ココナラ中菜": 2,
+        "instagramt": 3,
+        "儀合めてほとんどの人が凡人なので": 3,
+        "大きく称ぐことはほぼ無理": 3,
+        "よほどの才能と天性のセンスがある人のみ大きく和げる": 2,
+        "チャッ": 2,
+        "アフリ": 2,
+        "デザイン": 2,
+        "仕組み化できるかを考えることが必要": 2
+      },
+      "actionability_score": 95.0,
+      "content_maturity_score": 1.0,
+      "knowledge_value_index": 100.0,
+      "expected_roi_score": 0.78,
+      "visual_evidence_coverage": 51,
+      "visual_text_richness_score": 0.31,
+      "evidence_credibility_average": 0.92,
+      "screenshot_worthy_segments": 10,
+      "content_intelligence_score": 82.3,
+      "visual_knowledge_synthesis_ratio": 1.0,
+      "competitive_moat_strength": 0.98,
+      "performance_score": 27.4,
+      "content_role": "education",
+      "recommended_reuse_score": 0.48,
+      "reuse_recommendation": "このコンテンツは以下の理由から再利用価値が高い：（1）コンテンツ知性スコアが高い（82.3），（2）知識密度が高い（11.63/分），（2）100%が視覚的エビデンス付き，（2）ROI期待値スコアが高い（0.78）",
+      "youtube_metrics": {
+        "source": "YouTube Data API v3",
+        "fetched_at": "2026-03-23T11:34:18.807367",
+        "api_quota_used": 2101,
+        "data": [
+          {
+            "lecture_id": "02",
+            "title": "【超重要！】コンテンツ販売必須の基礎知識",
+            "video_id": "AtPI1tw6ctc",
+            "youtube_url": "https://www.youtube.com/watch?v=AtPI1tw6ctc",
+            "metrics": {
+              "view_count": 1802895,
+              "like_count": 41582,
+              "comment_count": 174,
+              "engagement_rate_percent": 2.32
+            }
+          },
+          {
+            "lecture_id": "03",
+            "title": "初級編の全体的な流れ",
+            "video_id": "FuOaGeNrpBk",
+            "youtube_url": "https://www.youtube.com/watch?v=FuOaGeNrpBk",
+            "metrics": {
+              "view_count": 879789,
+              "like_count": 19893,
+              "comment_count": 314,
+              "engagement_rate_percent": 2.3
+            }
+          },
+          {
+            "lecture_id": "04",
+            "title": "【初心者でもOK！】売れるコンテンツ制作の方法",
+            "video_id": "Iaxepk9w7OI",
+            "youtube_url": "https://www.youtube.com/watch?v=Iaxepk9w7OI",
+            "metrics": {
+              "view_count": 386,
+              "like_count": 7,
+              "comment_count": 0,
+              "engagement_rate_percent": 1.81
+            }
+          },
+          {
+            "lecture_id": "05",
+            "title": "【実演編】コンテンツ制作の流れ",
+            "video_id": "zvFCvBdOi44",
+            "youtube_url": "https://www.youtube.com/watch?v=zvFCvBdOi44",
+            "metrics": {
+              "view_count": 1355,
+              "like_count": 14,
+              "comment_count": 0,
+              "engagement_rate_percent": 1.03
+            }
+          },
+          {
+            "lecture_id": "06",
+            "title": "Brainサムネの6要素",
+            "video_id": "9R3o9gAAfmc",
+            "youtube_url": "https://www.youtube.com/watch?v=9R3o9gAAfmc",
+            "metrics": {
+              "view_count": 200851,
+              "like_count": 1574,
+              "comment_count": 24,
+              "engagement_rate_percent": 0.8
+            }
+          },
+          {
+            "lecture_id": "07",
+            "title": "Brainのサムネを安く抑える方法",
+            "video_id": "MKYIVZLR-yA",
+            "youtube_url": "https://www.youtube.com/watch?v=MKYIVZLR-yA",
+            "metrics": {
+              "view_count": 331,
+              "like_count": 23,
+              "comment_count": 1,
+              "engagement_rate_percent": 7.25
+            }
+          },
+          {
+            "lecture_id": "08",
+            "title": "簡単にサムネイルを制作する方法",
+            "video_id": "L3jzl9C6Hnw",
+            "youtube_url": "https://www.youtube.com/watch?v=L3jzl9C6Hnw",
+            "metrics": {
+              "view_count": 34207,
+              "like_count": 629,
+              "comment_count": 18,
+              "engagement_rate_percent": 1.89
+            }
+          },
+          {
+            "lecture_id": "09",
+            "title": "seaartの使い方",
+            "video_id": "Ci4ySRp0AKM",
+            "youtube_url": "https://www.youtube.com/watch?v=Ci4ySRp0AKM",
+            "metrics": {
+              "view_count": 35797,
+              "like_count": 526,
+              "comment_count": 64,
+              "engagement_rate_percent": 1.65
+            }
+          },
+          {
+            "lecture_id": "10",
+            "title": "【99%が知らない】Brain販売戦略とアルゴリズム",
+            "video_id": "9d_hLqtISRo",
+            "youtube_url": "https://www.youtube.com/watch?v=9d_hLqtISRo",
+            "metrics": {
+              "view_count": 5369,
+              "like_count": 94,
+              "comment_count": 5,
+              "engagement_rate_percent": 1.84
+            }
+          },
+          {
+            "lecture_id": "11",
+            "title": "【LTV上昇】公式LINEへの誘導と公式LINE内での施策",
+            "video_id": "or76DLP2I24",
+            "youtube_url": "https://www.youtube.com/watch?v=or76DLP2I24",
+            "metrics": {
+              "view_count": 195,
+              "like_count": 6,
+              "comment_count": 0,
+              "engagement_rate_percent": 3.08
+            }
+          },
+          {
+            "lecture_id": "12",
+            "title": "Brain記事の出し方",
+            "video_id": "z7V0TwNFZPA",
+            "youtube_url": "https://www.youtube.com/watch?v=z7V0TwNFZPA",
+            "metrics": {
+              "view_count": 9273,
+              "like_count": 152,
+              "comment_count": 5,
+              "engagement_rate_percent": 1.69
+            }
+          },
+          {
+            "lecture_id": "13",
+            "title": "【誰でもできる！】公式LINEアカウントの開設方法",
+            "video_id": "NEPEXtfrttA",
+            "youtube_url": "https://www.youtube.com/watch?v=NEPEXtfrttA",
+            "metrics": {
+              "view_count": 63884,
+              "like_count": 987,
+              "comment_count": 15,
+              "engagement_rate_percent": 1.57
+            }
+          },
+          {
+            "lecture_id": "14",
+            "title": "【登録率倍増！】特典の記載とLINE追加URLの発行方法",
+            "video_id": "vd_IUibWKbI",
+            "youtube_url": "https://www.youtube.com/watch?v=vd_IUibWKbI",
+            "metrics": {
+              "view_count": 4574730,
+              "like_count": 150067,
+              "comment_count": 689,
+              "engagement_rate_percent": 3.3
+            }
+          },
+          {
+            "lecture_id": "15",
+            "title": "【コピペでOK！】オプトインアフィで収益を得る",
+            "video_id": "h8Au4MC-BHs",
+            "youtube_url": "https://www.youtube.com/watch?v=h8Au4MC-BHs",
+            "metrics": {
+              "view_count": 876346,
+              "like_count": 9935,
+              "comment_count": 73,
+              "engagement_rate_percent": 1.14
+            }
+          },
+          {
+            "lecture_id": "16",
+            "title": "【BANに強い！】タイ版公式LINE垢の作成方法（※直近では有効性確認できません）",
+            "video_id": "PKszrEEm7z8",
+            "youtube_url": "https://www.youtube.com/watch?v=PKszrEEm7z8",
+            "metrics": {
+              "view_count": 1529,
+              "like_count": 36,
+              "comment_count": 3,
+              "engagement_rate_percent": 2.55
+            }
+          },
+          {
+            "lecture_id": "17",
+            "title": "クラウドワークスで外注を募集する方法",
+            "video_id": "e7W7iLFfd0o",
+            "youtube_url": "https://www.youtube.com/watch?v=e7W7iLFfd0o",
+            "metrics": {
+              "view_count": 1704,
+              "like_count": 18,
+              "comment_count": 0,
+              "engagement_rate_percent": 1.06
+            }
+          },
+          {
+            "lecture_id": "18",
+            "title": "クラウドワークス外注（応募〜契約までの流れ）",
+            "video_id": "WLrSXvOEcB4",
+            "youtube_url": "https://www.youtube.com/watch?v=WLrSXvOEcB4",
+            "metrics": {
+              "view_count": 8429,
+              "like_count": 33,
+              "comment_count": 0,
+              "engagement_rate_percent": 0.39
+            }
+          },
+          {
+            "lecture_id": "19",
+            "title": "外注から記事納品の際に意識するべきこと",
+            "video_id": "4cnT-SSx9sQ",
+            "youtube_url": "https://www.youtube.com/watch?v=4cnT-SSx9sQ",
+            "metrics": {
+              "view_count": 594,
+              "like_count": 14,
+              "comment_count": 0,
+              "engagement_rate_percent": 2.36
+            }
+          },
+          {
+            "lecture_id": "20",
+            "title": "Brainアルゴリズムの最新情報",
+            "video_id": "I4R3zy-HB4k",
+            "youtube_url": "https://www.youtube.com/watch?v=I4R3zy-HB4k",
+            "metrics": {
+              "view_count": 725524,
+              "like_count": 7057,
+              "comment_count": 178,
+              "engagement_rate_percent": 1.0
+            }
+          },
+          {
+            "lecture_id": "21",
+            "title": "Brain再出品する際に注意すること",
+            "video_id": "67KIRHW0GVw",
+            "youtube_url": "https://www.youtube.com/watch?v=67KIRHW0GVw",
+            "metrics": {
+              "view_count": 114166,
+              "like_count": 701,
+              "comment_count": 41,
+              "engagement_rate_percent": 0.65
+            }
+          }
+        ]
+      }
+    },
+    "self_improvement": {},
+    "education": {}
+  },
+  "_metadata": {
+    "converted_at": "2026-03-22T10:36:23.952637Z",
+    "source_system": "video-scraper / Antigravity Ver.1.0",
+    "conversion_version": "v1.0_phase1",
+    "conversion_phase": "Phase 1",
+    "data_sources": {
+      "core_json": "Mk2_Core_XX.json",
+      "sidecar_db": "Mk2_Sidecar_XX.db",
+      "youtube_api": false,
+      "youtube_analytics_api": false
+    },
+    "implementation_notes": {
+      "like_count_and_comment_count": "推定値（null 許容）",
+      "youtube_api_fields": "Phase 2 以降で実装予定",
+      "nlp_keyword_extraction": "Phase 2 で JANOME/transformers に差し替え予定"
+    }
+  }
+}

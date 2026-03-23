@@ -1,113 +1,118 @@
+"""
+keyword_extractor.py - キーワード抽出モジュール（Phase 2.1 修正版）
+
+JANOME 対応（品詞コード「名」「動」「形」を正しく処理）
+"""
+
 import re
 import logging
-from typing import Dict, List, Any
-from collections import Counter
+from typing import List, Dict, Optional
 
 logger = logging.getLogger(__name__)
 
+try:
+    from janome.tokenizer import Tokenizer
+    JANOME_AVAILABLE = True
+    _janome_tokenizer = Tokenizer()
+except ImportError:
+    JANOME_AVAILABLE = False
+    logger.warning("JANOME not available. Falling back to regex mode.")
+
 
 class KeywordExtractor:
-    """キーワード抽出・分析クラス（Phase 1：簡易版）"""
-
+    """キーワード抽出クラス（Phase 2.1 修正版）"""
+    
     def __init__(
         self,
-        json_extractor,
-        evidence_records: List[Dict[str, Any]]
+        db_path: str,
+        evidence_records: List[Dict],
+        use_nlp: bool = True,
+        stopwords: Optional[List[str]] = None
     ):
-        self.json_extractor = json_extractor
+        """初期化"""
+        self.db_path = db_path
         self.evidence_records = evidence_records
-
-    def extract_primary_theme_keywords(
-        self,
-        video_title: str = "",
-        max_keywords: int = 5
-    ) -> List[str]:
-        """主要なテーマキーワードを抽出（簡易版）"""
-        text_parts = []
-
-        if video_title:
-            text_parts.append(video_title)
-
-        for pin in self.json_extractor.center_pins:
-            content = pin.get("content", "")
-            if content:
-                text_parts.append(content)
-
-        combined_text = " ".join(text_parts)
-
-        keywords = self._extract_words_simple(combined_text)
-
-        keyword_freq = Counter(keywords)
-        top_keywords = [
-            word for word, freq in keyword_freq.most_common(max_keywords)
-        ]
-
-        logger.info(f"Extracted {len(top_keywords)} primary theme keywords")
-        return top_keywords
-
-    def get_keyword_mention_frequency(self) -> Dict[str, int]:
-        """キーワードの言及頻度を計算"""
-        if not self.evidence_records:
-            return {}
-
-        all_visual_text = " ".join(
-            record.get("visual_text", "") for record in self.evidence_records
-            if record.get("visual_text")
-        )
-
-        keywords = self._extract_words_simple(all_visual_text)
-        frequency = Counter(keywords)
-
-        return {
-            word: count for word, count in frequency.items()
-            if count >= 3
-        }
-
-    def get_keyword_segment_count(self) -> Dict[str, int]:
-        """各キーワードが登場するシーン（segment）数を計算"""
-        if not self.evidence_records:
-            return {}
-
-        keyword_segments = {}
-
-        for record in self.evidence_records:
-            visual_text = record.get("visual_text", "")
-            if not visual_text:
-                continue
-
-            keywords = self._extract_words_simple(visual_text)
-
-            for keyword in set(keywords):
-                if keyword not in keyword_segments:
-                    keyword_segments[keyword] = 0
-                keyword_segments[keyword] += 1
-
-        return {
-            word: count for word, count in keyword_segments.items()
-            if count >= 2
-        }
-
-    def _extract_words_simple(self, text: str, min_length: int = 2) -> List[str]:
-        """テキストから単語を簡易抽出（Phase 1）
+        self.use_nlp = use_nlp and JANOME_AVAILABLE
         
-        Note: 日本語・英語対応
-        - U+3040-U+309F: ひらがな
-        - U+30A0-U+30FF: カタカナ
-        - U+4E00-U+9FFF: 漢字
+        # デフォルト stopwords（拡張版）
+        self.stopwords = stopwords or {
+            "が", "を", "に", "は", "の", "で", "と", "も", "から", "まで",
+            "など", "および", "または", "ため", "こと", "もの", "ある", "いる",
+            "する", "なる", "いく", "くる", "おく", "しまう", "みる", "やる",
+            "できる", "いった", "いう", "あった", "あるいは",
+            "the", "a", "an", "and", "or", "but", "in", "on", "at", "to",
+            "of", "by", "for", "with", "from", "is", "are", "be", "have",
+        }
         
-        Phase 2 で JANOME/MeCab に置き換え予定
-        """
-        english_words = re.findall(r'[A-Za-z]{' + str(min_length) + r',}', text)
-
-        # より安全な日本語正規表現
-        japanese_words = re.findall(
-            r'[぀-ゟ゠-ヿ一-鿿]{' + str(min_length) + r',}',
-            text
-        )
-
-        english_words = [w.lower() for w in english_words]
-
-        stopwords = {'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for'}
-        english_words = [w for w in english_words if w not in stopwords]
-
-        return english_words + japanese_words
+        logger.info(f"KeywordExtractor initialized (use_nlp={self.use_nlp})")
+    
+    def extract_keywords(self, title: str, min_length: int = 2) -> List[str]:
+        """タイトルからキーワードを抽出"""
+        if not title:
+            return []
+        
+        if self.use_nlp:
+            return self._extract_keywords_janome(title, min_length)
+        else:
+            return self._extract_keywords_regex(title, min_length)
+    
+    def _extract_keywords_janome(self, title: str, min_length: int = 2) -> List[str]:
+        """JANOME による形態素解析キーワード抽出（修正版）"""
+        try:
+            keywords = set()
+            
+            for token in _janome_tokenizer.tokenize(title):
+                word = token.surface
+                pos = token.part_of_speech[0]  # 修正: 「名」「動」「形」
+                
+                # 名詞、動詞、形容詞を抽出（修正版）
+                if pos in ("名", "動", "形"):
+                    if len(word) >= min_length and word not in self.stopwords:
+                        keywords.add(word)
+            
+            return sorted(list(keywords))
+        
+        except Exception as e:
+            logger.warning(f"JANOME extraction failed: {e}")
+            return self._extract_keywords_regex(title, min_length)
+    
+    def _extract_keywords_regex(self, title: str, min_length: int = 2) -> List[str]:
+        """正規表現によるキーワード抽出（Phase 1 互換）"""
+        pattern = r'[\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\w]+'
+        keywords = set()
+        
+        for match in re.finditer(pattern, title, re.UNICODE):
+            word = match.group()
+            if len(word) >= min_length and word not in self.stopwords:
+                keywords.add(word)
+        
+        return sorted(list(keywords))
+    
+    def get_keyword_mention_frequency(self, title: str, db_records: List[Dict]) -> Dict[str, int]:
+        """キーワード出現頻度を計算"""
+        keywords = self.extract_keywords(title)
+        frequency = {kw: 0 for kw in keywords}
+        
+        for kw in keywords:
+            frequency[kw] += title.count(kw)
+            for record in db_records:
+                frequency[kw] += record.get("visual_text", "").count(kw)
+        
+        return {k: v for k, v in frequency.items() if v > 0}
+    
+    def get_keyword_segment_count(self, keyword: str, db_records: List[Dict]) -> int:
+        """キーワードが出現するセグメント数を計算"""
+        return sum(1 for record in db_records if keyword in record.get("visual_text", ""))
+    
+    def get_keyword_first_appearance_ms(self, keyword: str, db_records: List[Dict]) -> Optional[int]:
+        """キーワードの最初の出現タイムスタンプを取得"""
+        for record in sorted(db_records, key=lambda r: r.get("start_ms", 0)):
+            if keyword in record.get("visual_text", ""):
+                return record.get("start_ms")
+        return None
+    
+    def get_primary_theme_keywords(self, title: str, db_records: List[Dict], top_n: int = 5) -> List[str]:
+        """プライマリテーマキーワード（出現頻度上位 N 個）を抽出"""
+        freq = self.get_keyword_mention_frequency(title, db_records)
+        sorted_keywords = sorted(freq.items(), key=lambda x: x[1], reverse=True)
+        return [kw for kw, _ in sorted_keywords[:top_n]]

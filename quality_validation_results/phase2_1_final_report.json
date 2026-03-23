@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "validation_timestamp": "2026-03-22T23:29:35.059154",
+    "lecture_id": "01",
+    "method": "JANOME (content-only, OCR noise eliminated)",
+    "core_json": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\Mk2_Core_01.json",
+    "sidecar_db": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\Mk2_Sidecar_01.db"
+  },
+  "data_summary": {
+    "total_elements": 10,
+    "total_records": 10,
+    "content_text_length": 699
+  },
+  "keyword_extraction": {
+    "total_keywords": 0,
+    "high_quality_count": 0,
+    "keywords": []
+  },
+  "quality_assessment": {
+    "high_quality_keywords": {},
+    "average_quality_score": 0,
+    "distribution": {
+      "90_100": 0,
+      "80_89": 0,
+      "70_79": 0,
+      "60_69": 0,
+      "below_60": 0
+    }
+  }
+}

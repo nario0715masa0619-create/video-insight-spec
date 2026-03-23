@@ -1,0 +1,328 @@
+{
+  "metadata": {
+    "validation_timestamp": "2026-03-22T23:51:02.888921",
+    "lecture_id": "01",
+    "method": "JANOME (content-only, fixed POS codes)"
+  },
+  "keyword_extraction": {
+    "total_keywords": 88,
+    "high_quality_count": 37,
+    "keywords": [
+      "100",
+      "30",
+      "900",
+      "Brain",
+      "あたり",
+      "すれ",
+      "でき",
+      "ない",
+      "インフルエンサービジネス",
+      "クラウドソーシング",
+      "コスト",
+      "コンテンツ",
+      "スケール",
+      "センター",
+      "ノウハウ",
+      "ビジネス",
+      "ピン",
+      "フル",
+      "マインド",
+      "マニュアル",
+      "リライト",
+      "上げる",
+      "不可能",
+      "主義",
+      "事実",
+      "仕組み",
+      "作っ",
+      "作る",
+      "作成",
+      "作業",
+      "個人",
+      "再現",
+      "凡人",
+      "出す",
+      "出品",
+      "分析",
+      "利益",
+      "労力",
+      "動画",
+      "単純",
+      "可能",
+      "回ら",
+      "売上",
+      "外注",
+      "大きく",
+      "天性",
+      "委託",
+      "安価",
+      "完了",
+      "完成",
+      "完璧",
+      "属人",
+      "徹底",
+      "思考",
+      "成果",
+      "手法",
+      "才能",
+      "捨て",
+      "排除",
+      "改善",
+      "文字",
+      "時間",
+      "最初",
+      "構築",
+      "活用",
+      "無駄",
+      "生まれ",
+      "生む",
+      "目指し",
+      "稼ぐ",
+      "稼働",
+      "積み上げよ",
+      "積み上げる",
+      "組み合わせる",
+      "自分",
+      "行う",
+      "計算",
+      "費やす",
+      "起こし",
+      "過剰",
+      "達成",
+      "適し",
+      "重要",
+      "量産",
+      "限界",
+      "非常",
+      "高め",
+      "高める"
+    ]
+  },
+  "quality_assessment": {
+    "high_quality_keywords": {
+      "外注": {
+        "total_score": 99.67,
+        "content_frequency": 4,
+        "element_count": 3,
+        "average_purity": 98.33
+      },
+      "仕組み": {
+        "total_score": 99.0,
+        "content_frequency": 3,
+        "element_count": 3,
+        "average_purity": 95.0
+      },
+      "作業": {
+        "total_score": 99.0,
+        "content_frequency": 3,
+        "element_count": 3,
+        "average_purity": 95.0
+      },
+      "再現": {
+        "total_score": 99.0,
+        "content_frequency": 3,
+        "element_count": 3,
+        "average_purity": 95.0
+      },
+      "30": {
+        "total_score": 98.67,
+        "content_frequency": 4,
+        "element_count": 3,
+        "average_purity": 93.33
+      },
+      "でき": {
+        "total_score": 98.67,
+        "content_frequency": 3,
+        "element_count": 3,
+        "average_purity": 93.33
+      },
+      "主義": {
+        "total_score": 98.5,
+        "content_frequency": 4,
+        "element_count": 2,
+        "average_purity": 92.5
+      },
+      "量産": {
+        "total_score": 98.33,
+        "content_frequency": 3,
+        "element_count": 3,
+        "average_purity": 91.67
+      },
+      "Brain": {
+        "total_score": 98.0,
+        "content_frequency": 4,
+        "element_count": 4,
+        "average_purity": 90.0
+      },
+      "コンテンツ": {
+        "total_score": 98.0,
+        "content_frequency": 4,
+        "element_count": 4,
+        "average_purity": 90.0
+      },
+      "ビジネス": {
+        "total_score": 98.0,
+        "content_frequency": 4,
+        "element_count": 3,
+        "average_purity": 90.0
+      },
+      "100": {
+        "total_score": 97.67,
+        "content_frequency": 5,
+        "element_count": 3,
+        "average_purity": 88.33
+      },
+      "自分": {
+        "total_score": 97.67,
+        "content_frequency": 3,
+        "element_count": 3,
+        "average_purity": 88.33
+      },
+      "ない": {
+        "total_score": 97.0,
+        "content_frequency": 6,
+        "element_count": 2,
+        "average_purity": 85.0
+      },
+      "労力": {
+        "total_score": 97.0,
+        "content_frequency": 3,
+        "element_count": 2,
+        "average_purity": 85.0
+      },
+      "クラウドソーシング": {
+        "total_score": 90.0,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 100.0
+      },
+      "活用": {
+        "total_score": 90.0,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 100.0
+      },
+      "マニュアル": {
+        "total_score": 89.5,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 97.5
+      },
+      "単純": {
+        "total_score": 89.5,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 97.5
+      },
+      "構築": {
+        "total_score": 89.5,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 97.5
+      },
+      "上げる": {
+        "total_score": 88.5,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 92.5
+      },
+      "売上": {
+        "total_score": 88.5,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 92.5
+      },
+      "完了": {
+        "total_score": 88.5,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 92.5
+      },
+      "完璧": {
+        "total_score": 88.5,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 92.5
+      },
+      "手法": {
+        "total_score": 88.5,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 92.5
+      },
+      "排除": {
+        "total_score": 88.5,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 92.5
+      },
+      "達成": {
+        "total_score": 88.5,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 92.5
+      },
+      "高め": {
+        "total_score": 88.5,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 92.5
+      },
+      "フル": {
+        "total_score": 88.0,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 90.0
+      },
+      "作成": {
+        "total_score": 88.0,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 90.0
+      },
+      "可能": {
+        "total_score": 88.0,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 90.0
+      },
+      "属人": {
+        "total_score": 88.0,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 90.0
+      },
+      "稼ぐ": {
+        "total_score": 88.0,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 90.0
+      },
+      "時間": {
+        "total_score": 87.0,
+        "content_frequency": 2,
+        "element_count": 2,
+        "average_purity": 85.0
+      },
+      "動画": {
+        "total_score": 75.0,
+        "content_frequency": 2,
+        "element_count": 1,
+        "average_purity": 100.0
+      },
+      "思考": {
+        "total_score": 73.0,
+        "content_frequency": 2,
+        "element_count": 1,
+        "average_purity": 90.0
+      },
+      "作っ": {
+        "total_score": 72.0,
+        "content_frequency": 2,
+        "element_count": 1,
+        "average_purity": 85.0
+      }
+    },
+    "average_quality_score": 69.27
+  }
+}
