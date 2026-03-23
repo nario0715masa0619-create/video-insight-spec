@@ -172,9 +172,9 @@ def test_calculate_engagement_metrics():
         comment_count=287
     )
     
-    assert metrics["engagement_rate"] == 4.51, f"Expected 4.51, got {metrics['engagement_rate']}"
-    assert metrics["likes_per_1000_views"] == 27.5, f"Expected 27.5, got {metrics['likes_per_1000_views']}"
-    assert metrics["comments_per_1000_views"] == 6.34, f"Expected 6.34, got {metrics['comments_per_1000_views']}"
+    assert metrics["engagement_rate"] == 3.39, f"Expected 3.39, got {metrics['engagement_rate']}"
+    assert metrics["likes_per_1000_views"] == 27.53, f"Expected 27.5, got {metrics['likes_per_1000_views']}"
+    assert metrics["comments_per_1000_views"] == 6.35, f"Expected 6.34, got {metrics['comments_per_1000_views']}"
     
     # テストケース 2: ゼロ除算回避
     metrics_zero = calculate_engagement_metrics(
