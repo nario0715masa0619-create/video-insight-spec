@@ -41,7 +41,7 @@ class SidecarDBHelper:
 
     @staticmethod
     def get_timestamp_for_element(
-        element_id: str, db_path: str
+        db_path: str, element_id: str
     ) -> Optional[Dict[str, int]]:
         """特定の element_id のタイムスタンプを取得"""
         try:
@@ -67,7 +67,7 @@ class SidecarDBHelper:
 
     @staticmethod
     def get_visual_text_for_element(
-        element_id: str, db_path: str
+        db_path: str, element_id: str
     ) -> Optional[str]:
         """特定の element_id の visual_text を取得"""
         try:
