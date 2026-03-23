@@ -96,6 +96,9 @@ import sqlite3
 
 import sqlite3
 
+
+import sqlite3
+
 @pytest.fixture
 def sample_sidecar_db_file(tmp_path):
     """Sidecar DB with evidence_index table"""
@@ -115,9 +118,9 @@ def sample_sidecar_db_file(tmp_path):
     """)
     
     test_data = [
-        ("elem_001", 0, 5000, "テスト1", 0.95, "path/to/video1.mp4"),
-        ("elem_002", 5000, 10000, "テスト2", 0.90, "path/to/video2.mp4"),
-        ("elem_003", 10000, 15000, "テスト3", 0.85, "path/to/video3.mp4"),
+        ("elem_001", 0, 10000, "テスト1", 0.95, "path/to/video1.mp4"),
+        ("elem_002", 15000, 25000, "テスト2", 0.90, "path/to/video2.mp4"),
+        ("elem_003", 30000, 40000, "テスト3", 0.75, "path/to/video3.mp4"),
     ]
     
     for data in test_data:
