@@ -47,7 +47,29 @@
       "performance_score": 0,
       "trend_score": 0,
       "content_role": "education | branding | sales | hiring"
-    },
+    }
+
+### engagement_metrics（Phase 2.2.1 で追加）
+基本メトリクス（view_count, like_count, comment_count）から計算された派生指標。
+
+- **engagement_rate** (number)
+  - 定義: `(likes + comments) / view_count * 100`
+  - ⚠️ **view_count が 0 の場合は 0 とする（ゼロ除算回避）**
+  - 単位: パーセンテージ（%）
+  - 説明: 動画への総相互作用率
+
+- **likes_per_1000_views** (number)
+  - 定義: `likes / view_count * 1000`
+  - ⚠️ **view_count が 0 の場合は 0 とする（ゼロ除算回避）**
+  - 単位: 1000視聴あたりの高評価数
+  - 説明: 再生数を正規化した高評価率
+
+- **comments_per_1000_views** (number)
+  - 定義: `comments / view_count * 1000`
+  - ⚠️ **view_count が 0 の場合は 0 とする（ゼロ除算回避）**
+  - 単位: 1000視聴あたりのコメント数
+  - 説明: 再生数を正規化したコメント率
+,
     "self_improvement": {
       /* 将来自社AnalyticsやCVデータを統合する用（現時点は空でOK） */
     },
