@@ -29,6 +29,21 @@
     - `knowledge_core`：Brain_Marketing_Master.json 準拠の知識レイヤー  
     - `views`：用途別ビュー（competitive / self_improvement / education など）
 
+
+
+## Phase 2.2: YouTube API 統合（実装完了）
+- **YouTube Data API v3** から view_count, like_count, comment_count を自動取得
+- 21講座全体の動画メタデータを自動収集
+- insight_spec_XX.json の iews.competitive.youtube_metrics に統合
+
+## Phase 2.2.1: エンゲージメント指標の計算（実装完了）
+- **Engagement Metrics** の追加実装：
+  - engagement_rate: (likes + comments * 2) / view_count
+  - likes_per_1000_views: likes / view_count * 1000
+  - comments_per_1000_views: comments / view_count * 1000
+- ゼロ除算を安全に回避し、すべての動画に対応
+- 全テスト 50/50 PASS
+
 ## 期待するGensparkの役割
 1. 市場・競合リサーチ  
    - YouTube運用代行／分析ツールがどんなレポート項目・指標を扱っているかを調査し、  
