@@ -46,11 +46,11 @@ class ViewsCompetitiveBuilder:
             engagement_rate
         )
 
-        primary_theme_keywords = self.keyword_extractor.extract_primary_theme_keywords(
-            video_title=video_title
+        primary_theme_keywords = self.keyword_extractor.get_primary_theme_keywords(
+            title=video_title, db_records=[], top_n=5
         )
-        keyword_mention_frequency = self.keyword_extractor.get_keyword_mention_frequency()
-        keyword_segment_count = self.keyword_extractor.get_keyword_segment_count()
+        keyword_mention_frequency = self.keyword_extractor.get_keyword_mention_frequency(video_title, [])
+        keyword_segment_count = {}
 
         performance_score = self._calculate_performance_score(
             engagement_rate,
