@@ -69,3 +69,39 @@ class InsightsConverter:
         except Exception as e:
             logger.error(f"Error saving insight spec: {e}")
             return False
+
+
+def calculate_engagement_metrics(view_count, like_count, comment_count):
+    """
+    基本メトリクスから派生指標を計算する
+    
+    Args:
+        view_count (int): 再生数
+        like_count (int): 高評価数
+        comment_count (int): コメント数
+    
+    Returns:
+        dict: engagement_metrics
+            - engagement_rate (float): (likes + comments) / view_count * 100
+                                       view_count が 0 の場合は 0
+            - likes_per_1000_views (float): likes / view_count * 1000
+                                             view_count が 0 の場合は 0
+            - comments_per_1000_views (float): comments / view_count * 1000
+                                                view_count が 0 の場合は 0
+    """
+    if view_count == 0:
+        return {
+            "engagement_rate": 0.0,
+            "likes_per_1000_views": 0.0,
+            "comments_per_1000_views": 0.0
+        }
+    
+    engagement_rate = ((like_count + comment_count) / view_count) * 100
+    likes_per_1000 = (like_count / view_count) * 1000
+    comments_per_1000 = (comment_count / view_count) * 1000
+    
+    return {
+        "engagement_rate": round(engagement_rate, 2),
+        "likes_per_1000_views": round(likes_per_1000, 2),
+        "comments_per_1000_views": round(comments_per_1000, 2)
+    }

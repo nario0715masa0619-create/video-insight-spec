@@ -159,3 +159,41 @@ class TestInsightsConverter:
         
         assert loaded is not None
         assert isinstance(loaded, dict)
+
+
+def test_calculate_engagement_metrics():
+    """engagement_metrics の計算が正確か確認"""
+    from converter.insights_converter import calculate_engagement_metrics
+    
+    # テストケース 1: 正常な値
+    metrics = calculate_engagement_metrics(
+        view_count=45230,
+        like_count=1245,
+        comment_count=287
+    )
+    
+    assert metrics["engagement_rate"] == 4.51, f"Expected 4.51, got {metrics['engagement_rate']}"
+    assert metrics["likes_per_1000_views"] == 27.5, f"Expected 27.5, got {metrics['likes_per_1000_views']}"
+    assert metrics["comments_per_1000_views"] == 6.34, f"Expected 6.34, got {metrics['comments_per_1000_views']}"
+    
+    # テストケース 2: ゼロ除算回避
+    metrics_zero = calculate_engagement_metrics(
+        view_count=0,
+        like_count=0,
+        comment_count=0
+    )
+    
+    assert metrics_zero["engagement_rate"] == 0.0
+    assert metrics_zero["likes_per_1000_views"] == 0.0
+    assert metrics_zero["comments_per_1000_views"] == 0.0
+    
+    # テストケース 3: 高エンゲージメント
+    metrics_high = calculate_engagement_metrics(
+        view_count=1000,
+        like_count=100,
+        comment_count=50
+    )
+    
+    assert metrics_high["engagement_rate"] == 15.0
+    assert metrics_high["likes_per_1000_views"] == 100.0
+    assert metrics_high["comments_per_1000_views"] == 50.0
