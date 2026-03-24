@@ -8,82 +8,125 @@
 2. **実装ガイドライン** (`PHASE*.md`) の提供
 3. **ドキュメント生成・更新** による設計の最新化
 
-> 💡 **実装コード自体は別リポジトリで管理されていますが、このリポジトリの仕様に基づいて開発が進められます。**
+> 💡 **実装コード自体は別リポジトリ（video-scraper など）で管理されていますが、このリポジトリの仕様に基づいて開発が進められます。**
 
-## AI エージェントに期待する役割
-# AGENTS.md （Genspark用メモ）
+---
 
 ## このリポジトリについて
-- リポジトリ名：`video-insight-spec`
-- 目的：  
-  - 動画スクレイピングで取得したテキストから「実行可能な知恵」を抽出し、  
-    1本1JSONで保存するための **仕様書（スキーマ定義）** をまとめる。
-- 実装コードや機密情報は置かない。  
-  - ここにあるのは **設計レベルの情報だけ**。
+
+- **リポジトリ名**：`video-insight-spec`
+- **目的**：  
+  動画スクレイピングで取得したテキストから「実行可能な知恵」を抽出し、  
+  1 本 1 JSON で保存するための **仕様書（スキーマ定義）** をまとめる。
+- **実装コード・機密情報**：置かない。  
+  ここにあるのは **設計レベルの情報だけ**。
+
+---
 
 ## 重要ファイル
-- `JSON_SPEC.md`  
-  - JSONの構造と各フィールドの意味を定義しているメイン仕様書。  
-  - 3レイヤー構成：
+
+### スキーマ・仕様
+- **`JSON_SPEC.md`**  
+  - JSON の構造と各フィールドの意味を定義しているメイン仕様書
+  - 3 レイヤー構成：
     - `video_meta`：動画の汎用メタ情報  
-    - `knowledge_core`：Brain_Marketing_Master.json 準拠の知識レイヤー  
-    - `views`：用途別ビュー（competitive / self_improvement / education など）
+    - `knowledge_core`：センターピン + Gemini 拡張知識  
+    - `views`：用途別ビュー（competitive / self_improvement など）
+
+### 実装ガイド
+- **`PHASE1_IMPLEMENTATION.md`** - Phase 1（基本 JSON 化）
+- **`PHASE2_2_YOUTUBE_API_INTEGRATION.md`** - Phase 2.2（YouTube メトリクス取得）
+- **`PHASE2_2_1_ENGAGEMENT_METRICS.md`** - Phase 2.2.1（エンゲージメント指標計算）
+- **`PHASE2_2_2_OCR_TEXT_CLEANING.md`** - Phase 2.2.2（OCR テキストクリーニング）
+- **`PHASE2_2_3_VIDEO_ID_ENRICHER.md`** - Phase 2.2.3（YouTube Video ID 補充）
+- **`PHASE3_PREPARATION_OCCURRENCE_IMPORTANCE.md`** - Phase 3 準備（出現回数スコア計算）
+- **`PHASE3_GEMINI_KNOWLEDGE_EXPANSION.md`** - Phase 3（Gemini による知識拡張）
+
+---
+
+## 処理フロー全体図
+
+1. **video-scraper** → Mk2_Core_XX.json + Mk2_Sidecar_XX.db
+2. **Phase 1** → insight_spec_XX.json（基本形）
+3. **Phase 2.2** → YouTube メトリクス追加
+4. **Phase 2.2.1** → エンゲージメント指標計算
+5. **Phase 2.2.2** → OCR テキストクリーニング
+6. **Phase 2.2.3** → Video ID 補充
+7. **Phase 3 準備** → 出現回数・重要度スコア
+8. **Phase 3** → Gemini で gemini_expansion 生成
+
+**最終出力**：insight_spec_XX.json（完全版）
+完了状況
+✅ Phase 1, 2.0～2.1, 2.2, 2.2.1, 2.2.2, 2.2.3, 3 準備
+🔄 Phase 3（実装中）
+
+---
+
+## 重要ファイル
+
+### スキーマ・仕様
+- **`JSON_SPEC.md`**  
+  - JSON の構造と各フィールドの意味を定義しているメイン仕様書
+  - 3 レイヤー構成：
+    - `video_meta`：動画の汎用メタ情報  
+    - `knowledge_core`：センターピン + Gemini 拡張知識  
+    - `views`：用途別ビュー（competitive / self_improvement など）
+
+### 実装ガイド
+- **`PHASE1_IMPLEMENTATION.md`** - Phase 1（基本 JSON 化）
+- **`PHASE2_2_YOUTUBE_API_INTEGRATION.md`** - Phase 2.2（YouTube メトリクス取得）
+- **`PHASE2_2_1_ENGAGEMENT_METRICS.md`** - Phase 2.2.1（エンゲージメント指標計算）
+- **`PHASE2_2_2_OCR_TEXT_CLEANING.md`** - Phase 2.2.2（OCR テキストクリーニング）
+- **`PHASE2_2_3_VIDEO_ID_ENRICHER.md`** - Phase 2.2.3（YouTube Video ID 補充）
+- **`PHASE3_PREPARATION_OCCURRENCE_IMPORTANCE.md`** - Phase 3 準備（出現回数スコア計算）
+- **`PHASE3_GEMINI_KNOWLEDGE_EXPANSION.md`** - Phase 3（Gemini による知識拡張）
+
+---
+
+## Gemini API の使用仕様
+
+### モデル情報
+- **モデル名**: `gemini-3-pro-preview`
+- **出力形式**: JSON（`response_mime_type: "application/json"`）
+- **使用フェーズ**: 
+  - **video-scraper**: Mk2_Core_XX.json 生成（FACT/LOGIC/SOP/CASE タグ付きセンターピン）
+  - **Phase 3**: gemini_expansion 生成（related_concepts / practical_applications / cautions）
+
+### 環境変数
+```bash
+GEMINI_API_KEY=<実際の API キー>
+GEMINI_MODEL_ID=gemini-3-pro-preview
+リトライロジック
+最大再試行回数: 3 回
+初期待機時間: 1～2 秒
+バックオフ戦略: 指数バックオフ（2^n）
+API クォータ管理
+初期実装：TOP 5 センターピンを対象（小さく試す戦略）
+将来：バッチ処理や response_schema で複数レコードを 1 リクエストで処理
+期待する Genspark の役割
+市場・競合リサーチ
+
+YouTube 運用代行・分析ツールの現況を調査
+views.competitive に反映すべき追加項目を提案
+仕様ブラッシュアップ
+
+JSON_SPEC.md の改善案（命名・構造・拡張性）を提案
+将来機能（Analytics 連携、教材化など）を検討
+ドキュメント生成
+
+外部向け説明資料（クライアント・金融機関向け）を生成
+JSON スキーマのわかりやすい解説資料を作成
+注意事項
+機密情報の管理：
+このリポジトリに API キー・本番コードは置かない
+
+実装リポジトリ：
+実装コードは video-scraper など別リポジトリで管理
+
+仕様変更時：
+JSON_SPEC.md と各 PHASE*.md を更新 コミットメッセージで変更意図を明記
+
+環境構築：
+.env.example を参考に、ローカルの .env に API キー設定 .env は .gitignore で除外済み
 
 
-
-## Phase 2.2: YouTube API 統合（実装完了）
-- **YouTube Data API v3** から view_count, like_count, comment_count を自動取得
-- 21講座全体の動画メタデータを自動収集
-- insight_spec_XX.json の iews.competitive.youtube_metrics に統合
-
-
-
-## Phase 2.2.2: OCR Text Cleaning（実装予定）
-- **目的**：Sidecar DB の visual_text から OCR ノイズを除去
-- **実装内容**：
-  - UI ノイズ除去（ウィンドウ枠、メニュー、日付など）
-  - 日本語 OCR 誤認識補正（20～30 パターンのルール）
-  - テキスト正規化（全角・半角統一、スペース整理）
-- **品質管理**：クリーニング前後のログ記録、visual_score による信頼度管理
-
-
-## Phase 2.2.1: エンゲージメント指標の計算（実装完了）
-- **Engagement Metrics** の追加実装：
-  - engagement_rate: (likes + comments * 2) / view_count
-  - likes_per_1000_views: likes / view_count * 1000
-  - comments_per_1000_views: comments / view_count * 1000
-- ゼロ除算を安全に回避し、すべての動画に対応
-- 全テスト 50/50 PASS
-
-
-
-## ロードマップ方針の変更
-**Phase 2.3 (Brain 販売数 API 統合) をスコープ外へ**
-- 理由：本来のプロダクト目的（YouTube運用に悩む企業向けに「何を真似すべきか」を可視化）から外れている
-- Brain 販売データは想定ユーザーにとって直接的な価値にならない
-- 今後は、あらゆるジャンルのチャンネルに汎用的に効く「コア機能」に集中
-
-## 次フェーズ：Phase 3 へ集中
-**Phase 3: Gemini API による knowledge_points の自動拡張**
-- 目的：center_pins から、より詳細な「実装可能な知識」を自動抽出
-- 対象：すべての業界・ジャンルに応用可能な汎用機能
-- 難易度：★★★★☆ / 所要時間：3～4h
-
-## 期待するGensparkの役割
-1. 市場・競合リサーチ  
-   - YouTube運用代行／分析ツールがどんなレポート項目・指標を扱っているかを調査し、  
-     `views.competitive` に反映すべき追加項目や説明文を提案する。
-2. 仕様ブラッシュアップ  
-   - `JSON_SPEC.md` を読んだ上で、  
-     - 命名の改善案  
-     - フィールドの分割・統合案  
-     - 将来拡張（自社Analytics連携・教材化など）を見据えた構造案  
-     を提案する。
-3. ドキュメント生成  
-   - 外部向け説明資料（例：クライアント向け概要資料、金融機関向け資料）用に、  
-     JSON仕様のわかりやすい解説ドキュメントを生成する。
-
-## 注意事項
-- このリポジトリは **仕様書専用**。  
-  - 実際のAPIキー・環境変数・本番コードは別リポジトリで管理する。  
-- 仕様変更を行う場合は、`JSON_SPEC.md` を更新し、変更点をコメントかコミットメッセージで明記する。
