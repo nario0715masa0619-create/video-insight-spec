@@ -45,31 +45,45 @@
 ---
 
 ## 処理フロー全体図
-動画入力（MP4） ↓ [video-scraper リポジトリ] ├─ Step 1: Whisper で音声を文字起こし ├─ Step 2: FFmpeg でフレーム抽出 + EasyOCR で画面テキスト抽出 ├─ Step 3: Gemini 3 Pro でセンターピン生成（Mk2_Core_XX.json 出力） └─ Step 4: Sidecar DB 作成（Mk2_Sidecar_XX.db 出力）
 
-↓
-[video-insight-spec リポジトリ / Phase 1] ├─ Mk2_Core_XX.json + Mk2_Sidecar_XX.db を読込 ├─ JSON スキーマに変換 └─ insight_spec_XX.json 出力（基本形）
+1. **video-scraper** → Mk2_Core_XX.json + Mk2_Sidecar_XX.db
+   - Whisper で音声を文字起こし
+   - FFmpeg でフレーム抽出 + EasyOCR で画面テキスト抽出
+   - Gemini 3 Pro でセンターピン生成
+   - Sidecar DB 作成
 
-↓
-[Phase 2.2: YouTube API 統合] ├─ YouTube Data API v3 で動画メタデータ取得 ├─ views、likes、comments を取得 └─ insight_spec_XX.json に views.competitive を追加
+2. **Phase 1** → insight_spec_XX.json（基本形）
+   - JSON スキーマに変換
 
-↓
-[Phase 2.2.1: エンゲージメント指標] ├─ engagement_rate = (likes + comments × 2) / views ├─ likes_per_1000_views、comments_per_1000_views を計算 └─ insight_spec_XX.json に統合
+3. **Phase 2.2** → YouTube メトリクス追加
+   - YouTube Data API v3 で動画メタデータ取得
+   - views, likes, comments を追加
 
-↓
-[Phase 2.2.2: OCR テキストクリーニング] ├─ Sidecar DB の visual_text から UI ノイズを除去 ├─ 日本語 OCR 誤認識を補正 ├─ テキスト正規化（スペース・改行整理） └─ evidence_index テーブルを更新
+4. **Phase 2.2.1** → エンゲージメント指標計算
+   - engagement_rate = (likes + comments × 2) / views
+   - likes_per_1000_views、comments_per_1000_views を計算
 
-↓
-[Phase 2.2.3: YouTube Video ID Enricher] ├─ center_pin.title から YouTube API で video_id を検索 ├─ 取得した video_id を video_meta に追加 └─ insight_spec_XX.json の video_id を確定
+5. **Phase 2.2.2** → OCR テキストクリーニング
+   - UI ノイズ除去（26.38% 削減）
+   - 日本語 OCR 誤認識補正
+   - テキスト正規化
 
-↓
-[Phase 3 準備: 出現回数・重要度スコア計算] ├─ evidence_index の visual_text をグルーピング ├─ 各テキストの出現回数をカウント（occurrence_count） ├─ importance_score = occurrence_count を計算 ├─ evidence_index テーブルに追加 └─ Gemini への入力データとして準備
+6. **Phase 2.2.3** → Video ID 補充
+   - YouTube API で video_id を検索
+   - video_meta に追加
 
-↓
-[Phase 3: Gemini による知識点自動拡張] ├─ importance_score 上位 5 件のセンターピンを選定 ├─ Gemini 3 Pro で以下を生成： │ ├─ related_concepts（関連概念 3 件） │ ├─ practical_applications（実務応用例 3 件） │ └─ cautions（注意点 3 件） ├─ JSON を gemini_expansion フィールドに統合 └─ 最終版 insight_spec_XX.json 出力
+7. **Phase 3 準備** → 出現回数・重要度スコア
+   - occurrence_count をカウント
+   - importance_score を計算
 
-最終成果物：insight_spec_XX.json ├─ video_meta（動画メタデータ + video_id） ├─ knowledge_core（センターピン + gemini_expansion） ├─ views.competitive（YouTube メトリクス + エンゲージメント指標） └─ _metadata（処理履歴・タイムスタンプ）
+8. **Phase 3** → Gemini で gemini_expansion 生成
+   - business_theme（1～3 個、日本語）
+   - funnel_stage（1 個、日本語）
+   - difficulty（beginner/intermediate/advanced）
 
+**最終出力**：insight_spec_XX.json（完全版）
+
+---
 
 ## 完了フェーズ一覧
 
@@ -82,7 +96,7 @@
 | 2.2.2 | OCR テキストクリーニング | ✅ 完了 | UI ノイズ・誤認識除去（26.38% 削減） |
 | 2.2.3 | YouTube Video ID Enricher | ✅ 完了 | video_id 自動検索・補充 |
 | 3 準備 | 出現回数スコア | ✅ 完了 | occurrence_count / importance_score |
-| 3 | Gemini 知識拡張 | 🔄 実装中 | gemini_expansion フィールド自動生成 |
+| 3 実装 | Gemini ラベル付与 | ✅ 完了 | business_theme / funnel_stage / difficulty |
 
 ---
 
@@ -94,40 +108,9 @@
 - **使用フェーズ**: 
   - **video-scraper**: Mk2_Core_XX.json 生成（FACT/LOGIC/SOP/CASE タグ付きセンターピン）
   - **Phase 3**: gemini_expansion 生成（related_concepts / practical_applications / cautions）
+  - **Phase 3 実装**: labels 生成（business_theme / funnel_stage / difficulty）
 
 ### 環境変数
 ```bash
 GEMINI_API_KEY=<実際の API キー>
 GEMINI_MODEL_ID=gemini-3-pro-preview
-リトライロジック
-最大再試行回数: 3 回
-初期待機時間: 1～2 秒
-バックオフ戦略: 指数バックオフ（2^n）
-API クォータ管理
-初期実装：TOP 5 センターピンを対象（小さく試す戦略）
-将来：バッチ処理や response_schema で複数レコードを 1 リクエストで処理
-期待する Genspark の役割
-市場・競合リサーチ
-
-YouTube 運用代行・分析ツールの現況を調査
-views.competitive に反映すべき追加項目を提案
-仕様ブラッシュアップ
-
-JSON_SPEC.md の改善案（命名・構造・拡張性）を提案
-将来機能（Analytics 連携、教材化など）を検討
-ドキュメント生成
-
-外部向け説明資料（クライアント・金融機関向け）を生成
-JSON スキーマのわかりやすい解説資料を作成
-注意事項
-機密情報の管理：
-このリポジトリに API キー・本番コードは置かない
-
-実装リポジトリ：
-実装コードは video-scraper など別リポジトリで管理
-
-仕様変更時：
-JSON_SPEC.md と各 PHASE*.md を更新 コミットメッセージで変更意図を明記
-
-環境構築：
-.env.example を参考に、ローカルの .env に API キー設定 .env は .gitignore で除外済み
