@@ -23,6 +23,9 @@
 | [PHASE2_2_YOUTUBE_API_INTEGRATION.md](./PHASE2_2_YOUTUBE_API_INTEGRATION.md) | 実装者 | Phase 2.2（YouTube メトリクス取得）の仕様 |
 | [PHASE2_2_1_ENGAGEMENT_METRICS.md](./PHASE2_2_1_ENGAGEMENT_METRICS.md) | 実装者 | Phase 2.2.1（エンゲージメント指標計算）の仕様 |
 | [PHASE2_2_2_OCR_TEXT_CLEANING.md](./PHASE2_2_2_OCR_TEXT_CLEANING.md) | 実装者 | Phase 2.2.2（OCR テキストクリーニング）の仕様 |
+| [PHASE2_2_3_YOUTUBE_VIDEO_ID_ENRICHER.md](./PHASE2_2_3_YOUTUBE_VIDEO_ID_ENRICHER.md) | 実装者 | Phase 2.2.3（YouTube Video ID Enricher）の仕様 |
+| [PHASE2_2_1_ENGAGEMENT_METRICS.md](./PHASE2_2_1_ENGAGEMENT_METRICS.md) | 実装者 | Phase 2.2.1（エンゲージメント指標計算）の仕様 |
+| [PHASE2_2_2_OCR_TEXT_CLEANING.md](./PHASE2_2_2_OCR_TEXT_CLEANING.md) | 実装者 | Phase 2.2.2（OCR テキストクリーニング）の仕様 |
 
 ## セットアップ
 
