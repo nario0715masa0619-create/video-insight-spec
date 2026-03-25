@@ -7,7 +7,7 @@ GeminiLLMClient - LLM クライアント層
 - API 呼び出しのリトライロジック
 - JSON レスポンス処理
 
-このクラスが google.generativeai に唯一直接依存します。
+このクラスが google-genai に唯一直接依存します。
 外部には「dict を返すメソッド」のみを公開します。
 """
 
@@ -18,10 +18,10 @@ import logging
 from typing import Optional, Dict, Any
 
 try:
-    import google.generativeai as genai
-    from google.api_core import exceptions as google_exceptions
+    from google.genai import Client
+    from google.genai.types import GenerateContentConfig
 except ImportError:
-    raise ImportError("google-generativeai がインストールされていません。pip install google-generativeai を実行してください。")
+    raise ImportError("google-genai がインストールされていません。pip install google-genai を実行してください。")
 
 
 class GeminiAPIError(Exception):
@@ -39,111 +39,92 @@ class GeminiLLMClient:
         Args:
             api_key (str, optional): Gemini API キー。指定されない場合は環境変数から取得
             model_id (str, optional): モデル ID。デフォルト: gemini-2.0-flash
-            max_retries (int): 最大リトライ回数（デフォルト: 3）
+            max_retries (int, optional): リトライ回数。デフォルト: 3
         """
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
         self.model_id = model_id or os.getenv("GEMINI_MODEL_ID", "gemini-2.0-flash")
         self.max_retries = max_retries
+        self.logger = logging.getLogger(__name__)
 
         if not self.api_key:
-            raise ValueError(
-                "❌ GEMINI_API_KEY が設定されていません。"
-                ".env ファイルまたは環境変数で設定してください。"
-            )
+            raise ValueError("❌ GEMINI_API_KEY が設定されていません。環境変数または引数で指定してください。")
 
-        genai.configure(api_key=self.api_key)
-        self.gen_model = genai.GenerativeModel(self.model_id)
+        # google-genai の初期化（Client を直接作成）
+        self.client = Client(api_key=self.api_key)
+        
+        self.logger.info(f"✅ Gemini モデル '{self.model_id}' を初期化しました（max_retries={self.max_retries}）")
 
-        logging.info(f"✅ Gemini モデル '{self.model_id}' を初期化しました（max_retries={self.max_retries}）")
-
-    def _call_with_retry(
-        self,
-        prompt: str,
-        response_mime_type: str = "application/json",
-    ) -> str:
+    def _call_with_retry(self, prompt: str, response_mime_type: str = "application/json") -> str:
         """
-        リトライロジック付き Gemini API 呼び出し（内部使用）
+        リトライロジック付きで API を呼び出す（プライベートメソッド）
 
         Args:
             prompt (str): プロンプト
-            response_mime_type (str): レスポンス MIME タイプ
+            response_mime_type (str, optional): レスポンス MIME タイプ。デフォルト: application/json
 
         Returns:
-            str: Gemini からのレスポンステキスト
+            str: API レスポンステキスト
 
         Raises:
             GeminiAPIError: 最大リトライ回数超過時
         """
         for attempt in range(self.max_retries):
             try:
-                logging.debug(f"   [API 呼び出し試行 {attempt + 1}/{self.max_retries}]")
-                response = self.gen_model.generate_content(
-                    prompt,
-                    generation_config=genai.types.GenerationConfig(
-                        response_mime_type=response_mime_type
+                # google-genai での API 呼び出し
+                response = self.client.models.generate_content(
+                    model=self.model_id,
+                    contents=prompt,
+                    config=GenerateContentConfig(
+                        response_mime_type=response_mime_type,
+                        temperature=0.7,
+                        max_output_tokens=2048,
                     ),
                 )
-                logging.debug(f"✅ API 呼び出し成功（試行 {attempt + 1}/{self.max_retries}）")
+                
+                self.logger.info(f"✅ Gemini API 呼び出し成功（試行 {attempt + 1}/{self.max_retries}）")
                 return response.text
 
-            except google_exceptions.GoogleAPIError as e:
-                # Google API エラー（一時的エラーの可能性）
-                wait_time = 2 ** attempt
-                if attempt < self.max_retries - 1:
-                    logging.warning(
-                        f"⚠️ Google API エラー（試行 {attempt + 1}/{self.max_retries}）: {e}\n"
-                        f"   {wait_time} 秒待機後に再試行します..."
-                    )
-                    time.sleep(wait_time)
-                else:
-                    error_msg = f"❌ Gemini API 呼び出し失敗（最大リトライ回数 {self.max_retries} 超過）: {e}"
-                    logging.error(error_msg)
-                    raise GeminiAPIError(error_msg) from e
-
-            except (TimeoutError, ConnectionError) as e:
-                # タイムアウト・接続エラー（一時的エラーの可能性）
-                wait_time = 2 ** attempt
-                if attempt < self.max_retries - 1:
-                    logging.warning(
-                        f"⚠️ ネットワークエラー（試行 {attempt + 1}/{self.max_retries}）: {e}\n"
-                        f"   {wait_time} 秒待機後に再試行します..."
-                    )
-                    time.sleep(wait_time)
-                else:
-                    error_msg = f"❌ ネットワークエラー（最大リトライ回数 {self.max_retries} 超過）: {e}"
-                    logging.error(error_msg)
-                    raise GeminiAPIError(error_msg) from e
-
             except Exception as e:
-                # その他の予期しないエラー（リトライしない）
-                error_msg = f"❌ 予期しないエラー: {type(e).__name__}: {e}"
-                logging.error(error_msg)
-                raise GeminiAPIError(error_msg) from e
+                wait_time = 2 ** attempt
+                error_type = type(e).__name__
+
+                if attempt < self.max_retries - 1:
+                    self.logger.warning(
+                        f"⚠️ Gemini API エラー（試行 {attempt + 1}/{self.max_retries}）: {error_type}: {str(e)[:100]}. "
+                        f"{wait_time} 秒後に再試行します..."
+                    )
+                    time.sleep(wait_time)
+                else:
+                    self.logger.error(
+                        f"❌ Gemini API 呼び出し失敗（{self.max_retries} 回試行後）: {error_type}: {str(e)}"
+                    )
+                    raise GeminiAPIError(f"API 呼び出し失敗: {error_type}: {str(e)}") from e
 
     def generate_json(self, prompt: str) -> Dict[str, Any]:
         """
-        JSON レスポンスを期待する Gemini API 呼び出し
-
-        このクラスの公開メソッドです。
-        内部では _call_with_retry でリトライロジックを実行し、
-        JSON パースして dict を返します。
+        JSON 形式のレスポンスを生成（公開メソッド）
 
         Args:
             prompt (str): プロンプト
 
         Returns:
-            Dict[str, Any]: パースされた JSON オブジェクト
+            Dict[str, Any]: パースされた JSON レスポンス
 
         Raises:
-            GeminiAPIError: API 呼び出し失敗時
-            json.JSONDecodeError: JSON パース失敗時
+            GeminiAPIError: API 呼び出しエラー
+            json.JSONDecodeError: JSON パースエラー
         """
-        response_text = self._call_with_retry(prompt)
         try:
-            parsed = json.loads(response_text)
-            logging.debug(f"✅ JSON パース成功")
-            return parsed
-        except json.JSONDecodeError as e:
-            error_msg = f"❌ JSON パース失敗: {e}\nレスポンス: {response_text[:200]}..."
-            logging.error(error_msg)
-            raise GeminiAPIError(error_msg) from e
+            response_text = self._call_with_retry(prompt, response_mime_type="application/json")
+            
+            try:
+                return json.loads(response_text)
+            except json.JSONDecodeError as e:
+                self.logger.error(f"❌ JSON パースエラー: {e}. レスポンス: {response_text[:200]}")
+                raise
+
+        except GeminiAPIError:
+            raise
+        except Exception as e:
+            self.logger.error(f"❌ 予期しないエラー: {type(e).__name__}: {e}")
+            raise GeminiAPIError(f"予期しないエラー: {type(e).__name__}: {e}") from e
