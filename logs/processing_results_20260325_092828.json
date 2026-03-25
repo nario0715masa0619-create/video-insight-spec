@@ -1,0 +1,14 @@
+{
+  "started_at": "2026-03-25T09:25:11.865788",
+  "total": 1,
+  "success": 1,
+  "failed": 0,
+  "details": [
+    {
+      "file": "03_#03【独学で習得】初心者でも分かるwebマーケティング講座／LPO.mp4",
+      "status": "success",
+      "duration_s": 196.29
+    }
+  ],
+  "completed_at": "2026-03-25T09:28:28.163438"
+}

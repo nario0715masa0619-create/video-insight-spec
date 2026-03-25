@@ -1,0 +1,192 @@
+{
+  "started_at": "2026-03-24T21:22:39.8802593+09:00",
+  "lectures": [
+    {
+      "duration_seconds": 0,
+      "lecture_id": "02",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_02.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_02_labeled.json",
+      "start_time": "2026-03-24T21:22:39.8833297+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "03",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_03.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_03_labeled.json",
+      "start_time": "2026-03-24T21:22:39.8879473+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "04",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_04.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_04_labeled.json",
+      "start_time": "2026-03-24T21:22:39.8885065+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "05",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_05.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_05_labeled.json",
+      "start_time": "2026-03-24T21:22:39.8890106+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "06",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_06.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_06_labeled.json",
+      "start_time": "2026-03-24T21:22:39.8894823+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "07",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_07.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_07_labeled.json",
+      "start_time": "2026-03-24T21:22:39.8899519+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "08",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_08.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_08_labeled.json",
+      "start_time": "2026-03-24T21:22:39.8905022+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "09",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_09.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_09_labeled.json",
+      "start_time": "2026-03-24T21:22:39.8909721+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "10",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_10.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_10_labeled.json",
+      "start_time": "2026-03-24T21:22:39.8956783+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "11",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_11.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_11_labeled.json",
+      "start_time": "2026-03-24T21:22:39.8961999+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "12",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_12.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_12_labeled.json",
+      "start_time": "2026-03-24T21:22:39.896674+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "13",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_13.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_13_labeled.json",
+      "start_time": "2026-03-24T21:22:39.897151+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "14",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_14.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_14_labeled.json",
+      "start_time": "2026-03-24T21:22:39.8976092+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "15",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_15.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_15_labeled.json",
+      "start_time": "2026-03-24T21:22:39.8980625+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "16",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_16.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_16_labeled.json",
+      "start_time": "2026-03-24T21:22:39.8985857+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "17",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_17.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_17_labeled.json",
+      "start_time": "2026-03-24T21:22:39.8990557+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "18",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_18.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_18_labeled.json",
+      "start_time": "2026-03-24T21:22:39.8995439+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "19",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_19.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_19_labeled.json",
+      "start_time": "2026-03-24T21:22:39.900035+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "20",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_20.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_20_labeled.json",
+      "start_time": "2026-03-24T21:22:39.9005147+09:00"
+    },
+    {
+      "duration_seconds": 0,
+      "lecture_id": "21",
+      "status": "skipped",
+      "error": null,
+      "input_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_21.json",
+      "output_file": "D:\\Knowledge_Base\\Brain_Marketing\\archive\\insight_spec_21_labeled.json",
+      "start_time": "2026-03-24T21:22:39.9015378+09:00"
+    }
+  ],
+  "summary": {
+    "total": 0,
+    "success": 0,
+    "failed": 0,
+    "skipped": 20
+  },
+  "completed_at": "2026-03-24T21:22:39.9054480+09:00"
+}

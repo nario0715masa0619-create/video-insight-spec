@@ -1,0 +1,14 @@
+{
+  "started_at": "2026-03-25T07:55:52.062116",
+  "total": 1,
+  "success": 1,
+  "failed": 0,
+  "details": [
+    {
+      "file": "05_#05【独学で習得】初心者でも分かるwebマーケティング講座／Googleアナリティクス.mp4",
+      "status": "success",
+      "duration_s": 94.07
+    }
+  ],
+  "completed_at": "2026-03-25T07:57:26.130727"
+}

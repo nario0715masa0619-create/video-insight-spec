@@ -1,0 +1,14 @@
+{
+  "started_at": "2026-03-25T08:25:15.344149",
+  "total": 1,
+  "success": 1,
+  "failed": 0,
+  "details": [
+    {
+      "file": "02_#02【独学で習得】初心者でも分かるwebマーケティング講座／3C分析.mp4",
+      "status": "success",
+      "duration_s": 165.8
+    }
+  ],
+  "completed_at": "2026-03-25T08:28:01.143758"
+}

@@ -22,18 +22,38 @@ class JSONExtractor:
             with open(self.json_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
+            center_pins = []
+
+            # パターン 1: data が直接 list（旧形式）
             if isinstance(data, list):
                 center_pins = data
-            elif isinstance(data, dict) and "center_pins" in data:
-                center_pins = data["center_pins"]
-            else:
-                center_pins = data if isinstance(data, list) else []
+                logger.info(f"✅ Format 1 (list): {len(center_pins)} center_pins")
 
-            logger.info(f"Loaded {len(center_pins)} center_pins from {self.json_path}")
+            # パターン 2: data が dict で直接 "center_pins" キーを持つ
+            elif isinstance(data, dict) and "center_pins" in data:
+                center_pins = data.get("center_pins", [])
+                logger.info(f"✅ Format 2 (dict.center_pins): {len(center_pins)} center_pins")
+
+            # パターン 3: data が dict で "knowledge_core" -> "center_pins" の階層構造
+            elif isinstance(data, dict) and "knowledge_core" in data:
+                knowledge_core = data.get("knowledge_core", {})
+                if isinstance(knowledge_core, dict):
+                    center_pins = knowledge_core.get("center_pins", [])
+                    logger.info(f"✅ Format 3 (knowledge_core.center_pins): {len(center_pins)} center_pins")
+                else:
+                    logger.warning(f"⚠️ knowledge_core is not a dict")
+                    center_pins = []
+
+            # パターン 4: その他
+            else:
+                center_pins = []
+                logger.warning(f"⚠️ Unknown format. No center_pins found.")
+
+            logger.info(f"📊 Loaded {len(center_pins)} center_pins from {self.json_path}")
             return center_pins
 
         except Exception as e:
-            logger.error(f"Error loading JSON: {e}")
+            logger.error(f"❌ Error loading JSON: {e}", exc_info=True)
             return []
 
     def get_knowledge_elements_count(self) -> int:
@@ -46,7 +66,9 @@ class JSONExtractor:
             "FACT": 0,
             "LOGIC": 0,
             "SOP": 0,
-            "CASE": 0
+            "CASE": 0,
+            "concept": 0,
+            "strategy": 0
         }
 
         for pin in self.center_pins:
@@ -72,7 +94,7 @@ class JSONExtractor:
         """実行可能なノウハウ（type: SOP or CASE）を抽出"""
         return [
             pin for pin in self.center_pins
-            if pin.get("type") in ["SOP", "CASE"]
+            if pin.get("type") in ["SOP", "CASE", "strategy"]
         ]
 
     def get_actionability_score(self) -> float:

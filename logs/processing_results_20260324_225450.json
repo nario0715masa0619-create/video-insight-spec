@@ -1,0 +1,18 @@
+{
+  "execution_timestamp": "2026-03-24T22:54:50.607941",
+  "total_videos": 1,
+  "successful": 0,
+  "failed": 1,
+  "total_elapsed_time_sec": 0.04056549072265625,
+  "average_time_per_video_sec": 0.04056549072265625,
+  "details": [
+    {
+      "filename": "04_#04【独学で習得】初心者でも分かるwebマーケティング講座／売れるキャッチコピー.mp4",
+      "lecture_id": "04",
+      "status": "failed",
+      "timestamp": "2026-03-24T22:54:50.607638",
+      "elapsed_time_sec": 0.038697004318237305,
+      "error": "Failed to load audio: ffmpeg version 8.0.1-full_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers\r\n  built with gcc 15.2.0 (Rev8, Built by MSYS2 project)\r\n  configuration: --enable-gpl "
+    }
+  ]
+}

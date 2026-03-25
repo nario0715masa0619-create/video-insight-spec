@@ -1,0 +1,43 @@
+2026-03-24 22:58:58,721 [INFO] __main__ - Log file: ./logs\antigravity_20260324_225858.log
+2026-03-24 22:58:58,721 [INFO] __main__ - Gemini API initialized with model: gemini-3-pro-preview
+2026-03-24 22:58:58,721 [INFO] __main__ - ================================================================================
+2026-03-24 22:58:58,721 [INFO] __main__ - Antigravity Batch Processing Started
+2026-03-24 22:58:58,721 [INFO] __main__ - ================================================================================
+2026-03-24 22:58:58,721 [INFO] __main__ - Initializing Engines (CPU Mode) for Maximum Stability...
+2026-03-24 22:58:59,979 [WARNING] easyocr.easyocr - Using CPU. Note: This module is much faster with a GPU.
+2026-03-24 22:59:01,254 [INFO] __main__ - Whisper model loaded: small on cpu
+2026-03-24 22:59:01,255 [INFO] __main__ - EasyOCR initialized with languages: ['ja', 'en']
+2026-03-24 22:59:01,256 [INFO] __main__ - Found 1 videos to process
+2026-03-24 22:59:01,258 [INFO] __main__ - 
+[1/1] Processing: 01_#01【独学で習得】初心者でも分かるwebマーケティング講座.mp4
+2026-03-24 22:59:01,258 [INFO] __main__ - Processing Lecture 01: 01_#01【独学で習得】初心者でも分かるwebマーケティング講座.mp4
+2026-03-24 22:59:01,259 [INFO] __main__ - Step 1: Transcribing audio from 01_#01【独学で習得】初心者でも分かるwebマーケティング講座.mp4...
+2026-03-24 22:59:01,293 [ERROR] __main__ - Step 1 Failed: Whisper transcription error - Failed to load audio: ffmpeg version 8.0.1-full_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 15.2.0 (Rev8, Built by MSYS2 project)
+  configuration: --enable-gpl --enable-version3 --enable-static --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-lcms2 --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-libsnappy --enable-zlib --enable-librist --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-libbluray --enable-libcaca --enable-libdvdnav --enable-libdvdread --enable-sdl2 --enable-libaribb24 --enable-libaribcaption --enable-libdav1d --enable-libdavs2 --enable-libopenjpeg --enable-libquirc --enable-libuavs3d --enable-libxevd --enable-libzvbi --enable-liboapv --enable-libqrencode --enable-librav1e --enable-libsvtav1 --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxeve --enable-libxvid --enable-libaom --enable-libjxl --enable-libvpx --enable-mediafoundation --enable-libass --enable-frei0r --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-liblensfun --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-dxva2 --enable-d3d11va --enable-d3d12va --enable-ffnvcodec --enable-libvpl --enable-nvdec --enable-nvenc --enable-vaapi --enable-libshaderc --enable-vulkan --enable-libplacebo --enable-opencl --enable-libcdio --enable-openal --enable-libgme --enable-libmodplug --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libshine --enable-libtheora --enable-libtwolame --enable-libvo-amrwbenc --enable-libcodec2 --enable-libilbc --enable-libgsm --enable-liblc3 --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-ladspa --enable-libbs2b --enable-libflite --enable-libmysofa --enable-librubberband --enable-libsoxr --enable-chromaprint --enable-whisper
+  libavutil      60.  8.100 / 60.  8.100
+  libavcodec     62. 11.100 / 62. 11.100
+  libavformat    62.  3.100 / 62.  3.100
+  libavdevice    62.  1.100 / 62.  1.100
+  libavfilter    11.  4.100 / 11.  4.100
+  libswscale      9.  1.100 /  9.  1.100
+  libswresample   6.  1.100 /  6.  1.100
+[in#0 @ 000001ea16fe4800] Error opening input: No such file or directory
+Error opening input file D:\Knowledge_Base\Brain_Marketing\videos\downloaded_videos\01_#01【独学で習得】初心者でも分かるwebマーケティング講座.mp4.
+Error opening input files: No such file or directory
+
+2026-03-24 22:59:01,293 [ERROR] __main__ - ✗ FAILED: 01_#01【独学で習得】初心者でも分かるwebマーケティング講座.mp4 (0.0s) - Failed to load audio: ffmpeg version 8.0.1-full_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpe
+2026-03-24 22:59:01,295 [INFO] __main__ - 
+================================================================================
+2026-03-24 22:59:01,296 [INFO] __main__ - Antigravity Batch Processing Completed
+2026-03-24 22:59:01,296 [INFO] __main__ - ================================================================================
+2026-03-24 22:59:01,296 [INFO] __main__ - Total: 1 | Success: 0 | Failed: 1
+2026-03-24 22:59:01,296 [INFO] __main__ - Total elapsed time: 0.0 minutes (0s)
+2026-03-24 22:59:01,296 [INFO] __main__ - Average per video: 0.0s
+2026-03-24 22:59:01,296 [INFO] __main__ - Results saved to: ./logs\processing_results_20260324_225901.json
+2026-03-24 22:59:01,297 [WARNING] __main__ - 
+⚠️  1 video(s) failed:
+2026-03-24 22:59:01,297 [WARNING] __main__ -   - 01_#01【独学で習得】初心者でも分かるwebマーケティング講座.mp4
+2026-03-24 22:59:01,298 [WARNING] __main__ - 
+Retry target list saved to: ./logs\retry_targets_20260324_225901.txt
+2026-03-24 22:59:01,298 [INFO] __main__ - ================================================================================

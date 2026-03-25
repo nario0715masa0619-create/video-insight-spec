@@ -8,7 +8,7 @@ Phase 3: Label insight_spec_XX.json with Gemini Knowledge
 import os, sys, argparse, logging
 from pathlib import Path
 from dotenv import load_dotenv
-from converter.gemini_knowledge_labeler import GeminiKnowledgeLabeler
+from converter.gemini_knowledge_expander import GeminiKnowledgeLabeler
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(name)s - %(message)s')
 logger = logging.getLogger(__name__)

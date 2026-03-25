@@ -1,0 +1,22 @@
+2026-03-24 23:09:02,762 [INFO] __main__ - ✅ Gemini API 初期化完了: gemini-3-pro-preview
+2026-03-24 23:09:02,762 [INFO] __main__ - 入力ディレクトリ: D:\AI_Data\video-insight-spec\downloaded_videos
+2026-03-24 23:09:02,762 [INFO] __main__ - 出力ディレクトリ: D:\AI_Data\video-insight-spec\archive
+2026-03-24 23:09:02,762 [INFO] __main__ - Whisper モデル読み込み中... (small, device=cpu)
+2026-03-24 23:09:04,018 [INFO] __main__ - ✅ Whisper モデル読み込み完了
+2026-03-24 23:09:04,018 [INFO] __main__ - EasyOCR 初期化中... (GPU=False, languages=['ja', 'en'])
+2026-03-24 23:09:04,018 [WARNING] easyocr.easyocr - Using CPU. Note: This module is much faster with a GPU.
+2026-03-24 23:09:05,133 [INFO] __main__ - ✅ EasyOCR 初期化完了
+2026-03-24 23:09:05,133 [INFO] __main__ - Frame extraction rate: 3 frames/minute
+2026-03-24 23:09:05,133 [INFO] __main__ - ============================================================
+2026-03-24 23:09:05,133 [INFO] __main__ - Master Batch Refiner 開始
+2026-03-24 23:09:05,133 [INFO] __main__ - ============================================================
+2026-03-24 23:09:05,133 [INFO] __main__ - 処理対象: 1 ファイル
+2026-03-24 23:09:05,135 [INFO] __main__ - 【02】処理開始: 02_#02【独学で習得】初心者でも分かるwebマーケティング講座／3C分析.mp4
+2026-03-24 23:09:05,135 [INFO] __main__ -   [1/5] Whisper で音声認識中...
+2026-03-24 23:11:15,402 [INFO] __main__ -     ✅ 音声認識完了 (6966 文字)
+2026-03-24 23:11:15,402 [INFO] __main__ -   [2/5] FFmpeg でフレーム抽出中...
+2026-03-24 23:11:15,443 [ERROR] __main__ -     ❌ フレーム抽出失敗: could not convert string to float: ''
+2026-03-24 23:11:15,444 [INFO] __main__ - ============================================================
+2026-03-24 23:11:15,444 [INFO] __main__ - ✅ 処理完了: 0/1 成功
+2026-03-24 23:11:15,444 [INFO] __main__ - 📁 結果ファイル: ./logs\processing_results_20260324_231115.json
+2026-03-24 23:11:15,444 [INFO] __main__ - ============================================================

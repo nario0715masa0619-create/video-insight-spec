@@ -1,0 +1,18 @@
+{
+  "execution_timestamp": "2026-03-24T22:54:45.181840",
+  "total_videos": 1,
+  "successful": 0,
+  "failed": 1,
+  "total_elapsed_time_sec": 0.03549003601074219,
+  "average_time_per_video_sec": 0.03549003601074219,
+  "details": [
+    {
+      "filename": "03_#03【独学で習得】初心者でも分かるwebマーケティング講座／LPO.mp4",
+      "lecture_id": "03",
+      "status": "failed",
+      "timestamp": "2026-03-24T22:54:45.181545",
+      "elapsed_time_sec": 0.03296303749084473,
+      "error": "Failed to load audio: ffmpeg version 8.0.1-full_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers\r\n  built with gcc 15.2.0 (Rev8, Built by MSYS2 project)\r\n  configuration: --enable-gpl "
+    }
+  ]
+}

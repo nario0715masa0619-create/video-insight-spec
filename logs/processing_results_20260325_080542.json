@@ -1,0 +1,14 @@
+{
+  "started_at": "2026-03-25T08:03:58.306549",
+  "total": 1,
+  "success": 1,
+  "failed": 0,
+  "details": [
+    {
+      "file": "01_#01【独学で習得】初心者でも分かるwebマーケティング講座.mp4",
+      "status": "success",
+      "duration_s": 104.05
+    }
+  ],
+  "completed_at": "2026-03-25T08:05:42.357642"
+}

@@ -1,0 +1,51 @@
+[
+  {
+    "avg_content_length": 91.0,
+    "issues": [],
+    "files_exist": true,
+    "lecture_id": "01",
+    "core_pins_count": 3,
+    "has_labels": true,
+    "insight_pins_count": 3
+  },
+  {
+    "avg_content_length": 102.0,
+    "issues": [],
+    "files_exist": true,
+    "lecture_id": "02",
+    "core_pins_count": 3,
+    "has_labels": true,
+    "insight_pins_count": 3
+  },
+  {
+    "avg_content_length": 52.0,
+    "issues": [
+      "content が短すぎるピンがあります（最小: 28 文字）"
+    ],
+    "files_exist": true,
+    "lecture_id": "03",
+    "core_pins_count": 6,
+    "has_labels": true,
+    "insight_pins_count": 6
+  },
+  {
+    "avg_content_length": 69.0,
+    "issues": [],
+    "files_exist": true,
+    "lecture_id": "04",
+    "core_pins_count": 8,
+    "has_labels": true,
+    "insight_pins_count": 8
+  },
+  {
+    "avg_content_length": 71.0,
+    "issues": [
+      "content が短すぎるピンがあります（最小: 46 文字）"
+    ],
+    "files_exist": true,
+    "lecture_id": "05",
+    "core_pins_count": 4,
+    "has_labels": true,
+    "insight_pins_count": 4
+  }
+]

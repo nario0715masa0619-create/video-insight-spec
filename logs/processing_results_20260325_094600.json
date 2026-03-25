@@ -1,0 +1,14 @@
+{
+  "started_at": "2026-03-25T09:43:05.651068",
+  "total": 1,
+  "success": 1,
+  "failed": 0,
+  "details": [
+    {
+      "file": "04_#04【独学で習得】初心者でも分かるwebマーケティング講座／売れるキャッチコピー.mp4",
+      "status": "success",
+      "duration_s": 175.15
+    }
+  ],
+  "completed_at": "2026-03-25T09:46:00.803074"
+}

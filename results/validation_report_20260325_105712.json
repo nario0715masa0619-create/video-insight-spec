@@ -1,0 +1,47 @@
+[
+  {
+    "avg_content_length": 141.0,
+    "issues": [],
+    "files_exist": true,
+    "lecture_id": "01",
+    "core_pins_count": 10,
+    "has_labels": true,
+    "insight_pins_count": 10
+  },
+  {
+    "avg_content_length": 204.0,
+    "issues": [],
+    "files_exist": true,
+    "lecture_id": "02",
+    "core_pins_count": 10,
+    "has_labels": true,
+    "insight_pins_count": 10
+  },
+  {
+    "avg_content_length": 150.0,
+    "issues": [],
+    "files_exist": true,
+    "lecture_id": "03",
+    "core_pins_count": 11,
+    "has_labels": true,
+    "insight_pins_count": 11
+  },
+  {
+    "avg_content_length": 116.0,
+    "issues": [],
+    "files_exist": true,
+    "lecture_id": "04",
+    "core_pins_count": 10,
+    "has_labels": true,
+    "insight_pins_count": 10
+  },
+  {
+    "avg_content_length": 154.0,
+    "issues": [],
+    "files_exist": true,
+    "lecture_id": "05",
+    "core_pins_count": 11,
+    "has_labels": true,
+    "insight_pins_count": 11
+  }
+]
