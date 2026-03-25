@@ -1,82 +1,73 @@
 # video-insight-spec
 
-**YouTube動画から『実行可能な知恵』を抽出し、JSON と SQLite で蓄積する仕組みの仕様書・設計リポジトリ。**
+YouTube動画から実行可能な知恵を抽出し、JSONとSQLiteに蓄積するシステム
 
-## このリポジトリについて
+## プロジェクト進捗
 
-`video-insight-spec` は、以下を統括する「スキーマ・仕様設計の中核」です：
+Phase 1: ✅ 基本JSON化
+Phase 2: ✅ テストスイート (77/77 PASS)
+Phase 3: ✅ Geminiラベル付与 (52個のcenter_pins)
 
-- **JSON スキーマ定義** (`JSON_SPEC.md`)：1本の動画ごとの知識構造
-- **サイドカー DB 設計** (`JSON_SPEC.md` の追記セクション）：時間軸インデックス
-- **AI エージェント向けマニュアル** (`AGENTS.md`)：実装・拡張時の指針
-- **実装ガイダンス** (PHASE*.md)：各フェーズでの具体的な処理仕様
+## Phase 3 完了（2026-03-25）
 
-> 💡 **実装コードや API キーなどの機密情報は、別リポジトリ（`video-scraper` など）で管理**しています。
+- YouTube → MP4 → Mk2_Core → insight_spec → labeled JSON パイプライン実装
+- 5講座処理完了、52個のcenter_pinsにラベル付与
+- 品質検証: 5/5講座 OK
+- 処理時間: 約20分
+## 📁 ファイル構成
 
-## ドキュメント案内
+### 生成ファイル（D:\AI_Data\video-insight-spec\archive）
 
-| ドキュメント | 対象者 | 概要 |
-|-----------|--------|------|
-| [JSON_SPEC.md](./JSON_SPEC.md) | 設計者・実装者 | JSON スキーマと DB 構造の完全仕様 |
-| [AGENTS.md](./AGENTS.md) | AI エージェント | 動画スクレイピング～JSON 変換のフロー |
-| [PHASE1_IMPLEMENTATION.md](./PHASE1_IMPLEMENTATION.md) | 実装者 | Phase 1（基本 JSON 化）の詳細 |
-| [PHASE2_2_YOUTUBE_API_INTEGRATION.md](./PHASE2_2_YOUTUBE_API_INTEGRATION.md) | 実装者 | Phase 2.2（YouTube メトリクス取得）の仕様 |
-| [PHASE2_2_1_ENGAGEMENT_METRICS.md](./PHASE2_2_1_ENGAGEMENT_METRICS.md) | 実装者 | Phase 2.2.1（エンゲージメント指標計算）の仕様 |
-| [PHASE2_2_2_OCR_TEXT_CLEANING.md](./PHASE2_2_2_OCR_TEXT_CLEANING.md) | 実装者 | Phase 2.2.2（OCR テキストクリーニング）の仕様 |
-| [PHASE2_2_3_YOUTUBE_VIDEO_ID_ENRICHER.md](./PHASE2_2_3_YOUTUBE_VIDEO_ID_ENRICHER.md) | 実装者 | Phase 2.2.3（YouTube Video ID Enricher）の仕様 |
-| [PHASE2_2_1_ENGAGEMENT_METRICS.md](./PHASE2_2_1_ENGAGEMENT_METRICS.md) | 実装者 | Phase 2.2.1（エンゲージメント指標計算）の仕様 |
-| [PHASE2_2_2_OCR_TEXT_CLEANING.md](./PHASE2_2_2_OCR_TEXT_CLEANING.md) | 実装者 | Phase 2.2.2（OCR テキストクリーニング）の仕様 |
+| ファイル | 説明 |
+|---------|------|
+| Mk2_Core_01-05.json | Whisper + EasyOCR + Gemini による抽出結果 |
+| insight_spec_01-05.json | ラベル付与済みの insight_spec |
+| Mk2_Sidecar_01-05.db | SQLite DB（evidence_index テーブル） |
+| Mk2_OCR_01-05.txt | EasyOCR で抽出したテキスト |
 
-## セットアップ
+## 🎯 講座別結果
 
-### 環境変数の設定
+| 講座 | Core Pins | 平均文字数 | ラベル | 検証 |
+|------|-----------|----------|--------|------|
+| Lecture 01 | 10 | 141 chars | ✅ | ✅ |
+| Lecture 02 | 10 | 204 chars | ✅ | ✅ |
+| Lecture 03 | 11 | 150 chars | ✅ | ✅ |
+| Lecture 04 | 10 | 116 chars | ✅ | ✅ |
+| Lecture 05 | 11 | 154 chars | ✅ | ✅ |
 
-#### 1. `.env.example` から `.env` を作成
-```bash
-cp .env.example .env
-```
+## 🚀 クイックスタート
 
-#### 2. `.env` を編集して実際のAPIキーを設定
-```bash
-# テキストエディタで .env を開き、以下を編集：
-YOUTUBE_API_KEY=sk-proj-xxxxxxxxx  # ← 実際のキーに置き換え
-ARCHIVE_DIR=D:\your\actual\path     # ← パスを変更
-```
+### セットアップ
 
-#### 3. 確認コマンド
-```bash
-python -c "import os; from dotenv import load_dotenv; load_dotenv(); print('✅ 設定OK' if os.getenv('YOUTUBE_API_KEY') else '❌ APIキーが見つかりません')"
-```
+1. .env.example をコピーして .env を作成
+2. GEMINI_API_KEY と ARCHIVE_OUTPUT_DIR を設定
+3. PowerShell で以下を実行:
 
-## ⚠️ セキュリティに関する重要な注意事項
+.\youtube_to_labeled_spec_pipeline.ps1
 
-### APIキー漏洩について
-本リポジトリの過去のコミット履歴に Google API キー（`AIza...`）が含まれていました。
-**該当のAPIキーは既に無効化（Revoke）済みであり、現在利用することはできません。**
-コード内に含まれるキーはあくまでサンプルであり、動作確認用です。
+### 品質検証
 
-### 環境変数の設定方法
-ご自身の環境で本システムを動かす場合は、ご自身で取得した有効なAPIキーを用いた `.env` ファイルを作成してください。
-なお、セキュリティ保護のため `.env` ファイルは `.gitignore` に登録されており、Gitのコミット対象外となっています。
+.\analysis\validate_pipeline_output.ps1
 
-### セキュリティルール（重要）
-⛔ **以下の操作は絶対に行わないでください：**
-- `.env` ファイルを Git にコミット・プッシュすること
-- APIキーをコード内にハードコーディングすること
-- 認証情報を GitHub Issues や PR コメントに記載すること
+## 🔒 セキュリティ
 
-✅ **推奨される運用方法：**
-- `.env` は必ず `.gitignore` で除外（既に設定済み）
-- APIキーはローカルの `.env` ファイルのみに保存
-- チームメンバーとは `.env.example` を共有（ダミー値のみ）
-- GitHub Actions 等でのキー運用は Secret として管理
+- .env ファイルは .gitignore に登録済み
+- API キーは環境変数から読み込み
+- 過去に Google API キーが流出した場合は Google Cloud Console で無効化
 
-### APIキーの再発行方法
-万が一、実際のキーが漏洩した場合：
-1. Google Cloud Console でキーを無効化（Revoke）
-2. 新しいキーを発行
-3. ローカルの `.env` を更新
-4. 旧キーの使用ログを確認し、不正利用がないか確認
+## 📚 関連ドキュメント
 
-## ライセンス
-MIT
+- JSON_SPEC.md - JSON スキーマ・DB 設計
+- AGENTS.md - AI エージェント仕様
+- WORKFLOW_IMPLEMENTATION_MAP.md - ワークフロー仕様
+- PHASE3_COMPLETION_SUMMARY.md - Phase 3 詳細レポート
+- PHASE3_IMPROVEMENT_ROADMAP.md - Phase 3+ ロードマップ
+
+## 📄 ライセンス
+
+MIT License
+
+## 最終更新
+
+2026-03-25 - Phase 3 完了（52 center_pins ラベル付与、品質検証 5/5 OK）
+
