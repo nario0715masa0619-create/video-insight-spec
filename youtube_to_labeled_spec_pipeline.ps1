@@ -218,7 +218,7 @@ foreach ($r in $phase1Results | Where-Object { $_.status -eq "success" }) {
         $st = Get-Date
         
         # expand_insight_spec_with_gemini.py を実行
-        $output = & python expand_insight_spec_with_gemini.py --lecture-id $lectureId --archive-dir $ArchiveDir --top-n $TopN 2>&1
+        $output = & python expand_insight_spec_with_gemini.py --lecture-id $lectureId --archive-dir $ArchiveDir  2>&1
         
         $dur = ((Get-Date)-$st).TotalSeconds
         
@@ -272,3 +272,5 @@ if ($phase3SuccessCount -eq $downloadedCount) {
     Write-Log "⚠️ 一部のステップで失敗しています。ログを確認してください。" "WARN"
     exit 1
 }
+
+

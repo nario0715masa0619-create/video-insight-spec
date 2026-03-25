@@ -207,3 +207,4 @@ class GeminiKnowledgeLabeler:
         except Exception as e:
             logger.error(f"❌ ファイル保存失敗: {e}")
             return False
+

@@ -20,7 +20,7 @@ def main():
     parser.add_argument("--input", type=str, help="Path to insight_spec_XX.json (auto-detect if not specified)")
     parser.add_argument("--output", type=str, help="Output path for labeled insight_spec (same as input if not specified)")
     parser.add_argument("--archive-dir", type=str, default=r"D:\Knowledge_Base\Brain_Marketing\archive", help="Archive directory containing insight_spec files")
-    parser.add_argument("--top-n", type=int, default=5, help="Number of top center_pins to label (default: 5)")
+    parser.add_argument("--top-n", type=int, default=None, help="Number of top center_pins to label (default: 5)")
     parser.add_argument("--api-key", type=str, help="Gemini API key (from .env if not specified)")
     args = parser.parse_args()
 
@@ -64,3 +64,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+
