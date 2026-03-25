@@ -16,15 +16,63 @@ Phase 3: ✅ Geminiラベル付与 (52個のcenter_pins)
 - 処理時間: 約20分
 ## 📁 ファイル構成
 
-### 生成ファイル（D:\AI_Data\video-insight-spec\archive）
-
-| ファイル | 説明 |
-|---------|------|
-| Mk2_Core_01-05.json | Whisper + EasyOCR + Gemini による抽出結果 |
-| insight_spec_01-05.json | ラベル付与済みの insight_spec |
-| Mk2_Sidecar_01-05.db | SQLite DB（evidence_index テーブル） |
-| Mk2_OCR_01-05.txt | EasyOCR で抽出したテキスト |
-
+\\\
+video-insight-spec/
+├── README.md
+├── NOTE_ARTICLE_DRAFT.md
+├── requirements.txt
+├── .env.example
+│
+├── converter/
+│   ├── __init__.py
+│   ├── gemini_knowledge_expander.py
+│   ├── gemini_llm_client.py           # Phase 3.1 new
+│   ├── center_pin_labeling_service.py # Phase 3.1 planned
+│   ├── insight_spec_repository.py     # Phase 3.1 planned
+│   ├── json_extractor.py
+│   ├── ocr_text_cleaner.py
+│   ├── youtube_video_id_enricher.py
+│   └── その他モジュール
+│
+├── analysis/
+│   ├── validate_pipeline_output.ps1
+│   ├── analyze_phase3_labels.py
+│   └── その他分析スクリプト
+│
+├── docs/
+│   ├── phases/
+│   │   ├── PHASE1_IMPLEMENTATION.md
+│   │   ├── PHASE1_5_HOTFIXES.md
+│   │   ├── PHASE2_2_YOUTUBE_API_INTEGRATION.md
+│   │   ├── PHASE2_2_1_ENGAGEMENT_METRICS.md
+│   │   ├── PHASE2_2_2_OCR_TEXT_CLEANING.md
+│   │   ├── PHASE2_2_3_VIDEO_ID_ENRICHER.md
+│   │   ├── PHASE3_GEMINI_KNOWLEDGE_EXPANSION.md
+│   │   ├── PHASE3_PREPARATION_OCCURRENCE_IMPORTANCE.md
+│   │   ├── PHASE3_IMPROVEMENT_ROADMAP.md
+│   │   └── PHASE3_COMPLETION_SUMMARY.md
+│   │
+│   ├── specs/
+│   │   ├── JSON_SPEC.md
+│   │   └── WORKFLOW_IMPLEMENTATION_MAP.md
+│   │
+│   └── implementation/
+│       └── (TASK_EXECUTION_PLAN.md 予定)
+│
+├── targets/
+│   └── marketing_univ_top5.txt
+│
+├── tests/
+│   ├── conftest.py
+│   ├── test_*.py
+│   └── TEST_IMPROVEMENT_PLAN.md
+│
+├── logs/
+│   └── youtube_pipeline_*.log
+│
+└── results/
+    └── validation_report_*.json
+\\\
 ## 🎯 講座別結果
 
 | 講座 | Core Pins | 平均文字数 | ラベル | 検証 |
@@ -70,4 +118,6 @@ MIT License
 ## 最終更新
 
 2026-03-25 - Phase 3 完了（52 center_pins ラベル付与、品質検証 5/5 OK）
+
+
 
