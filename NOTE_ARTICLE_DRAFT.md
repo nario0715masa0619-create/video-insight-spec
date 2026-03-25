@@ -102,3 +102,85 @@ YouTube を「コンテンツ販売の営業ツール」として捉えると：
 次の Phase 3（Gemini API 統合）では、さらに高度な知識抽出・分析が可能になります。
 
 プロジェクト URL：https://github.com/nario0715masa0619-create/video-insight-spec
+
+
+## Phase 3: Gemini Knowledge Labeling（完了・2026-03-25）
+
+### 実装内容
+- YouTube → MP4 → Mk2_Core → insight_spec → labeled JSON の完全自動パイプライン
+- Gemini 3 Pro による center_pins の自動ラベル付与
+- business_theme、funnel_stage、difficulty の 3 軸ラベル付与
+
+### 成果
+- 処理対象：5 講座、52 個のセンターピン
+- ラベル付与率：100%
+- 品質検証：5/5 講座合格
+- 処理時間：約 25 分（全 4 ステップ）
+
+### 品質メトリクス
+- business_theme：マーケティング 100%（22 種類のバリエーション）
+- funnel_stage：興味・関心 40.4%、クロージング 19.2%、比較検討 19.2%
+- difficulty：beginner 82.7%、intermediate 17.3%
+- content 長：平均 139～152 文字（十分な情報量）
+
+### 課題発見と解決
+- **課題**：初回パイプラインで一部ピンがラベル未付与
+- **原因**：--top-n デフォルト値が 5 に固定（Perplexity テスト設定）
+- **解決**：デフォルト動作を「全ピン処理」に修正（Perplexity 協議後）
+
+### Git コミット
+- 4e23720: test: Phase 3 ラベル品質検証完了
+- 379f6f6: fix: デフォルト動作を『全ピン処理』に修正
+- d83767f: docs: Phase 3 完了レポートを追加
+- 878e0e0: docs: README.md を Phase 3 完了情報で更新
+- f20ae43: feat: Phase 3完全成功
+
+---
+
+## Phase 3.1: 軽量リファクタリング（実装開始・2026-03-25）
+
+### 背景
+Phase 3 実装の責務分離によるアーキテクチャ改善。
+Perplexity の提案に基づき、以下を実装予定：
+
+### 実装内容
+
+#### 1. GeminiLLMClient（API 呼び出し一元化）
+- Gemini API 呼び出しを 1 箇所に集約
+- リトライロジック、エラーハンドリング統一
+- 将来の LLM クライアント抽象化に対応
+
+#### 2. CenterPinLabelingService（ラベル付与ロジック）
+- center_pin 単位のラベル付与メソッド
+- center_pins 配列への一括適用メソッド
+- GeminiLLMClient を依存注入で受け取り
+
+#### 3. InsightSpecRepository（ファイル I/O）
+- insight_spec JSON の読み込み・保存
+- ファイル操作を一元化
+
+#### 4. expand_insight_spec_with_gemini.py 更新
+- 新クラスで再実装
+- 既存テスト（52 ピン）で品質低下なし確認
+
+### 進捗
+- [x] ロードマップ確認（PHASE3_IMPROVEMENT_ROADMAP.md）
+- [x] NOTE 更新
+- [ ] GeminiLLMClient 実装
+- [ ] CenterPinLabelingService 実装
+- [ ] InsightSpecRepository 実装
+- [ ] expand_insight_spec_with_gemini.py 更新
+- [ ] 統合テスト（既存 52 ピン）
+- [ ] Git コミット & main へマージ
+
+### ブランチ
+feature/phase-3.1-refactoring
+
+### 推定時間
+4～6 時間
+
+### 技術仕様
+**設計原則**:
+- 責務分離：API クライアント、ラベル付与ロジック、ファイル I/O を分離
+- 依存注入：GeminiLLMClient を注入可能に
+- 拡張性：LLM クライアント抽象化対応
