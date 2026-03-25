@@ -21,27 +21,31 @@ video-insight-spec/
 ├── README.md
 ├── NOTE_ARTICLE_DRAFT.md
 ├── requirements.txt
-├── .env.example
+├── pytest.ini
+├── .env.example              # セットアップテンプレート
+├── .env.test                 # テスト設定
+├── .gitignore
 │
-├── converter/
+├── 【メインスクリプト】
+├── youtube_to_labeled_spec_pipeline.ps1    # Phase 3 統合パイプライン
+├── master_batch_refiner.py                 # Step 2: Mk2_Core 生成
+├── convert_to_insight_spec_phase1.py       # Step 3: insight_spec 生成
+├── expand_insight_spec_with_gemini.py      # Step 4: Gemini ラベル付与
+│
+├── converter/                  # Python modules
 │   ├── __init__.py
 │   ├── gemini_knowledge_expander.py
 │   ├── gemini_llm_client.py           # Phase 3.1 new
 │   ├── center_pin_labeling_service.py # Phase 3.1 planned
 │   ├── insight_spec_repository.py     # Phase 3.1 planned
-│   ├── json_extractor.py
-│   ├── ocr_text_cleaner.py
-│   ├── youtube_video_id_enricher.py
 │   └── その他モジュール
 │
-├── analysis/
+├── analysis/                   # Analysis & validation scripts
 │   ├── validate_pipeline_output.ps1
-│   ├── analyze_phase3_labels.py
-│   └── その他分析スクリプト
+│   └── analyze_phase3_labels.py
 │
-├── docs/
-│   ├── phases/
-│   │   ├── PHASE1_IMPLEMENTATION.md
+├── docs/                       # Documentation
+│   ├── phases/                 # Phase implementation docs
 │   │   ├── PHASE1_5_HOTFIXES.md
 │   │   ├── PHASE2_2_YOUTUBE_API_INTEGRATION.md
 │   │   ├── PHASE2_2_1_ENGAGEMENT_METRICS.md
@@ -49,29 +53,33 @@ video-insight-spec/
 │   │   ├── PHASE2_2_3_VIDEO_ID_ENRICHER.md
 │   │   ├── PHASE3_GEMINI_KNOWLEDGE_EXPANSION.md
 │   │   ├── PHASE3_PREPARATION_OCCURRENCE_IMPORTANCE.md
-│   │   ├── PHASE3_IMPROVEMENT_ROADMAP.md
-│   │   └── PHASE3_COMPLETION_SUMMARY.md
+│   │   └── PHASE3_IMPROVEMENT_ROADMAP.md
 │   │
-│   ├── specs/
-│   │   ├── JSON_SPEC.md
-│   │   └── WORKFLOW_IMPLEMENTATION_MAP.md
-│   │
-│   └── implementation/
-│       └── (TASK_EXECUTION_PLAN.md 予定)
+│   └── specs/                  # Specification docs
+│       ├── JSON_SPEC.md
+│       └── WORKFLOW_IMPLEMENTATION_MAP.md
 │
-├── targets/
+├── scripts/                    # Development & utility scripts
+│   └── dev/                    # デバッグ・開発スクリプト（16個）
+│       ├── phase2_*.py
+│       ├── add_importance_schema.py
+│       ├── calculate_occurrence_and_importance.py
+│       ├── check_content.py
+│       └── batch_label_lectures_02_21.ps1
+│
+├── targets/                    # Target URLs
 │   └── marketing_univ_top5.txt
 │
-├── tests/
+├── tests/                      # Test suite
 │   ├── conftest.py
 │   ├── test_*.py
 │   └── TEST_IMPROVEMENT_PLAN.md
 │
-├── logs/
-│   └── youtube_pipeline_*.log
-│
-└── results/
-    └── validation_report_*.json
+├── logs/                       # Execution logs
+├── results/                    # Validation results
+├── batch_refine_work/          # Working directory
+├── quality_validation_results/ # Quality check results
+└── phase2_2_output/            # Legacy output directory
 \\\
 ## 🎯 講座別結果
 
@@ -118,6 +126,5 @@ MIT License
 ## 最終更新
 
 2026-03-25 - Phase 3 完了（52 center_pins ラベル付与、品質検証 5/5 OK）
-
 
 
