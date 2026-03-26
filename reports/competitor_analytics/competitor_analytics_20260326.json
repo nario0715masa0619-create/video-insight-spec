@@ -1,0 +1,68 @@
+{
+  "generated_at": "2026-03-26T21:36:23.618914+09:00",
+  "portfolio_view": [
+    {
+      "role": "self",
+      "lecture_id": "01",
+      "title": "",
+      "dominant_funnel_stage": "認知",
+      "dominant_difficulty": "beginner",
+      "total_center_pins": 9,
+      "view_count": 118000,
+      "engagement_rate": 0.0164
+    },
+    {
+      "role": "self",
+      "lecture_id": "02",
+      "title": "",
+      "dominant_funnel_stage": "比較検討",
+      "dominant_difficulty": "beginner",
+      "total_center_pins": 10,
+      "view_count": 47739,
+      "engagement_rate": 0.0168
+    },
+    {
+      "role": "self",
+      "lecture_id": "03",
+      "title": "",
+      "dominant_funnel_stage": "クロージング",
+      "dominant_difficulty": "beginner",
+      "total_center_pins": 11,
+      "view_count": 33800,
+      "engagement_rate": 0.0189
+    },
+    {
+      "role": "self",
+      "lecture_id": "04",
+      "title": "",
+      "dominant_funnel_stage": "興味・関心",
+      "dominant_difficulty": "beginner",
+      "total_center_pins": 11,
+      "view_count": 26026,
+      "engagement_rate": 0.0175
+    },
+    {
+      "role": "self",
+      "lecture_id": "05",
+      "title": "",
+      "dominant_funnel_stage": "教育",
+      "dominant_difficulty": "beginner",
+      "total_center_pins": 11,
+      "view_count": 21064,
+      "engagement_rate": 0.016
+    }
+  ],
+  "growth_view": {
+    "period": "2026-03-26 to 2026-04-02",
+    "top_by_view_growth": [
+      {
+        "role": "self",
+        "lecture_id": "01",
+        "title": "",
+        "view_count_delta": 2166,
+        "view_count_growth_rate": 0.0187,
+        "engagement_rate_delta": 0.0004
+      }
+    ]
+  }
+}
