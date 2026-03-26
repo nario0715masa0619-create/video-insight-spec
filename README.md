@@ -11,6 +11,7 @@ YouTube 動画から知識体系を自動抽出し、ビジネス価値を分析
 | Phase 3 | ✅ 完了 | Gemini AI ラベリング、52 個の知識要素抽出 |
 | Phase 3.3 | ✅ 完了 | YouTube API で video_meta 埋め込み |
 | Phase 4 | ✅ 完了 | Views 生成、YouTube Analytics 統合 |
+| Phase 4.1 | ✅ JSON weekly report generation | 2026-03-26 |
 | Phase 4.1 | ⏳ 予定 | 週次レポート生成 |
 
 ## Phase 4 の成果
@@ -47,3 +48,4 @@ python quality_check_phase4.py
 
 ---
 Last Updated: 2026-03-26
+
