@@ -403,3 +403,73 @@ views は **ダッシュボード用要約ビュー** です。
 **最終更新：** 2026-03-29
 **作成者：** Phase 4 Implementation
 **バージョン：** v3.0
+
+## Phase 4.2: Competitor Analytics Views
+
+JSON output from competitor_analytics_generator.py.
+
+### portfolio_view
+
+Array of lecture objects.
+
+Schema:
+{
+  "role": "self",
+  "lecture_id": "01",
+  "title": "...",
+  "dominant_funnel_stage": "認知",
+  "dominant_difficulty": "beginner",
+  "total_center_pins": 9,
+  "view_count": 118000,
+  "engagement_rate": 0.0161
+}
+
+### growth_view
+
+Period and top growth lectures.
+
+Schema:
+{
+  "period": "2026-03-26 to 2026-04-02",
+  "top_by_view_growth": [
+    {
+      "role": "self",
+      "lecture_id": "01",
+      "title": "...",
+      "view_count_delta": 2166,
+      "view_count_growth_rate": 0.0187,
+      "engagement_rate_delta": 0.0001
+    }
+  ]
+}
+
+### theme_view
+
+Themes with top lecture per theme.
+
+Schema:
+{
+  "マーケティング": [
+    {
+      "role": "self",
+      "lecture_id": "01",
+      "title": "...",
+      "view_count": 118000,
+      "engagement_rate": 0.0161,
+      "representative_pin": {
+        "element_id": "cp_005",
+        "content": "..."
+      }
+    }
+  ]
+}
+
+### Root Fields
+
+generated_at: ISO8601 JST timestamp
+- Format: "2026-03-26T22:36:53.574351+09:00"
+- Type: string
+
+portfolio_view: array
+growth_view: object
+theme_view: object

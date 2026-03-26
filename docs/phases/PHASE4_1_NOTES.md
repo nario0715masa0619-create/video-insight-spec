@@ -40,3 +40,49 @@
 - ✅ 0除算エラーなし
 - ✅ baseline/current の値の取り違いなし
 - ✅ quality_check: 25/25 合格
+
+## Phase 4.2 Transition
+
+Phase 4.1 completed weekly report generation.
+Phase 4.2 builds on this with competitive analytics.
+
+## Data Flow from Phase 4.1 to 4.2
+
+Phase 4.1 Output:
+- snapshot_history in insight_spec
+- Weekly aggregated metrics
+
+Phase 4.2 Input:
+- Loads snapshot_history
+- Extracts latest and baseline values
+- Calculates growth metrics
+
+## Key Changes in Phase 4.2
+
+1. portfolio_view: Lists all courses
+2. growth_view: Filters snapshot_history >= 2
+3. theme_view: Groups by business_theme
+4. Engagement scoring: New formula
+5. Representative pins: Highest engagement
+
+## Dependencies on Phase 4.1
+
+snapshot_history must exist:
+- Requires at least 1 snapshot
+- 2+ snapshots for growth_view
+- Timestamps must be valid
+
+center_pins required:
+- For funnel_stage calculation
+- For engagement scoring
+- For theme grouping
+
+## Status
+
+Phase 4.1: ✅ Complete
+Phase 4.2: ✅ Complete
+Phase 4.3: 🔄 In Progress
+
+---
+
+**Last Updated:** 2026-03-26
