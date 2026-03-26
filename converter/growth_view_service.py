@@ -1,9 +1,5 @@
 """
 Growth View Service - 伸びている講座ランキング生成
-
-目的：ここ数週間でどの講座が伸びているかを把握する。
-- view_count_delta / growth_rate
-- engagement_rate_delta
 """
 
 
@@ -14,34 +10,19 @@ class GrowthViewService:
     def generate_growth_view(insight_specs, role="self"):
         """
         複数講座の insight_spec から growth_view を生成
-        
-        Args:
-            insight_specs: [{ lecture_id, title, views }, ...]
-            role: "self" または "competitor"
-        
-        Returns:
-            {
-              "period": "YYYY-MM-DD to YYYY-MM-DD",
-              "top_by_view_growth": [
-                { role, lecture_id, title, view_count_delta, view_count_growth_rate, 
-                  engagement_rate_delta },
-                ...
-              ]
-            }
         """
         growth_items = []
         
         for spec in insight_specs:
             lecture_id = spec.get("lecture_id", "unknown")
-            title = spec.get("title", "")
+            # ✅ FIX: video_meta から title を取得
+            title = spec.get("video_meta", {}).get("title", "")
             
-            # snapshot_history から baseline と current を取得
             views = spec.get("views", {})
             competitive = views.get("competitive", {})
             snapshot_history = competitive.get("snapshot_history", [])
             
             if len(snapshot_history) < 2:
-                # baseline のみの場合は delta を計算できないのでスキップ
                 continue
             
             baseline = snapshot_history[0]
@@ -52,7 +33,6 @@ class GrowthViewService:
             baseline_engagement_rate = baseline.get("engagement_rate", 0.0)
             current_engagement_rate = current.get("engagement_rate", 0.0)
             
-            # delta と growth_rate を計算
             view_count_delta = current_view_count - baseline_view_count
             view_count_growth_rate = (
                 round(view_count_delta / baseline_view_count, 4) 
@@ -65,7 +45,7 @@ class GrowthViewService:
             growth_item = {
                 "role": role,
                 "lecture_id": lecture_id,
-                "title": title,
+                "title": title,  # ✅ FIX: video_meta.title を使用
                 "view_count_delta": view_count_delta,
                 "view_count_growth_rate": view_count_growth_rate,
                 "engagement_rate_delta": engagement_rate_delta
@@ -73,10 +53,8 @@ class GrowthViewService:
             
             growth_items.append(growth_item)
         
-        # view_count_delta でソート（降順）
         growth_items.sort(key=lambda x: x["view_count_delta"], reverse=True)
         
-        # 期間を取得（snapshot_history の最初と最後のタイムスタンプから）
         period_start = "unknown"
         period_end = "unknown"
         

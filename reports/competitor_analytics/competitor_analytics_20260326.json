@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-03-26T21:36:23.618914+09:00",
+  "generated_at": "2026-03-26T21:43:59.012701+09:00",
   "portfolio_view": [
     {
       "role": "self",
       "lecture_id": "01",
-      "title": "",
+      "title": "#01【独学で習得】初心者でも分かるwebマーケティング講座",
       "dominant_funnel_stage": "認知",
       "dominant_difficulty": "beginner",
       "total_center_pins": 9,
@@ -14,7 +14,7 @@
     {
       "role": "self",
       "lecture_id": "02",
-      "title": "",
+      "title": "#02【独学で習得】初心者でも分かるwebマーケティング講座／3C分析",
       "dominant_funnel_stage": "比較検討",
       "dominant_difficulty": "beginner",
       "total_center_pins": 10,
@@ -24,7 +24,7 @@
     {
       "role": "self",
       "lecture_id": "03",
-      "title": "",
+      "title": "#03【独学で習得】初心者でも分かるwebマーケティング講座／LPO",
       "dominant_funnel_stage": "クロージング",
       "dominant_difficulty": "beginner",
       "total_center_pins": 11,
@@ -34,7 +34,7 @@
     {
       "role": "self",
       "lecture_id": "04",
-      "title": "",
+      "title": "#04【独学で習得】初心者でも分かるwebマーケティング講座／売れるキャッチコピー",
       "dominant_funnel_stage": "興味・関心",
       "dominant_difficulty": "beginner",
       "total_center_pins": 11,
@@ -44,7 +44,7 @@
     {
       "role": "self",
       "lecture_id": "05",
-      "title": "",
+      "title": "#05【独学で習得】初心者でも分かるwebマーケティング講座／Googleアナリティクス",
       "dominant_funnel_stage": "教育",
       "dominant_difficulty": "beginner",
       "total_center_pins": 11,
@@ -58,7 +58,7 @@
       {
         "role": "self",
         "lecture_id": "01",
-        "title": "",
+        "title": "#01【独学で習得】初心者でも分かるwebマーケティング講座",
         "view_count_delta": 2166,
         "view_count_growth_rate": 0.0187,
         "engagement_rate_delta": 0.0004
