@@ -1,12 +1,12 @@
-# JSON スキーマ仕様書 v3（video-insight-spec）
+# JSON スキーマ仕様書 v2（video-insight-spec）
 
 ## 概要
 
 このプロジェクトは YouTube 動画から知識を抽出し、構造化データとして管理するシステムです。
 1 本の動画に対して 3 つのファイルが生成されます：
 1. **Mk2_Core_XX.json** - 知識コア（center_pins, knowledge_points）
-2. **Mk2_Sidecar_XX.db** - エビデンスインデックス + メタデータ DB（SQLite）
-3. **insight_spec_XX.json** - 最終成果物（video_meta + ラベル付き知識）
+2. **Mk2_Sidecar_XX.db** - エビデンスインデックス（OCR テキスト、タイムスタンプ）
+3. **insight_spec_XX.json** - 最終成果物（video_meta + ラベル付け）
 
 ## ファイル構成（D:\AI_Data\video-insight-spec\archive）
 
@@ -42,9 +42,9 @@ knowledge_core.center_pins（Phase 3 で Gemini ラベル付与）:
 
 ## 2. Mk2_Sidecar_XX.db スキーマ
 
-役割: center_pins のエビデンス（OCR テキスト、タイムスタンプ）+ YouTube メタデータを SQLite で管理
+役割: center_pins のエビデンス（OCR テキスト、動画内のタイムスタンプ）を SQLite で管理
 
-### テーブル 1: evidence_index
+テーブル: evidence_index
 
 カラム構成:
   element_id: center_pin の ID（TEXT）
@@ -54,22 +54,9 @@ knowledge_core.center_pins（Phase 3 で Gemini ラベル付与）:
   visual_score: OCR テキスト信頼度（REAL、0-100）
   source_video_path: 動画ファイルのパス（TEXT）
 
-### テーブル 2: video_metadata（Phase 3.3 で追加）
-
-役割: YouTube メタデータの一元管理。Phase 4 以降で views 生成時に参照
-
-カラム構成:
-  lecture_id: 講座ID（TEXT、主キー）
-  video_id: YouTube video_id（TEXT）
-  channel_id: YouTube チャンネルID（TEXT）
-  title: 動画タイトル（TEXT）
-  url: YouTube URL（TEXT）
-  published_at: 公開日時（ISO8601）
-  updated_at: メタデータ更新日時（TIMESTAMP）
-
 ## 3. insight_spec_XX.json スキーマ
 
-役割: 最終成果物。video_meta（YouTube メタデータ）+ knowledge_core（ラベル付き）+ views
+役割: 最終成果物。video_meta（YouTube メタデータ）+ knowledge_core（ラベル付き）
 
 トップレベルキー:
   video_meta: YouTube メタデータセクション
@@ -77,12 +64,12 @@ knowledge_core.center_pins（Phase 3 で Gemini ラベル付与）:
   views: 用途別ビュー
   _metadata: メタデータ
 
-video_meta 仕様（Phase 3.3 で完成）:
-  video_id: 講座ID（"01" など）
-  channel_id: YouTube チャンネルID（Phase 3.3 で設定）
-  title: 動画タイトル（Phase 3.3 で設定）
-  url: YouTube URL（Phase 3.3 で設定）
-  published_at: 公開日時（ISO8601、Phase 3.3 で設定）
+video_meta 仕様:
+  video_id: "01" など、講座ID（現在: 設定済み）
+  channel_id: YouTube チャンネルID（現在: null、Phase 3.3 で設定予定）
+  title: 動画タイトル（現在: "Lecture 01" など、改善予定）
+  url: YouTube URL（現在: null、Phase 3.3 で設定予定）
+  published_at: 公開日時（ISO8601、現在: null、Phase 3.3 で設定予定）
 
 knowledge_core: Mk2_Core と同じ（center_pins にラベル付与）
 
@@ -100,25 +87,17 @@ views: 用途別ビュー（Phase 4 で実装予定）
 
 ↓ Phase 3（Gemini ラベル付与）
 
-最終成果物（中間）:
-  insight_spec_XX.json - video_meta: 未完成（null）、center_pins: ラベル付与済
+最終成果物:
+  insight_spec_XX.json
+    - video_meta: 未完成（channel_id, url, published_at = null）
+    - knowledge_core.center_pins: ラベル付与済（business_theme, funnel_stage, difficulty）
 
 ↓ Phase 3.3（YouTube API で video_meta 補完）
 
-処理フロー:
-  1. generate_video_mapping.py - downloaded_videos から video_mapping_new.csv 生成（一時ファイル）
-  2. enrich_insight_spec_with_youtube_metadata.py - CSV から video_id を読み込み、insight_spec に反映
-  3. update_mk2_sidecar_with_youtube_metadata.py - CSV から video_id を読み込み、Mk2_Sidecar.video_metadata に記録
-  4. クリーンアップ - video_mapping_new.csv を削除（または archive に保存）
-
 完成版:
-  insight_spec_XX.json - video_meta: 完全（YouTube API から取得）、center_pins: ラベル付与済
-  Mk2_Sidecar_XX.db - video_metadata テーブル追加（Phase 4 以降で参照）
-
-↓ Phase 4（views 実装）
-
-最終出力:
-  insight_spec_XX.json - views セクション追加（competitive, self_improvement 等）
+  insight_spec_XX.json
+    - video_meta: 完全（YouTube API から取得）
+    - knowledge_core.center_pins: ラベル付与済
 
 ## 現在のステータス
 
@@ -127,44 +106,21 @@ Phase 2: 完了 - YouTube API, OCR, Whisper
 Phase 3: 完了 - Gemini ラベル付与（52 ピン）
 Phase 3.1: 完了 - コード設計改善（責務分離）
 Phase 3.2: 完了 - google.generativeai -> google-genai 移行
-Phase 3.3: 進行中 - YouTube API で video_meta 補完
-  ✅ YouTubeMetadataService 実装完了
-  ✅ generate_video_mapping.py 実装完了
-  ✅ enrich_insight_spec_with_youtube_metadata.py 実装完了
-  ⏳ update_mk2_sidecar_with_youtube_metadata.py（次実装）
-  ⏳ Mk2_Sidecar_XX.db に video_metadata テーブル追加
+Phase 3.3: 予定 - YouTube API で video_meta 補完
 Phase 4: 予定 - views 実装、本番環境対応
-
-## 設計決定事項（Phase 3.3）
-
-### 1. video_mapping.csv の管理
-  - 一時ファイルとして phase2_2_output/video_mapping_new.csv に保存
-  - 処理完了後に削除または archive に移動
-  - 本体管理: Mk2_Sidecar_XX.db.video_metadata テーブル
-
-### 2. メタデータの一元管理
-  - Mk2_Sidecar_XX.db に video_metadata テーブルを追加
-  - Phase 4 以降で views 生成時に Sidecar DB から参照
-  - 拡張性向上（新しいメタデータ追加時に DB に記録するのみ）
-
-### 3. ファイル間の役割分担
-  - Mk2_Core_XX.json: 知識抽出のみ（video_meta は追加しない）
-  - Mk2_Sidecar_XX.db: エビデンス + メタデータ管理
-  - insight_spec_XX.json: 最終成果物（すべての情報を統合）
 
 ## 注意事項
 
-1. video_meta の完成フロー
-   - Phase 3 完了時: video_meta は {video_id: "01" のみ、その他は null}
-   - Phase 3.3 完了時: video_meta は完全（channel_id, title, url, published_at も埋まる）
-   - 中間状態は仕様上正常
+1. video_meta の未完成状態
+   - Phase 3 ラベル付与完了時点では、channel_id, url, published_at が null
+   - Phase 3.3（YouTube API 統合）で完全に埋める予定
+   - 現在の状態は仕様上正常
 
-2. Mk2_Sidecar の拡張計画
-   - 現在: evidence_index（OCR テキスト）
-   - Phase 3.3: video_metadata（YouTube メタデータ）追加
-   - Phase 4 以降: engagement_metrics（再生数、いいね数等）追加予定
+2. Mk2_Sidecar の役割
+   - center_pins のエビデンス管理
+   - 将来的に「どこから知識を得たか」をトレース可能にする
+   - 現在は OCR テキストのみ記録
 
 3. スキーマの拡張性
    - views セクションで用途別ビューを追加可能
    - knowledge_points セクション（現在は未使用）で複雑な知識構造を管理予定
-   - video_metadata テーブルに新しいカラム追加可能
