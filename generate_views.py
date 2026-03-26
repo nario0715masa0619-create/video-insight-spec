@@ -35,7 +35,8 @@ def main():
             
             # Fetch YouTube metrics
             video_id = insight_spec['video_meta']['video_id']
-            metrics = youtube_service.get_video_stats(video_id)
+            video_meta_data = youtube_service.get_video_metadata(video_id)
+            metrics = youtube_service.get_video_analytics(video_id)
             
             # Generate views
             views = views_service.generate_views(
@@ -64,3 +65,6 @@ def main():
 
 if __name__ == '__main__':
     exit(main())
+
+
+

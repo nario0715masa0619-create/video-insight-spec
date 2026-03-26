@@ -88,3 +88,44 @@ class YouTubeMetadataService:
         except Exception as e:
             self.logger.error(f"❌ 予期しないエラー: {e}")
             raise YouTubeAPIError(f"予期しないエラー: {e}")
+    
+    def get_video_analytics(self, video_id: str) -> Dict[str, Any]:
+        """
+        YouTube Data API から動画の統計情報を取得
+        
+        Args:
+            video_id (str): YouTube video ID
+        
+        Returns:
+            dict: {
+                "view_count": int,
+                "like_count": int,
+                "comment_count": int
+            }
+        """
+        
+        try:
+            from googleapiclient.discovery import build
+            
+            youtube = build('youtube', 'v3', developerKey=self.api_key)
+            
+            # Statistics を取得
+            request = youtube.videos().list(
+                part='statistics',
+                id=video_id
+            )
+            response = request.execute()
+            
+            if not response.get('items'):
+                raise ValueError(f"video_id '{video_id}' が見つかりません")
+            
+            stats = response['items'][0]['statistics']
+            
+            return {
+                "view_count": int(stats.get('viewCount', 0)),
+                "like_count": int(stats.get('likeCount', 0)),
+                "comment_count": int(stats.get('commentCount', 0)),
+            }
+        
+        except Exception as e:
+            raise YouTubeAPIError(f"YouTube Analytics API エラー: {str(e)}")

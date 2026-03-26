@@ -170,7 +170,7 @@ class ViewsGeneratorService:
             
             # Average difficulty（簡易版：最初の値）
             difficulties = [pin['labels'].get('difficulty', 'beginner') for pin in pins]
-            avg_difficulty = difficulties[0] if difficulties else $null
+            avg_difficulty = difficulties[0] if difficulties else None
             
             funnel_flow.append({
                 "stage": stage,
@@ -191,3 +191,4 @@ class ViewsGeneratorService:
         if len(content) > max_length:
             return content[:max_length] + "..."
         return content
+
