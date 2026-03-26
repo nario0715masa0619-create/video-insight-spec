@@ -2,69 +2,60 @@
 
 import os
 import argparse
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
 from converter.insight_spec_repository import InsightSpecRepository
 from converter.youtube_metadata_service import YouTubeMetadataService
 from converter.views_generator_service import ViewsGeneratorService
 
-
 def main():
-    parser = argparse.ArgumentParser(description="Generate views for insight_spec (Phase 4)")
-    parser.add_argument('--lecture-ids', default='01,02,03,04,05', help='Comma-separated lecture IDs')
-    parser.add_argument('--archive-dir', default=os.getenv('ARCHIVE_OUTPUT_DIR'), help='Archive directory')
-    parser.add_argument('--api-key', default=os.getenv('YOUTUBE_API_KEY'), help='YouTube API key')
+    parser = argparse.ArgumentParser(description="Phase 4: Views Generation")
+    parser.add_argument("--lecture-ids", default="01,02,03,04,05", help="Lecture IDs (comma-separated)")
+    parser.add_argument("--archive-dir", required=True, help="Archive directory path")
+    parser.add_argument("--api-key", help="YouTube API key")
     
     args = parser.parse_args()
     
-    lecture_ids = [lid.strip() for lid in args.lecture_ids.split(',')]
+    lecture_ids = args.lecture_ids.split(",")
     repo = InsightSpecRepository(args.archive_dir)
     youtube_service = YouTubeMetadataService(args.api_key)
-    views_service = ViewsGeneratorService()
-    
-    success_count = 0
-    failed_count = 0
     
     print("【Phase 4: Views Generation】")
     print(f"Archive dir: {args.archive_dir}")
     print(f"Processing lectures: {', '.join(lecture_ids)}\n")
     
+    JST = timezone(timedelta(hours=9))
+    success_count = 0
+    
     for lecture_id in lecture_ids:
         try:
-            # Load insight_spec
-            insight_spec = repo.load(lecture_id)
+            spec = repo.load(lecture_id)
+            video_id = spec['video_meta']['video_id']
             
-            # Fetch YouTube metrics
-            video_id = insight_spec['video_meta']['video_id']
-            video_meta_data = youtube_service.get_video_metadata(video_id)
-            metrics = youtube_service.get_video_analytics(video_id)
+            # YouTube Analytics API でメトリクスを取得
+            youtube_metrics = youtube_service.get_video_analytics(video_id)
             
-            # Generate views
-            views = views_service.generate_views(
-                insight_spec['video_meta'],
-                insight_spec['knowledge_core']['center_pins'],
-                metrics
-            )
+            # center_pins を取得
+            center_pins = spec.get('knowledge_core', {}).get('center_pins', [])
             
-            # Update and save
-            insight_spec['views'] = views
-            insight_spec['_metadata']['converted_at'] = datetime.utcnow().isoformat() + "Z"
-            insight_spec['_metadata']['conversion_phase'] = "Phase 4"
+            # Views を生成
+            views = ViewsGeneratorService.generate_views(spec['video_meta'], center_pins, youtube_metrics)
             
-            repo.save(lecture_id, insight_spec)
+            # insight_spec に views を追加
+            spec['views'] = views
+            spec['_metadata']['converted_at'] = datetime.now(JST).isoformat()
+            spec['_metadata']['conversion_phase'] = "Phase 4"
             
-            print(f"✅ Lecture {lecture_id}: views generated (competitive, education, self_improvement)")
+            # 保存
+            repo.save(lecture_id, spec)
+            
+            print(f"✅ Lecture {lecture_id}: views generated")
             success_count += 1
-            
+        
         except Exception as e:
             print(f"❌ Lecture {lecture_id}: {str(e)}")
-            failed_count += 1
     
-    print(f"\n✅ Phase 4 completed: {success_count} success, {failed_count} failed")
-    return 0 if failed_count == 0 else 1
+    print(f"\n✅ Phase 4 completed: {success_count} success, {len(lecture_ids) - success_count} failed")
 
-
-if __name__ == '__main__':
-    exit(main())
-
-
-
+if __name__ == "__main__":
+    main()

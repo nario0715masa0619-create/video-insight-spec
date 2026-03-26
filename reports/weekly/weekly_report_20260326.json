@@ -1,0 +1,67 @@
+[
+  {
+    "lecture_id": "01",
+    "title": "#01【独学で習得】初心者でも分かるwebマーケティング講座",
+    "status": "BASELINE_SET",
+    "baseline_timestamp": "2026-03-26T18:39:08.348463+09:00",
+    "baseline_metrics": {
+      "view_count": 115834,
+      "like_count": 1804,
+      "comment_count": 48,
+      "engagement_rate": 0.016
+    },
+    "message": "初回ベースラインスナップショットを記録しました。次週のレポートで増減を表示します。"
+  },
+  {
+    "lecture_id": "02",
+    "title": "#02【独学で習得】初心者でも分かるwebマーケティング講座／3C分析",
+    "status": "BASELINE_SET",
+    "baseline_timestamp": "2026-03-26T18:39:08.621291+09:00",
+    "baseline_metrics": {
+      "view_count": 47739,
+      "like_count": 776,
+      "comment_count": 24,
+      "engagement_rate": 0.0168
+    },
+    "message": "初回ベースラインスナップショットを記録しました。次週のレポートで増減を表示します。"
+  },
+  {
+    "lecture_id": "03",
+    "title": "#03【独学で習得】初心者でも分かるwebマーケティング講座／LPO",
+    "status": "BASELINE_SET",
+    "baseline_timestamp": "2026-03-26T18:39:08.896724+09:00",
+    "baseline_metrics": {
+      "view_count": 33800,
+      "like_count": 619,
+      "comment_count": 21,
+      "engagement_rate": 0.0189
+    },
+    "message": "初回ベースラインスナップショットを記録しました。次週のレポートで増減を表示します。"
+  },
+  {
+    "lecture_id": "04",
+    "title": "#04【独学で習得】初心者でも分かるwebマーケティング講座／売れるキャッチコピー",
+    "status": "BASELINE_SET",
+    "baseline_timestamp": "2026-03-26T18:39:09.202805+09:00",
+    "baseline_metrics": {
+      "view_count": 26026,
+      "like_count": 432,
+      "comment_count": 23,
+      "engagement_rate": 0.0175
+    },
+    "message": "初回ベースラインスナップショットを記録しました。次週のレポートで増減を表示します。"
+  },
+  {
+    "lecture_id": "05",
+    "title": "#05【独学で習得】初心者でも分かるwebマーケティング講座／Googleアナリティクス",
+    "status": "BASELINE_SET",
+    "baseline_timestamp": "2026-03-26T18:39:09.509822+09:00",
+    "baseline_metrics": {
+      "view_count": 21064,
+      "like_count": 310,
+      "comment_count": 26,
+      "engagement_rate": 0.016
+    },
+    "message": "初回ベースラインスナップショットを記録しました。次週のレポートで増減を表示します。"
+  }
+]
