@@ -128,3 +128,59 @@ MIT License
 2026-03-25 - Phase 3 完了（52 center_pins ラベル付与、品質検証 5/5 OK）
 
 
+
+
+## Phase 4: Views Implementation
+
+Phase 4 では、各講座の insight_spec に **views** セクションを追加し、ビジネス分析用の 3 つの異なるビューを生成します。
+
+### 生成されるビュー
+
+| ビュー | 説明 | 主な指標 |
+|-------|------|--------|
+| **competitive** | YouTube メトリクスと engagement | view_count, like_count, comment_count, engagement_score |
+| **education** | 難易度別の学習構成 | difficulty_distribution, top_pins_by_difficulty |
+| **self_improvement** | ビジネステーマとファネル流れ | business_theme_distribution, funnel_flow |
+
+### engagement_score（新規スコア）
+
+各ピンの"ビジネス価値"を 0.0～1.0 でスコアリング。base_purity（60%）+ type（20%）+ funnel_stage（20%）の合成スコア。
+
+詳細は [VIEWS_DESIGN.md](docs/architecture/VIEWS_DESIGN.md) を参照。
+
+### 実装ファイル
+
+- **converter/engagement_scorer.py** - engagement_score 計算
+- **converter/views_generator_service.py** - views セクション生成
+- **generate_views.py** - メインスクリプト
+
+### 実行方法
+
+\\\ash
+python generate_views.py --lecture-ids "01,02,03,04,05" --archive-dir "D:\\AI_Data\\video-insight-spec\\archive"
+\\\
+
+### 品質検査
+
+\\\ash
+python quality_check_phase4.py --lecture-ids "01,02,03,04,05"
+\\\
+
+---
+
+## サブスク連携（Phase 4.1 予定）
+
+Phase 4.1 では、週次レポート生成スクリプト（weekly_update_views.py）を実装し、毎週 views を更新。初回（Phase 4）の baseline と比較して成長率を計算し、クライアント向けレポートを配信します。
+
+\\\
+初期 baseline（Phase 4）
+  ↓ 1 週間後
+views を API で更新 + delta 計算
+  ↓
+週次レポート（HTML/PDF）を配信
+  ↓
+毎週繰り返し（サブスク）
+\\\
+
+詳細は [IMPLEMENTATION_PLAN.md](docs/operations/IMPLEMENTATION_PLAN.md) を参照。
+
