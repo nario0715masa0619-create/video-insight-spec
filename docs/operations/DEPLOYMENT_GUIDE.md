@@ -59,3 +59,37 @@ git branch -D feature/phase-4-views-implementation
 
 ---
 Last Updated: 2026-03-26
+
+## Phase 4.1: Weekly Report Generation
+
+### 概要
+週次レポート生成機能。複数週のスナップショットから成長率を計算し、JSON形式で出力。
+
+### 必須ファイル
+- \weekly_report_generator.py\: レポート生成エンジン
+- \converter/report_utils.py\: Delta計算ユーティリティ
+- \converter/report_formatter.py\: JSON/HTML/Text フォーマッタ
+- \converter/snapshot_manager.py\: スナップショット管理
+- \quality_check_phase4_1.py\: 品質検査スクリプト
+
+### 実行例
+\\\ash
+python weekly_report_generator.py \\
+  --lecture-ids "01,02,03,04,05" \\
+  --archive-dir "D:\\AI_Data\\video-insight-spec\\archive" \\
+  --output-dir "reports/weekly"
+\\\
+
+### 出力フォーマット
+- **初回（Baseline）**: \BASELINE_SET\ ステータス、スナップショット初期化
+- **2回目以降（Delta）**: 前週との差分、成長率を計算
+
+### メトリクス
+- view_count, like_count, comment_count, engagement_rate
+- タイムスタンプ: ISO8601+09:00 (JST)
+
+### 品質検査結果
+- ✅ 25/25 合格
+- ✅ Delta計算: 0除算なし
+- ✅ baseline/current の値の取り違いなし
+
