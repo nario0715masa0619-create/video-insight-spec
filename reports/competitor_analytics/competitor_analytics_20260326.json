@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-26T21:43:59.012701+09:00",
+  "generated_at": "2026-03-26T22:09:58.784477+09:00",
   "portfolio_view": [
     {
       "role": "self",
@@ -9,7 +9,7 @@
       "dominant_difficulty": "beginner",
       "total_center_pins": 9,
       "view_count": 118000,
-      "engagement_rate": 0.0164
+      "engagement_rate": 0.0161
     },
     {
       "role": "self",
@@ -61,7 +61,7 @@
         "title": "#01【独学で習得】初心者でも分かるwebマーケティング講座",
         "view_count_delta": 2166,
         "view_count_growth_rate": 0.0187,
-        "engagement_rate_delta": 0.0004
+        "engagement_rate_delta": 0.0001
       }
     ]
   }

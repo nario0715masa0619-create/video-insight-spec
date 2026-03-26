@@ -1,7 +1,5 @@
 """
 Phase 4.2: Competitor Analytics Generator
-
-portfolio_view + growth_view を生成し、JSON で出力する。
 """
 
 import argparse
@@ -25,13 +23,10 @@ def main():
     archive_dir = args.archive_dir
     output_dir = args.output_dir
     
-    # Output ディレクトリを作成
     os.makedirs(output_dir, exist_ok=True)
     
-    # InsightSpecRepository インスタンスを作成
     repo = InsightSpecRepository(archive_dir)
     
-    # 各講座の insight_spec を読み込み
     print("【Phase 4.2: Competitor Analytics Generation】")
     print(f"Archive dir: {archive_dir}")
     print(f"Processing lectures: {', '.join(lecture_ids)}\n")
@@ -50,32 +45,40 @@ def main():
         print("❌ No specs loaded. Exiting.")
         return
     
-    # portfolio_view を生成
     print("\n【Portfolio View Generation】")
     portfolio_view = PortfolioViewService.generate_portfolio_view(insight_specs, role="self")
     print(f"✅ Portfolio view generated: {len(portfolio_view)} lectures")
+    # ✅ INFO: snapshot_history < 2 の講座をスキップ
+    skipped_lectures = [
+        spec.get("lecture_id", "unknown") 
+        for spec in insight_specs 
+        if len(spec.get("views", {}).get("competitive", {}).get("snapshot_history", [])) < 2
+    ]
+    if skipped_lectures:
+        print(f"ℹ️  INFO: snapshot_history < 2 の講座はスキップ: {', '.join(skipped_lectures)}")
+
+
     
-    # growth_view を生成
     print("\n【Growth View Generation】")
     growth_view = GrowthViewService.generate_growth_view(insight_specs, role="self")
     print(f"✅ Growth view generated: {len(growth_view.get('top_by_view_growth', []))} lectures with growth data")
     
-    # 結果を統合
+    # ✅ FIX: JST timezone を正しく指定
     JST = timezone(timedelta(hours=9))
+    generated_at = datetime.now(JST).isoformat()
+    
     competitor_analytics = {
-        "generated_at": datetime.now(JST).isoformat(),
+        "generated_at": generated_at,
         "portfolio_view": portfolio_view,
         "growth_view": growth_view
     }
     
-    # JSON で出力
     output_file = os.path.join(output_dir, f"competitor_analytics_{datetime.now().strftime('%Y%m%d')}.json")
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(competitor_analytics, f, ensure_ascii=False, indent=2)
     
     print(f"\n✅ Competitor analytics generated: {output_file}")
     
-    # サマリーを表示
     print("\n【Summary】")
     print(f"Portfolio items: {len(portfolio_view)}")
     print(f"Growth items: {len(growth_view.get('top_by_view_growth', []))}")
@@ -85,3 +88,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
