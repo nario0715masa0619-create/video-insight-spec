@@ -43,8 +43,8 @@ def main():
     parser.add_argument(
         "--archive-dir",
         type=str,
-        default=r"D:\Knowledge_Base\Brain_Marketing\archive",
-        help="Archive directory containing insight_spec files"
+        default=None,
+        help="Archive directory containing insight_spec files (uses ARCHIVE_OUTPUT_DIR from .env if not specified)"
     )
     parser.add_argument(
         "--top-n",
@@ -60,7 +60,8 @@ def main():
     args = parser.parse_args()
 
     lecture_id = args.lecture_id
-    archive_dir = args.archive_dir
+    # ARCHIVE_OUTPUT_DIR を優先、なければ引数、なければデフォルト
+    archive_dir = args.archive_dir or os.getenv("ARCHIVE_OUTPUT_DIR", r"D:\Knowledge_Base\Brain_Marketing\archive")
 
     # ============================================================================
     # STEP 1: Initialize Components
