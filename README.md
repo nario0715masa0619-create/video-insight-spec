@@ -1,44 +1,54 @@
 # video-insight-spec
 
-**YouTube動画から『実行可能な知恵』を抽出し、JSON と SQLite で蓄積する仕組みの仕様書・設計リポジトリ。**
+YouTube 動画の洞察・競合分析システム。
 
-## クイックスタート
+## Quick Start
 
-### セットアップ
-\\\ash
-cp .env.example .env
-# .env を編集して YOUTUBE_API_KEY を設定
-\\\
+**Requirements:**
+- Python 3.8+
+- YouTube API Key
 
-### Views 生成（Phase 4）
-\\\ash
-python generate_views.py --lecture-ids "01,02,03,04,05" --archive-dir "D:\\AI_Data\\video-insight-spec\\archive" --api-key "YOUR_API_KEY"
-\\\
+**Setup:**
+1. Clone repository
+2. Install dependencies
+3. Set YOUTUBE_API_KEY in .env
+4. Run competitor_analytics_generator.py
 
-### Weekly Report 生成（Phase 4.1）
-\\\ash
-python weekly_report_generator.py --lecture-ids "01,02,03,04,05" --archive-dir "D:\\AI_Data\\video-insight-spec\\archive" --output-dir "reports/weekly"
-\\\
+## Phase Progress
 
-## ドキュメント
+| Phase | Status | Date |
+|-------|--------|------|
+| Phase 1-3 | ✅ Complete | - |
+| Phase 4 | ✅ Complete | 2026-03-26 |
+| Phase 4.1 | ✅ Complete | 2026-03-26 |
+| Phase 4.2 | ✅ Complete | 2026-03-26 |
+| Phase 4.3 | 🔄 In Progress | - |
 
-| ドキュメント | 説明 |
-|-----------|------|
-| [docs/PROJECT_OVERVIEW.md](./docs/PROJECT_OVERVIEW.md) | 📖 詳細な実装進捗・Phase ごとの説明 |
-| [JSON_SPEC.md](./docs/specs/JSON_SPEC.md) | JSON スキーマ定義 |
-| [docs/architecture/MODULES.md](./docs/architecture/MODULES.md) | モジュール参照（全モジュールの役割） |
-| [docs/operations/DEPLOYMENT_GUIDE.md](./docs/operations/DEPLOYMENT_GUIDE.md) | デプロイメントガイド |
+## Documentation
 
-## ⚠️ セキュリティに関する注意
+- [PROJECT_OVERVIEW.md](docs/PROJECT_OVERVIEW.md)
+- [PHASE4_2_DESIGN.md](docs/phases/PHASE4_2_DESIGN.md)
+- [JSON_SPEC.md](docs/specs/JSON_SPEC.md)
+- [VIEWS_DESIGN.md](docs/specs/VIEWS_DESIGN.md)
 
-本リポジトリの過去のコミット履歴に Google API キー（\AIza...\）が含まれていました。
-**該当のAPIキーは既に無効化（Revoke）済みです。**
+## Commands
 
-ご自身で取得した有効なAPIキーを用いて \.env\ ファイルを作成してください。
-\.env\ ファイルは \.gitignore\ に登録されており、Git のコミット対象外です。
+python competitor_analytics_generator.py --lecture-ids "01,02,03,04,05"
 
-## ライセンス
-MIT
+## Directory Structure
+
+video-insight-spec/
+├── docs/
+├── converter/
+├── scripts/
+├── reports/
+└── competitor_analytics_generator.py
+
+## Security
+
+Keep YOUTUBE_API_KEY in .env
+Do not commit to Git
 
 ---
-Last Updated: 2026-03-26
+
+**Last Updated:** 2026-03-26

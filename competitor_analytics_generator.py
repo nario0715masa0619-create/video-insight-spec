@@ -10,6 +10,7 @@ from converter.portfolio_view_service import PortfolioViewService
 from converter.growth_view_service import GrowthViewService
 from converter.theme_view_service import ThemeViewService
 from converter.insight_spec_repository import InsightSpecRepository
+from converter.report_generator import ReportGenerator
 
 
 def main():
@@ -83,14 +84,27 @@ def main():
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(competitor_analytics, f, ensure_ascii=False, indent=2)
 
-    print(f"\n✅ Competitor analytics generated: {output_file}")
+    print(f"\n✅ Competitor analytics JSON generated: {output_file}")
+
+    # ===== Phase 4.3: HTML/Text レポート生成 =====
+    print("\n【Phase 4.3: HTML/Text Report Generation】")
+    try:
+        report_paths = ReportGenerator.generate(output_file, output_dir="reports")
+        print(f"✅ HTML Report generated: {report_paths['html']}")
+        print(f"✅ Text Report generated: {report_paths['text']}")
+    except Exception as e:
+        print(f"❌ Report generation error: {str(e)}")
+        return
 
     print("\n【Summary】")
     print(f"Portfolio items: {len(portfolio_view)}")
     print(f"Growth items: {len(growth_view.get('top_by_view_growth', []))}")
     print(f"Theme items: {theme_count}")
     print(f"Period: {growth_view.get('period', 'unknown')}")
-    print(f"Output: {output_file}")
+    print(f"\nOutput Files:")
+    print(f"  JSON: {output_file}")
+    print(f"  HTML: {report_paths['html']}")
+    print(f"  Text: {report_paths['text']}")
 
 
 if __name__ == "__main__":
