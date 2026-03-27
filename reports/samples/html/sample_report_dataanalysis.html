@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>サンプルレポート：データ分析系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #222; background: #f9f9f9; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h1 { font-size: 2rem; font-weight: 700; margin: 0 0 20px 0; color: #0066cc; border-bottom: 3px solid #0066cc; padding-bottom: 10px; }
+        h2 { font-size: 1.5rem; font-weight: 600; margin: 30px 0 10px 0; color: #0066cc; }
+        h3 { font-size: 1.2rem; font-weight: 600; margin: 15px 0 8px 0; color: #333; }
+        p { margin: 8px 0; line-height: 1.7; }
+        strong { color: #0066cc; font-weight: 600; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #f0f0f0; font-weight: 600; }
+        tbody tr:nth-child(even) { background: #fafafa; }
+        ol { margin: 10px 0 10px 25px; }
+        ul { margin: 10px 0 10px 25px; }
+        li { margin: 5px 0; line-height: 1.7; }
+        .footer { margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee; font-size: 0.85rem; color: #666; }
+        .footer p { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+<h1>サンプルレポート：データ分析系</h1>
+<p><strong>分析対象：</strong> Python・SQL・データ分析講座を提供する EdTech スタートアップ</p>
+<p><strong>講座数：</strong> 5～10 本</p>
+<p><strong>分析期間：</strong> 2026 年 2 月（過去 1 ヶ月）</p>
+<p><strong>レポート生成日：</strong> 2026-03-27</p>
+<h2>Executive Summary</h2>
+<h3>全体サマリ</h3>
+<table>
+<thead><tr>
+<th>指標</th>
+<th>数値</th>
+</tr></thead><tbody>
+<tr>
+<td>総視聴数</td>
+<td>95,000</td>
+</tr>
+<tr>
+<td>前月比</td>
+<td>+6.8%</td>
+</tr>
+<tr>
+<td>平均エンゲージメント率</td>
+<td>1.58%</td>
+</tr>
+</tbody></table>
+<h3>成長テーマ Top 3</h3>
+<ol><li><strong>Python データ分析</strong> - 視聴数前月比 +18.2%、エンゲージメント 1.75%</li>
+<li><strong>SQL 実践</strong> - 視聴数前月比 +12.5%、エンゲージメント 1.62%</li>
+<li><strong>データ可視化</strong> - 視聴数前月比 +8.9%、エンゲージメント 1.51%</li>
+</ol>
+<h3>Top 3 講座</h3>
+<table>
+<thead><tr>
+<th>講座名</th>
+<th>視聴数</th>
+<th>エンゲージ率</th>
+<th>主要テーマ</th>
+</tr></thead><tbody>
+<tr>
+<td>Python 分析入門：NumPy・Pandas 完全ガイド</td>
+<td>38,000</td>
+<td>1.72%</td>
+<td>Python・データ分析</td>
+</tr>
+<tr>
+<td>SQL 実践スキル：データ抽出から集計まで</td>
+<td>28,000</td>
+<td>1.58%</td>
+<td>SQL・データ処理</td>
+</tr>
+<tr>
+<td>Tableau でしか見えないダッシュボード構築</td>
+<td>19,000</td>
+<td>1.44%</td>
+<td>データ可視化・ツール</td>
+</tr>
+</tbody></table>
+<p><strong>推奨アクション</strong>: Python 入門者向け統計学講座を新規開設、SQL と Python の統合パッケージ化、データ可視化講座を倍増。</p>
+<p><strong>期待効果</strong>: 来月視聴数 10～15% 程度の上昇が見込める可能性があります。売上インパクトは月数十～数百万円規模（詳細は個別試算）。</p>
+<p>※ Tableau 上級（認定資格対策）講座は前月比 +1.2% で成長が小さい、コンテンツ見直し検討。</p>
+<h2>ポートフォリオビュー</h2>
+<p>各講座の詳細メトリクス（視聴数、前月比、エンゲージメント率、販売ステージ）を掲載。</p>
+<table>
+<thead><tr>
+<th>講座名</th>
+<th>視聴数</th>
+<th>前月比</th>
+<th>エンゲージ率</th>
+<th>ステージ</th>
+</tr></thead><tbody>
+<tr>
+<td>Python 分析入門</td>
+<td>38,000</td>
+<td>+22.1%</td>
+<td>1.72%</td>
+<td>教育</td>
+</tr>
+<tr>
+<td>SQL 実践スキル</td>
+<td>28,000</td>
+<td>+15.8%</td>
+<td>1.58%</td>
+<td>教育</td>
+</tr>
+<tr>
+<td>Tableau ダッシュボード</td>
+<td>19,000</td>
+<td>+8.6%</td>
+<td>1.44%</td>
+<td>比較検討</td>
+</tr>
+<tr>
+<td>統計学基礎（ノーコード）</td>
+<td>7,200</td>
+<td>-2.1%</td>
+<td>1.21%</td>
+<td>認知</td>
+</tr>
+<tr>
+<td>R 言語実践分析</td>
+<td>2,800</td>
+<td>-0.8%</td>
+<td>0.98%</td>
+<td>認知</td>
+</tr>
+</tbody></table>
+<h2>成長ビュー</h2>
+<p><strong>Python データ分析テーマ成長トレンド</strong>: 過去2ヶ月で視聴数が 1.75 倍に増加。20～50 歳の データサイエンティスト候補・経営企画・営業分析チーム担当者が主な視聴層。</p>
+<ul><li>1 月視聴数：21,700</li>
+<li>2 月視聴数：38,000</li>
+<li>成長率：1.75 倍相当</li>
+</ul>
+<h2>テーマ別トップ講座</h2>
+<table>
+<thead><tr>
+<th>テーマ</th>
+<th>トップ講座</th>
+<th>視聴数</th>
+<th>エンゲージ率</th>
+</tr></thead><tbody>
+<tr>
+<td>Python</td>
+<td>Python 分析入門</td>
+<td>38,000</td>
+<td>1.72%</td>
+</tr>
+<tr>
+<td>SQL</td>
+<td>SQL 実践スキル</td>
+<td>28,000</td>
+<td>1.58%</td>
+</tr>
+<tr>
+<td>データ可視化</td>
+<td>Tableau ダッシュボード</td>
+<td>19,000</td>
+<td>1.44%</td>
+</tr>
+<tr>
+<td>統計学</td>
+<td>統計学基礎（ノーコード）</td>
+<td>7,200</td>
+<td>1.21%</td>
+</tr>
+</tbody></table>
+<h2>代表的インサイト</h2>
+<h3>インサイト 1：初心者向けコンテンツの需要が高い</h3>
+<p>統計学基礎（ノーコード）講座の視聴数は少ないが、完了率 72% で継続学習への関心が高い。→ 初級者向け充実化で新規ユーザー流入期待</p>
+<h3>インサイト 2：Python＋SQL セット化による相乗効果</h3>
+<p>Python 講座視聴後の SQL 講座転換率が 32%（業界平均 ~25% 想定）で高い。→ セット販売・カリキュラム統合で相乗効果見込める可能性</p>
+<h3>インサイト 3：可視化ツール供給不足</h3>
+<p>Tableau 講座の視聴は増加傾向だが完了率は 48% で低迷。→ 初級～中級別、ツール別（Power BI・Looker も含む）講座拡充で需要対応可能</p>
+<h3>インサイト 4：R 言語講座は需要縮小傾向</h3>
+<p>R 言語講座は視聴数が低下（-0.8% MoM）。Python への置き換わり進行中か。→ R 講座廃止検討、または R/Python 比較講座に統合</p>
+<h2>営業向けチェックリスト（学べるポイント）</h2>
+<ul><li>Executive Summary の凝縮度合い（1 ページで全体像把握）</li>
+<li>数値抽出の正確性（エンゲージ率 小数点 2 位）</li>
+<li>成長テーマ抽出と顧客ニーズ マッピング</li>
+<li>定量的アクション提案の具体性（セット化、講座数◎本）</li>
+<li>実行可能性の高いインサイト（完了率、転換率データ活用）</li>
+</ul>
+<div class="footer">
+            <p><strong>データソース：</strong> video-insight-spec</p>
+            <p><strong>レポート作成者note:</strong> 本サンプルレポートは仮想データを基に構成。Phase 7 以降は匿名化した実績データに置換予定。</p>
+        </div>
+    </div>
+</body>
+</html>
+
