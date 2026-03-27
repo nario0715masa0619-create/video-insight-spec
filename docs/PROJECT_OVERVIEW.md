@@ -1,120 +1,247 @@
-# Project Overview: video-insight-spec
+# プロジェクト概要：video-insight-spec
 
-## Phase Progress
+## ビジョン
 
-| Phase | Status | Date |
-|-------|--------|------|
-| Phase 1-3 | ✅ Complete | - |
-| Phase 4 | ✅ Complete | 2026-03-26 |
-| Phase 4.1 | ✅ Complete | 2026-03-26 |
-| Phase 4.2 | ✅ Complete | 2026-03-26 |
-| Phase 4.3 | 🔄 In Progress | - |
+YouTube動画の洞察・競合分析システム。動画視聴データを構造化し、経営判断に直結したレポートを自動生成・配信するSaaSサービスの基盤。
 
-## Phase 4.2: Competitor Analytics
+## フェーズの進捗
 
-### 1. Portfolio View
+| フェーズ | タイトル | 状態 | 日付 |
+|---------|---------|------|------|
+| 4.2 | データ仕様設計 | ✅ 完了 | 2026-03-26 |
+| 4.3 | HTML/Text フォーマッタ | ✅ 完了 | 2026-03-27 |
+| 5.1 | 経営者向けサマリー | ✅ 完了 | 2026-03-27 |
+| 5.2 | サブスク仕様 | ✅ 完了 | 2026-03-27 |
+| 5.3 | 外部向け資料 | ✅ 完了 | 2026-03-27 |
+| 6 | PoC・営業支援 | 🔄 進行中 | - |
+| 7 | プロダクト拡張 | 📋 計画中 | - |
 
-**Purpose:** All courses with metadata and engagement metrics.
+## フェーズ4：データ生成・レポート自動化
 
-**Data:** 5 lectures
+### 4.2 - データ仕様設計
 
-| Lecture | Views | Engagement | Dominant Stage |
-|---------|-------|------------|-----------------|
-| 01 | 118,000 | 1.61% | 認知 |
-| 02 | 47,739 | 1.68% | 比較検討 |
-| 03 | 33,800 | 1.89% | クロージング |
-| 04 | 26,026 | 1.75% | 興味・関心 |
-| 05 | 21,064 | 1.60% | 教育 |
+目的：競合分析用の構造化ビュー生成
 
-### 2. Growth View
+ビュー構成：
+1. Portfolio View：全講座のメタデータとエンゲージメント指標
+2. Growth View：直近成長中の講座（スナップショット≥2件）
+3. Theme View：ビジネステーマごとのトップ講座
 
-**Purpose:** Courses with recent growth (snapshot_history ≥ 2 only).
+サンプルデータ：
+- 分析講座数：5本
+- ビジネステーマ数：8個
+- テーマ別総講座数：14本
+- エンゲージメント計算式：0.6 × purity + 0.2 × type_weight + 0.2 × stage_weight
 
-**Period:** 2026-03-26 to 2026-04-02
+### 4.3 - HTML/Text フォーマッタ
 
-**Data:** 1 lecture
+目的：3層JSONを人間が読める形式に変換
 
-| Lecture | View Delta | Growth Rate |
-|---------|-----------|-------------|
-| 01 | +2,166 | +1.87% |
+出力形式：
+- Executive Summary（1ページ）：主要指標 + Top3講座 + Top3テーマ + アクション提案
+- Full Report（HTML）：Portfolio View + Growth View + Theme View + インサイト
+- Full Report（テキスト）：マークダウン互換版
 
-**Note:** Lectures 02-05 excluded (single snapshot).
+実装ファイル：
+- html_formatter.py - レスポンシブCSSを使用したHTML生成
+- text_formatter.py - マークダウン変換
+- executive_summary_formatter.py - 1ページサマリー生成
+- report_generator.py - オーケストレーション
 
-### 3. Theme View
+## フェーズ5：商品化・営業資料
 
-**Purpose:** Top course per business theme.
+### 5.1 - 経営者向けサマリー
 
-**Data:** 8 themes, 14 lectures
+出力内容：経営判断用1ページレポート
+- 総視聴数、エンゲージメント率、成長テーマ
+- Top3講座の詳細指標
+- アクション提案
 
-| Theme | Top Lecture | Views | Engagement |
-|-------|------------|-------|------------|
-| マーケティング | 01 | 118,000 | 1.61% |
-| Webマーケティング | 01 | 118,000 | 1.61% |
-| 自社分析 | 02 | 47,739 | 1.68% |
-| コピーライティング | 03 | 33,800 | 1.89% |
-| Webデザイン | 03 | 33,800 | 1.89% |
-| Web制作 | 03 | 33,800 | 1.89% |
-| Webサイト制作 | 03 | 33,800 | 1.89% |
-| データ分析 | 05 | 21,064 | 1.60% |
+### 5.2 - サブスクリプション仕様
 
-## Technical Details
+サービスモデル：
+- ターゲット：EdTechスタートアップ（講座5～20本）
+- 基本プラン：月額10万円 + 初期導入費30～50万円
+- プレミアムプラン（将来）：月額20万円 + 週次報告
+- エンタープライズ（将来）：要相談
 
-### Engagement Score Formula
+Year 3予測（シナリオB）：
+- ARR：4,500万円
+- 顧客数：30社
+- EBITDA：1,900～2,400万円（利益率42～53%）
+- 回収期間：3～4年
 
-engagement_score = 0.6 × purity_norm + 0.2 × type_weight + 0.2 × stage_weight
+### 5.3 - 外部向け資料
 
-**type_weight:**
-- framework: 1.0
-- strategy: 0.8
-- tactic: 0.6
-- concept: 0.4
+成果物：
+- LP構成メモ（PHASE5_3_LP_OUTLINE.md）：マーケティング資料、CTA、料金体系
+- note記事草案（PHASE5_3_NOTE_DRAFT.md）：経営層向けビジネスモデル解説
+- 金融機関向け説明書（PHASE5_3_FINANCE_BRIEF.md）：VC・銀行向けピッチ資料、市場分析、財務予測、リスク対策
 
-**stage_weight:**
-- クロージング: 1.0
-- 継続・LTV: 0.9
-- 比較検討: 0.8
-- 教育: 0.7
-- 興味・関心: 0.5
-- 認知: 0.3
+## フェーズ6：PoC・営業支援（進行中）
 
-## Implementation Files
+### 目標
 
-| File | Purpose |
-|------|---------|
-| `competitor_analytics_generator.py` | CLI entry point |
-| `converter/portfolio_view_service.py` | Portfolio view generation |
-| `converter/growth_view_service.py` | Growth view generation (≥2 snapshots) |
-| `converter/theme_view_service.py` | Theme view generation |
-| `converter/engagement_scorer.py` | Engagement score calculation |
-| `converter/views_generator_service.py` | Views data handling |
-| `converter/insight_spec_repository.py` | Spec loading |
-| `docs/phases/PHASE4_2_DESIGN.md` | Design specifications |
-| `reports/competitor_analytics/competitor_analytics_20260326.json` | Generated output |
+1. PoC用ランディングページ：サンプルレポート掲載、計算機、デモ予約
+2. サンプルレポートセット：実例1～3件（HTML + テキスト）
+3. 営業テンプレ・自動化ツール：提案書生成、メールテンプレ、見積自動化
+4. オンボーディング支援：ドキュメント、チェックリスト、実装ガイド
 
-## Command
+### 成果物
 
-python competitor_analytics_generator.py
+- docs/phases/PHASE6_PLAN.md - 詳細実装計画
+- reports/samples/ - サンプルレポート
+- sales/ - 営業テンプレ
+- docs/onboarding/ - オンボーディング資料
 
-## Validation Results
+## フェーズ7：プロダクト拡張（将来）
 
-| Item | Result |
-|------|--------|
-| portfolio_view | ✅ 5 lectures |
-| growth_view | ✅ 1 lecture |
-| theme_view | ✅ 8 themes |
-| JSON format | ✅ Valid |
-| Timestamps | ✅ ISO8601 JST |
+### 計画機能
 
-## Next: Phase 4.3
+1. Webダッシュボード：リアルタイム・日次更新の可視化
+2. REST API：認証・レート制限付きデータ公開
+3. Slack統合：月次自動通知、成長テーマアラート
 
-HTML/Text Formatter
-- JSON → HTML report
-- Theme ranking tables
-- Growth highlights
+### ロードマップ
 
-**Status:** 🔄 In Progress
+- 2026年Q3：ダッシュボードMVP
+- 2026年Q4：API GA + Slack統合
+- 2027年：プレミアム機能、高度な分析機能
+
+## フェーズ8以降：長期成長（将来）
+
+- AI による自動提案生成
+- PDF出力・カスタムブランディング
+- 国際展開（東南アジア）
+- モバイルアプリ（iOS/Android）
+
+## 技術アーキテクチャ
+
+### 3層JSON構造
+
+{
+  "video_meta": { lecture_id, title, url, created_at, ... },
+  "knowledge_core": { themes, content_type, business_stage, ... },
+  "views": { portfolio_view, growth_view, theme_view, insights }
+}
+
+### 処理パイプライン
+
+1. 生成：YouTube API → 競合データ収集
+2. 分析：データを3層JSON に構造化
+3. フォーマッタ：JSON → HTML、テキスト、Executive Summary
+4. 出力：レポートファイルを reports/ に保存
+
+### 出力ディレクトリ
+
+- reports/competitor_analytics/ - 生JSON
+- reports/html/ - HTMLレポート
+- reports/text/ - テキスト/マークダウンレポート
+- reports/executive_summary/ - 1ページサマリー
+- reports/samples/ - PoCサンプルレポート（フェーズ6）
+
+## ビジネスモデル
+
+### ターゲット市場
+
+- 講座5～20本を持つEdTechスタートアップ
+- 年間売上1～10億円規模
+- 課題：データドリブン改善を進めたいが分析人材が限定的
+
+### 料金体系
+
+フェーズ5：
+- 基本プラン：月額10万円
+- 初期導入費：30～50万円
+- ROI：コース改善による年間1,000万～1億円超の効果
+
+フェーズ7（ダッシュボード追加時）：
+- プレミアム：月額20万円（週次報告 + 最適化コンサルティング）
+
+### 成長予測
+
+Year 1：5～8社、ARR 750万円、EBITDA 570万円（利益率76%）
+Year 2：15～20社、ARR 2,250万円、EBITDA 1,970万円（利益率88%）
+Year 3：30社、ARR 4,500万円、EBITDA 1,900～2,400万円（利益率42～53%）
+
+### 資金調達・出口
+
+資金調達計画：
+- Series A：1.5～2億円（R&D + 初期営業）
+- Series B：3～5億円（スケール + 国際展開）
+
+出口戦略：
+- M&A：1.35～1.8億円（ARRの3～4倍）
+- IPO：3.6～4.5億円（ARRの8～10倍）
+
+## セキュリティ・コンプライアンス
+
+- APIキー管理：.env ファイルで管理（Gitに非追跡）
+- データ暗号化：通信中（TLS）+ 保存時
+- 認証取得：SOC 2 Type II、ISO 27001（Year 1内）
+- SLA：稼働率99.9%を目指す
+- バックアップ：日次、地理的冗長化
+
+## ドキュメント構成
+
+docs/
+├── specs/
+│   ├── JSON_SPEC.md - 3層JSONスキーマ
+│   └── VIEWS_DESIGN.md - ビュー定義
+├── phases/
+│   ├── PHASE4_2_DESIGN.md - データ仕様
+│   ├── PHASE4_3_DESIGN.md - フォーマッタ設計
+│   ├── PHASE5_1_DESIGN.md - Executive Summary
+│   ├── PHASE5_2_PLAN.md - サブスク仕様
+│   ├── PHASE5_3_LP_OUTLINE.md - マーケティング資料
+│   ├── PHASE5_3_NOTE_DRAFT.md - note記事草案
+│   ├── PHASE5_3_FINANCE_BRIEF.md - 金融機関向け説明書
+│   └── PHASE6_PLAN.md - PoC・営業支援計画
+├── onboarding/ (フェーズ6以降)
+│   ├── ONBOARDING_GUIDE.md
+│   └── IMPLEMENTATION_CHECKLIST.md
+├── README.md - ファイル概要
+└── PROJECT_OVERVIEW.md - 本ドキュメント
+
+## 主要指標・KPI
+
+### プロダクト指標
+
+- レポート生成時間：5分以内
+- Executive Summary 精度：95%以上
+- ビュー生成完全性：100%
+
+### ビジネス指標
+
+- 顧客獲得原価（CAC）：50～100万円
+- 顧客生涯価値（LTV）：360～720万円（3年）
+- LTV/CAC比：3.6～7.2倍
+- チャーン率目標：年5%以下
+
+### 財務指標
+
+- 粗利益率：85～90%
+- 営業利益率（Year 3）：42～53%
+- キャッシュフロー黒字化：月24～30
+- Series A 回収期間：3～4年
+
+## 次のステップ
+
+今期（フェーズ6）：
+1. PHASE6_PLAN.md を詳細な成果物リスト付きで作成
+2. PoC 用ランディングページテンプレート構築
+3. サンプルレポートセット生成（3例）
+4. 営業テンプレ・自動化ツール作成
+5. オンボーディングドキュメント作成
+
+後続（フェーズ7以降）：
+- ダッシュボード開発
+- API 実装
+- Slack 統合
 
 ---
 
-**Last Updated:** 2026-03-26
-**Commit:** afa2bd2
+最終更新：2026-03-27
+ブランチ：main（フェーズ5.3 マージ済み）
+コミット：0b4f38e
+次のフェーズ：フェーズ6 - PoC・営業支援
