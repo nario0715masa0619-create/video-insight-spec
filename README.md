@@ -23,8 +23,8 @@ YouTube 動画の洞察・競合分析システム。動画視聴データを構
 | 5.1 | 経営者向けサマリー | ✅ 完了 | 2026-03-27 | 1ページレポート |
 | 5.2 | サブスク仕様 | ✅ 完了 | 2026-03-27 | サービスモデル、料金、SLA |
 | 5.3 | 外部向け資料 | ✅ 完了 | 2026-03-27 | LP outline、note 草案、Finance brief |
-| 6 | PoC・営業支援 | 🔄 進行中 | - | PoC 用 LP、サンプルレポート、営業テンプレ |
-| 7 | プロダクト拡張 | 📋 計画中 | - | ダッシュボード、REST API、Slack 統合 |
+`| 6 | PoC・営業支援 | ✅ 完了` | - |PHASE6_1_LP_MESSAGING.md、PHASE6_2_SAMPLE_REPORTS.md、PHASE6_4_ONBOARDING.md、sample_report (3種 MD/HTML) |
+`| 7 | プロダクト拡張 | 🔄 実装中 | - | ダッシュボード、REST API、Slack 統合 |
 
 ## 主な機能
 
@@ -168,4 +168,5 @@ video-insight-spec/
 最終更新: 2026-03-27
 ブランチ: main（Phase 5.3 マージ済み）
 次のフェーズ: Phase 6 - PoC・営業支援
+
 
