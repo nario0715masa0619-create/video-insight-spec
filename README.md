@@ -170,3 +170,4 @@ video-insight-spec/
 次のフェーズ: Phase 6 - PoC・営業支援
 
 
+
