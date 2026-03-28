@@ -168,3 +168,4 @@ video-insight-spec/
 最終更新: 2026-03-27
 ブランチ: main（Phase 5.3 マージ済み）
 次のフェーズ: Phase 6 - PoC・営業支援
+
