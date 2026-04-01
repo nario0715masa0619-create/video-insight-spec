@@ -1,183 +1,196 @@
 # PHASE 7-2：レポート自動生成エンジン
-**バージョン**: 1.0（計画版） | **作成日**: 2026-03-28 | **ステータス**: 計画中
+**バージョン**: 1.1（YouTube API 自動フィルタリング対応） | **作成日**: 2026-03-28 | **ステータス**: 計画中
 
 ## 概要
-Phase 7-1 で匿名化した実績データを入力として、Markdown / HTML / PDF レポートを自動生成・配信するエンジンを構築。毎月・毎週・毎日の定期実行をサポート。
-
-**5月～6月実装予定**（4月は Phase 7-1 匿名化・手動フロー確立に集中）
+Phase 7-1 で構築した実績データ匿名化フローを基に、YouTube API を用いた自動講座フィルタリング、Markdown→HTML→PDF のレポート自動生成、および定期実行スケジューリングを実装。毎月 1 日に自動実行、人的操作は月 1 回のボタン押下のみ。
 
 ---
 
-## 成果物（5月～6月）
+## 成果物（5月～6月完成予定）
 
-### 1. PHASE7_2_AUTO_GENERATION.md（このファイル）
-- レポート自動生成エンジン全体設計
-- 技術スタック、アーキテクチャ
-- 実装スケジュール、KPI
+### 1. YouTube API 自動フィルタリングスクリプト
+**ファイル**: scripts/youtube_auto_filter.py
+- YouTube Data API v3 で全講座を取得
+- フィルタリング条件：
+  - 再生数 ≥ 10,000
+  - 成長率（月増加率） ≥ 10%
+  - エンゲージメント率 ≥ 1.5%
+- 結果を CSV (data/filtered_lectures.csv) に出力
+- エラーハンドリング・API 制限対応
+- **期限**: 5月12日
 
-### 2. Python 自動化スクリプト (scripts/generate_report.py)
-機能:
-- CSV / JSON データ入力 → Markdown テンプレート埋め込み
-- Markdown → HTML 変換（markdown-it または pandoc）
-- HTML → PDF 出力（wkhtmltopdf または Playwright）
-- エラーハンドリング・ロギング
-- メール送信（オプション）
+### 2. レポート自動生成スクリプト
+**ファイル**: scripts/generate_report.py
+- 入力: CSV (filtered_lectures.csv) + 匿名化済み実績データ
+- Jinja2 テンプレートで Markdown 生成
+- pandoc / markdown-it で HTML 変換
+- wkhtmltopdf / Playwright で PDF 生成
+- 出力: reports/html/, reports/text/, reports/pdf/
+- **期限**: 5月26日
 
-### 3. スケジューリング設定 (scripts/scheduler_config.py)
-- APScheduler を使用した定期実行（日次・週次・月次）
-- cron 式対応
-- エラー時の再試行・通知機能
+### 3. スケジューリング・実行エンジン
+**ファイル**: scripts/scheduler_config.py
+- APScheduler で毎月 1 日 09:00 に自動実行
+- フロー: API 取得 → フィルタリング → レポート生成 → 配信
+- ログ記録・アラート通知（Slack/Email）
+- **期限**: 6月9日
 
-### 4. テンプレートライブラリ (templates/)
-- report_template_marketing.md
-- report_template_webdev.md
-- report_template_dataanalysis.md
-- report_template_custom.md
+### 4. テンプレートライブラリ
+**ディレクトリ**: templates/
+- templates/marketing_template.jinja2
+- templates/webdev_template.jinja2
+- templates/dataanalysis_template.jinja2
+- カスタマイズガイド同梱
+- **期限**: 5月19日
 
-### 5. 統合テスト・ドキュメント
-- tests/test_generate_report.py
-- docs/AUTO_GENERATION_USER_GUIDE.md
-- docs/AUTO_GENERATION_ADMIN_GUIDE.md
+### 5. テスト・ドキュメント
+- Unit テスト (tests/test_youtube_filter.py, test_generate_report.py)
+- Integration テスト (tests/test_full_pipeline.py)
+- ユーザーガイド (docs/PHASE7_2_USER_GUIDE.md)
+- 管理者ガイド (docs/PHASE7_2_ADMIN_GUIDE.md)
+- **期限**: 6月23日
 
 ---
 
 ## 技術スタック
 
-| レイヤー | 技術 | 用途 |
+| レイヤー | 技術 | 役割 |
 |---|---|---|
-| データ入力 | CSV / JSON | 匿名化データ |
-| テンプレート | Jinja2 | Markdown 埋め込み |
-| Markdown→HTML | markdown-it/pandoc | HTML 生成 |
-| HTML→PDF | wkhtmltopdf/Playwright | PDF 生成 |
-| スケジューリング | APScheduler | 定期実行 |
-| ロギング | Python logging | 監査ログ |
-| エラー通知 | メール/Slack | アラート |
-| 実行環境 | Docker/GitHub Actions/AWS Lambda | 本番運用 |
+| YouTube 連携 | YouTube Data API v3 + google-api-python-client | 講座自動取得・メタデータ抽出 |
+| フィルタリング | Python (pandas) | 条件評価・ソート |
+| データ準備 | Python (Pandas, NumPy) | 匿名化データ統合・正規化 |
+| テンプレート | Jinja2 | Markdown テンプレート埋め込み |
+| Markdown→HTML | pandoc / markdown-it | 出力フォーマット変換 |
+| HTML→PDF | wkhtmltopdf / Playwright | PDF レンダリング |
+| スケジューリング | APScheduler / cron | 定期実行（毎月 1 日） |
+| 環境・CI/CD | Docker / GitHub Actions | 本番環境・自動テスト |
+| ログ・監視 | Python logging + ELK | エラー追跡・パフォーマンス監視 |
 
 ---
 
-## アーキテクチャ概要
+## アーキテクチャ・処理フロー
 
-入力層: CSV / JSON / YAML
- ↓
-処理層（Python）
-├─ データ読み込み & 検証（pandas）
-├─ テンプレート変数埋め込み（Jinja2）
-├─ Markdown 生成
-├─ HTML 変換（pandoc / markdown-it）
-└─ PDF 生成（wkhtmltopdf / Playwright）
- ↓
-出力層
-├─ reports/text/report_YYYYMMDD.md
-├─ reports/html/report_YYYYMMDD.html
-├─ reports/pdf/report_YYYYMMDD.pdf
-└─ メール / Slack 送信
- ↓
-スケジューリング層（APScheduler）
-├─ 日次（毎朝 6:00 JST）
-├─ 週次（毎月曜 8:00 JST）
-└─ 月次（毎月 1 日 9:00 JST）
-
----
-
-## 実装ステップ（5月～6月）
-
-### ステップ 1：スクリプト実装（5月1日～15日）
-1. generate_report.py 基本フレーム（入力検証、エラーハンドリング）
-2. Markdown → HTML 変換モジュール（レスポンシブ CSS）
-3. HTML → PDF 変換モジュール（日本語フォント対応）
-
-### ステップ 2：テンプレート整備（5月8日～20日）
-1. 3 種類のテンプレート完成
-2. Jinja2 変数ドキュメント作成
-3. サンプルレンダリング & 確認
-
-### ステップ 3：スケジューリング実装（5月15日～25日）
-1. APScheduler 設定（日次・週次・月次）
-2. ロギング実装（audit log）
-3. エラー時の再試行・通知
-
-### ステップ 4：統合テスト（5月26日～31日）
-1. 単体テスト（pytest）
-2. 統合テスト（CSV → PDF 全フロー）
-3. パフォーマンステスト（生成時間 < 5分確認）
-
-### ステップ 5：本番デプロイ準備（6月1日～15日）
-1. Docker イメージ作成
-2. GitHub Actions ワークフロー設定
-3. AWS Lambda / Scheduler 設定
-4. 監視・アラート設定
-5. ドキュメント完成
-
-### ステップ 6：本番運用開始（6月16日～30日）
-1. 本番環境デプロイ
-2. 日次 → 週次 → 月次レポート段階的運用開始
-3. 監視・ログ確認（1～2週間）
+\\\
+[毎月 1 日 09:00] 
+  ↓
+[YouTube API] → 全講座メタデータ取得
+  ↓
+[youtube_auto_filter.py] → 再生数≥10k, 成長率≥10%, エンゲージ≥1.5% でフィルタリング
+  ↓
+[data/filtered_lectures.csv] → フィルタリング結果を出力
+  ↓
+[匿名化データ結合] → data/anonymized_customer_data.csv + filtered_lectures.csv
+  ↓
+[generate_report.py] → Jinja2 テンプレートで Markdown 生成
+  ↓
+[pandoc / markdown-it] → HTML 変換
+  ↓
+[wkhtmltopdf / Playwright] → PDF 変換
+  ↓
+[reports/ に保存]
+  ↓
+[APScheduler] → Slack/Email 通知
+  ↓
+[ログ記録・モニタリング]
+\\\
 
 ---
 
-## スケジュール（5月～6月詳細）
+## 実装スケジュール（5月～6月）
 
-| 週 | タスク | 担当 | KPI |
+### ステップ 1：YouTube API 統合（5月1日～12日）
+| 日程 | タスク | 担当 | KPI |
 |---|---|---|---|
-| 5/1-5/5 | スクリプト基本フレーム | Lead Dev | コード 50% 完成 |
-| 5/6-5/12 | Markdown→HTML/PDF 変換実装 | Lead Dev | 変換モジュール 100% |
-| 5/13-5/19 | テンプレート整備、Jinja2 変数定義 | PO + Dev | 3種テンプレート完成 |
-| 5/20-5/26 | APScheduler 設定、ロギング実装 | Dev + Ops | スケジューリング 100% |
-| 5/27-6/2 | 単体テスト、統合テスト | QA | テスト合格率 100% |
-| 6/3-6/9 | Docker 化、CI/CD 設定 | DevOps | デプロイ自動化 100% |
-| 6/10-6/16 | 本番環境テスト、ドキュメント完成 | Team | ドキュメント 100% |
-| 6/17-6/30 | 本番デプロイ、監視・最適化 | Ops + Dev | 稼働率 99.9% |
+| 5/1-5/3 | YouTube Data API v3 キー取得・認証確認 | Lead Dev | API 接続確認 |
+| 5/4-5/7 | youtube_auto_filter.py 実装・基本テスト | Lead Dev | フィルタリング動作 100% |
+| 5/8-5/12 | エラーハンドリング・API レート制限対応 | Lead Dev | エラー処理 100%, レート制限対応 ✅ |
+
+### ステップ 2：レポート生成パイプライン実装（5月13日～26日）
+| 日程 | タスク | 担当 | KPI |
+|---|---|---|---|
+| 5/13-5/15 | Jinja2 テンプレート 3 種完成 | PO + Designer | テンプレート 100% |
+| 5/16-5/19 | generate_report.py 実装（Markdown 生成） | Lead Dev | スクリプト動作 100% |
+| 5/20-5/23 | pandoc/markdown-it 統合、HTML 変換テスト | QA + Lead Dev | HTML 出力確認 ✅ |
+| 5/24-5/26 | wkhtmltopdf / Playwright 統合、PDF 変換テスト | QA + Lead Dev | PDF 出力確認 ✅ |
+
+### ステップ 3：スケジューリング・本番化（5月27日～6月15日）
+| 日程 | タスク | 担当 | KPI |
+|---|---|---|---|
+| 5/27-5/30 | APScheduler / cron 設定、定期実行テスト | Lead Dev + DevOps | スケジューリング動作 ✅ |
+| 6/1-6/5 | 本番環境デプロイ（Docker / GitHub Actions） | DevOps + Lead Dev | 本番環境 ✅ |
+| 6/6-6/9 | Slack/Email 通知・ロギング統合 | Lead Dev + Ops | 通知機能 ✅ |
+
+### ステップ 4：テスト・ドキュメント（6月10日～23日）
+| 日程 | タスク | 担当 | KPI |
+|---|---|---|---|
+| 6/10-6/15 | Unit / Integration テスト実施、バグ修正 | QA + Lead Dev | テスト合格率 100% |
+| 6/16-6/20 | ユーザーガイド・管理者ガイド作成 | PO + Tech Writer | ドキュメント完成度 100% |
+| 6/21-6/23 | 最終レビュー・本運用開始準備 | Lead Dev + PO | 本運用開始可否判定 |
+
+### ステップ 5：本運用開始・監視（6月24日～30日）
+| 日程 | タスク | 担当 | KPI |
+|---|---|---|---|
+| 6/24-6/30 | 本運用開始、1 週間モニタリング | Ops + Support | エラー率 < 1%, 応答時間 < 5 分 |
 
 ---
 
 ## リスク・対応
 
-| リスク | 影響 | 対応 | オーナー |
-|---|---|---|---|
-| PDF 生成遅延 | 5分以上かかる | 非同期処理化、キューイング | Lead Dev |
-| 日本語フォント未対応 | 文字化け | フォント埋め込み、テスト | Dev |
-| テンプレート拡張困難 | カスタマイズ困難 | Jinja2 ドキュメント充実 | PO |
-| スケジューリング漏れ | 実行停止 | 監視・アラート、キュー | Ops |
-| DB 接続エラー | 生成失敗 | 再試行ロジック | Dev |
+| # | リスク | 影響度 | 対応策 | オーナー |
+|---|---|---|---|---|
+| 1 | YouTube API レート制限超過 | 高 | キャッシング・バッチ処理・複数 API キー | Lead Dev |
+| 2 | Markdown→PDF 崩れ | 高 | wkhtmltopdf + Playwright テンプレート検証 | QA |
+| 3 | 大規模データ処理遅延 | 中 | 非同期処理・キュー実装 | Lead Dev |
+| 4 | スケジューラ停止 | 中 | 監視アラート・自動再起動 | DevOps |
+| 5 | セキュリティ脆弱性 | 高 | コード審査・依存パッケージ更新 | Security |
 
 ---
 
 ## 成功指標（KPI）
 
 ### 5月末
-- ✅ スクリプト実装率 >= 80%
-- ✅ テンプレート 3種完成
-- ✅ 単体テスト合格率 100%
+- ✅ YouTube API フィルタリング動作率 100%
+- ✅ Markdown 生成成功率 ≥ 99%
+- ✅ HTML/PDF 出力品質スコア ≥ 95%
+- ✅ テンプレート 3 種完成度 100%
 
 ### 6月末
-- ✅ レポート生成時間 < 5分 / 件
-- ✅ 生成成功率 >= 99.5%
-- ✅ 本番デプロイ完了・稼働率 99.9%
-- ✅ ドキュメント完成・利用者評価 >= 4.5/5.0
+- ✅ レポート生成時間 < 5 分/件
+- ✅ スケジューリング成功率 ≥ 99.5%
+- ✅ エラー率 < 0.5%
+- ✅ テスト合格率 100%
+- ✅ ドキュメント完成度 100%
+- ✅ 本運用準備完了
 
 ---
 
-## 担当者・所属
+## 担当者・役割
 
-| 役割 | 人数 | 主要タスク |
+| 役割 | 主要タスク | スキル要件 |
 |---|---|---|
-| Lead Dev | 1 | スクリプト実装、PDF 生成、最適化 |
-| PO | 1 | テンプレート設計、スケジュール定義 |
-| QA / テスト | 1 | 単体テスト、統合テスト |
-| DevOps | 1 | Docker 化、CI/CD |
-| Ops | 1 | スケジューリング運用、監視 |
+| **PO** | 要件定義、テンプレート承認、進捗管理 | ビジネス理解、プロセス設計 |
+| **Lead Dev** | API・スクリプト・パイプライン実装、テスト | Python, YouTube API, Jinja2, pandoc |
+| **QA** | テスト計画・実施、品質保証 | テスト設計、自動テスト |
+| **Designer** | テンプレートレイアウト、PDF スタイル | HTML/CSS, PDF デザイン |
+| **DevOps** | Docker, GitHub Actions, 本番デプロイ | Docker, CI/CD, Linux |
+| **Security** | セキュリティレビュー、GDPR 対応確認 | セキュリティ監査、暗号化 |
+| **Tech Writer** | ユーザー・管理者ガイド | ドキュメント作成スキル |
 
 ---
 
 ## 参考資料
 
-- Jinja2: https://jinja.palletsprojects.com/
+- YouTube Data API v3: https://developers.google.com/youtube/v3
+- google-api-python-client: https://github.com/googleapis/google-api-python-client
+- Jinja2 Documentation: https://jinja.palletsprojects.com/
 - Pandoc: https://pandoc.org/
+- markdown-it: https://github.com/executablebooks/markdown-it-py
 - wkhtmltopdf: https://wkhtmltopdf.org/
+- Playwright: https://playwright.dev/python/
 - APScheduler: https://apscheduler.readthedocs.io/
-- Python Logging: https://docs.python.org/3/library/logging.html
+- Docker Documentation: https://docs.docker.com/
+- GitHub Actions: https://docs.github.com/en/actions
 
 ---
 
-**次のステップ**: 5月1日に実装開始（スクリプト基本フレーム）
+**次のステップ**: 5月 1 日から実装着手。毎週金曜日に進捗ミーティング。
