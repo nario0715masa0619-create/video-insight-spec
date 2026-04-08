@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Summary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'メイリオ', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            line-height: 1.6;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #1a73e8;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 24px;
+            color: #1a73e8;
+            margin-bottom: 5px;
+        }
+        .header p {
+            font-size: 12px;
+            color: #666;
+        }
+        .summary-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+            background: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #34a853;
+        }
+        .summary-item {
+            text-align: center;
+        }
+        .summary-item .value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+        .summary-item .label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .section {
+            margin: 25px 0;
+        }
+        .section h2 {
+            font-size: 16px;
+            color: #1a73e8;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        .lecture-item {
+            background: #f9f9f9;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid #34a853;
+        }
+        .lecture-item .title {
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .lecture-item .metrics {
+            font-size: 12px;
+            color: #666;
+            margin: 5px 0;
+        }
+        .lecture-item .reason {
+            font-size: 12px;
+            color: #555;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        .theme-item {
+            background: #f9f9f9;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid #ea4335;
+        }
+        .theme-item .name {
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .theme-item .summary {
+            font-size: 12px;
+            color: #666;
+            margin: 3px 0;
+        }
+        .theme-item .top-course {
+            font-size: 12px;
+            color: #1a73e8;
+            margin-top: 5px;
+        }
+        .actions {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+        .actions h3 {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .action-item {
+            margin: 8px 0;
+            font-size: 12px;
+        }
+        .action-placeholder {
+            background: white;
+            border: 1px dashed #ccc;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            margin-top: 30px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Competitor Analytics Report</h1>
+            <p>自社Webマーケ講座（全5講座セット） / 直近7日間（2026-03-26〜2026-04-02）</p>
+            <p>Generated: 2026-03-26 22:36:53 (JST)</p>
+        </div>
+
+        <div class="section">
+            <h2>全体サマリ</h2>
+            <div class="summary-row">
+                <div class="summary-item">
+                    <div class="value">246,629</div>
+                    <div class="label">総ビュー数</div>
+                </div>
+                <div class="summary-item">
+                    <div class="value">1.71%</div>
+                    <div class="label">平均エンゲージメント率</div>
+                </div>
+                <div class="summary-item">
+                    <div class="value">1</div>
+                    <div class="label">成長テーマ数</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏆 Top 3 講座</h2>
+            <div class="lecture-item">
+    <div class="title">1️⃣ Lecture 01: #01【独学で習得】初心者でも分かるwebマーケティング講座</div>
+    <div class="metrics">118,000 views / 1.61% engagement</div>
+    <div class="reason">💡 基礎ニーズが継続的に強い。安定した人気講座</div>
+</div>
+<div class="lecture-item">
+    <div class="title">2️⃣ Lecture 02: #02【独学で習得】初心者でも分かるwebマーケティング講座／3C分析</div>
+    <div class="metrics">47,739 views / 1.68% engagement</div>
+    <div class="reason">💡 着実な成長を見せている講座</div>
+</div>
+<div class="lecture-item">
+    <div class="title">3️⃣ Lecture 03: #03【独学で習得】初心者でも分かるwebマーケティング講座／LPO</div>
+    <div class="metrics">33,800 views / 1.89% engagement</div>
+    <div class="reason">💡 着実な成長を見せている講座</div>
+</div>
+
+        </div>
+
+        <div class="section">
+            <h2>🎯 重要テーマ ×3</h2>
+            <div class="theme-item">
+    <div class="name">1🎯 マーケティング</div>
+    <div class="summary">💡 全体を牽引する最優先テーマ</div>
+    <div class="top-course">代表講座：Lecture 01</div>
+</div>
+<div class="theme-item">
+    <div class="name">2🎯 Webマーケティング</div>
+    <div class="summary">💡 ボリュームゾーン。継続強化推奨</div>
+    <div class="top-course">代表講座：Lecture 01</div>
+</div>
+<div class="theme-item">
+    <div class="name">3🎯 自社分析</div>
+    <div class="summary">💡 成長ポテンシャルのあるテーマ</div>
+    <div class="top-course">代表講座：Lecture 02</div>
+</div>
+
+        </div>
+
+        <div class="actions">
+            <h3>📌 今月のアクション提案</h3>
+            <div class="action-item">
+                1. <div class="action-placeholder">（例：Lecture 01 の応用編コンテンツ追加を検討）</div>
+            </div>
+            <div class="action-item">
+                2. <div class="action-placeholder">（例：LPO系テーマの動画を月内に新規制作開始）</div>
+            </div>
+            <div class="action-item">
+                3. <div class="action-placeholder">（例：Data分析講座の字幕・多言語対応を優先）</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Last Updated: 2026-03-26 22:36:53 (JST)</p>
+        </div>
+    </div>
+</body>
+</html>

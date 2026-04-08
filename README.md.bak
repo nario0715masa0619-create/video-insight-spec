@@ -179,13 +179,9 @@ video-insight-spec/
 - PHASE7_1_DATA_ANONYMIZATION.md（確定版）: 実績データ匿名化・統合ガイド
 - 4月スケジュール・GDPR 対応・品質チェック（レコード保持率 ≥ 95%、PII ゼロ）
 
-🔄 **Phase 7-2 実装中（Phase 7.2.1 完了）**
-- PHASE7_2_AUTO_GENERATION.md: YouTube ダウンロード & メタデータ抽出エンジン
-  - ✅ youtube_channel_downloader.py: チャンネルから自動ダウンロード（11 個の MP4、合計 115.7 MB）
-  - ✅ youtube_metadata_file_extractor.py: メタデータ自動抽出
-  - ✅ results/all_channels_metadata.json: 講座動画メタデータ
-  - 📅 Phase 7.2.2: Markdown → HTML → PDF パイプライン（5/26 予定）
-  - 📅 Phase 7.2.3: APScheduler 統合（6/9 予定）
+🔜 **Phase 7-2 予定**
+- PHASE7_2_AUTO_GENERATION.md: レポート自動生成エンジン設計
+- Python 自動化スクリプト（Markdown → HTML → PDF パイプライン）
 - APScheduler / cron 設定
 
 ---
@@ -204,5 +200,4 @@ video-insight-spec/
 - luvira-catalog-spec.md - 料金プラン・ユースケース仕様書
 - sales-script-insight.md - 営業スクリプト
 - 映像構造解析（JSON）サービスカタログ - 株式会社ルヴィラ.html - Web公開用カタログ
-
 
