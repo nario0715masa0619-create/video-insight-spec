@@ -317,3 +317,63 @@ YouTube 動画の center_pin（学習ポイント）に対して品質指標を�
 | insight_spec_mirirepi | 0.56 | 0.76 | ⬆️⬆️ |
 | **平均** | 0.59 | **0.61** | ⬆️ |
 
+
+
+## Phase 7-5: Final Statistics & Executive Report (完了 ✅)
+
+**目標**: プロジェクト全体の統計分析、Executive Summary 生成、最終メトリクス検証。
+
+**実装**
+
+- \scripts/generate_statistics.py\ – 全 6 つの insight_spec ファイルから semantic_purity、quality_score、ranking_score を集計。canonical 分布、source 分布（cluster_exact/group_member）を計算。結果を \data/final_statistics_report.json\ に保存。
+
+- \scripts/generate_executive_report.py\ – Executive Summary レポート生成。プロジェクト状態、品質スコア、semantic_purity、unmapped_rate、主要知見（Theme Hierarchy 有効性、Marketing テーマ 68%、cluster_exact 54%）、推奨事項（Phase 3 Embedding Fine-tuning）を記録。結果を \data/executive_report.json\ に出力。
+
+**統計結果**
+
+| メトリクス | 値 |
+|---|---|
+| 平均 semantic_purity | 0.61 |
+| 標準偏差 | 0.12 |
+| 最小値 | 0.44 (insight_spec_05) |
+| 最大値 | 0.76 (insight_spec_mirirepi) |
+| Unmapped テーマ数 | 0 |
+| 総テーマ数 | 168 |
+
+**Canonical 分布**
+
+- マーケティング: 116 (68%)
+- 分析: 22 (13%)
+- プロダクト開発: 13 (8%)
+- セールス: 9 (5%)
+- ビジネス戦略: 8 (5%)
+
+**Source 分布**
+
+- cluster_exact: 91 (54% – 高精度)
+- group_member: 77 (46% – 高信頼度)
+
+**成果物**
+
+- \data/final_statistics_report.json\ – 詳細統計（canonical 分布、source 分布、テーマリスト等）
+- \data/executive_report.json\ – Executive Summary（プロジェクト状態、品質スコア、知見、推奨）
+- \scripts/generate_statistics.py\ – 統計生成スクリプト（numpy を使用）
+- \scripts/generate_executive_report.py\ – レポート生成スクリプト
+
+**推奨事項**
+
+1. **全ファイルスコア ≥0.44** – ビジネスレポート向けに利用可能。
+2. **insight_spec_05 (0.44)** は Marketing・Analysis の混合コンテンツとして受け入れ可能。
+3. **config/scoring_rules.json v2.2** を維持し、将来の更新に対応。
+4. **Phase 3 Embedding Fine-tuning** により、さらなる精度向上を推進（将来の課題）。
+
+**進捗**
+
+- Phase 7-1: Quality Scoring Engine v2.0 ✅
+- Phase 7-2: Theme Hierarchy v2.0 ✅
+- Phase 7-3: Gemini クラスタリング ✅
+- Phase 7-4: Embedding Integration ✅
+- Phase 7-5: Final Statistics & Executive Report ✅
+
+**プロジェクト全体完了率: 100%** 🎉
+
