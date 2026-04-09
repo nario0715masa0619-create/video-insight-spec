@@ -1,0 +1,64 @@
+def calculate_semantic_purity_score(knowledge_core: Dict, rules: Dict) -> tuple[float, Dict]:
+    """semantic_purity_score を計算（theme_normalization 対応）"""
+    center_pins = knowledge_core.get("center_pins", [])
+
+    if not center_pins:
+        return 0.5, {"warning": "no_center_pins"}
+
+    # テーマ分布を抽出
+    raw_themes = []
+    for pin in center_pins:
+        if isinstance(pin, dict) and "labels" in pin:
+            labels = pin["labels"]
+            if isinstance(labels, dict) and "business_theme" in labels:
+                pin_themes = labels["business_theme"]
+                if isinstance(pin_themes, list):
+                    raw_themes.extend(pin_themes)
+
+    if not raw_themes:
+        return 0.5, {"warning": "no_themes_found"}
+
+    # テーマを正規化
+    canonical_themes = normalize_themes(raw_themes, rules)
+    theme_mapping_dict = {}
+    for raw, canonical in zip(raw_themes, canonical_themes):
+        if canonical not in theme_mapping_dict:
+            theme_mapping_dict[canonical] = []
+        if raw not in theme_mapping_dict[canonical]:
+            theme_mapping_dict[canonical].append(raw)
+
+    # dominant_theme_ratio 計算（正規化後のテーマで）
+    canonical_counts = Counter(canonical_themes)
+    most_common_count = canonical_counts.most_common(1)[0][1] if canonical_counts else 0
+    dominant_theme_ratio = most_common_count / len(canonical_themes) if canonical_themes else 0.0
+
+    # topic_entropy_score 計算（正規化後のテーマで）
+    total = len(canonical_themes)
+    entropy = 0.0
+    for count in canonical_counts.values():
+        if count > 0:
+            prob = count / total
+            entropy -= prob * math.log(prob) if prob > 0 else 0
+    max_entropy = math.log(len(canonical_counts)) if len(canonical_counts) > 1 else 1
+    topic_entropy_score = 1 - (entropy / max_entropy) if max_entropy > 0 else 0.5
+
+    # topic_transition_stability （簡略版: ランダムに 0.7～0.9）
+    topic_transition_stability = 0.75
+
+    semantic_purity_score = (
+        0.4 * dominant_theme_ratio +
+        0.3 * topic_entropy_score +
+        0.3 * topic_transition_stability
+    )
+
+    details = {
+        "dominant_theme_ratio": round(dominant_theme_ratio, 2),
+        "topic_entropy_score": round(topic_entropy_score, 2),
+        "topic_transition_stability": round(topic_transition_stability, 2),
+        "unique_themes_canonical": len(canonical_counts),
+        "unique_themes_raw": len(set(raw_themes)),
+        "total_theme_mentions": len(canonical_themes),
+        "theme_mapping": theme_mapping_dict
+    }
+
+    return max(0.0, min(1.0, semantic_purity_score)), details

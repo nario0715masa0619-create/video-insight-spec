@@ -16,6 +16,54 @@ def load_scoring_config(weights_path: str, rules_path: str) -> tuple[Dict, Dict]
         rules = json.load(f)
     return weights, rules
 
+
+def normalize_theme(raw_theme: str, rules: dict) -> tuple[str, str]:
+    """単一テーマを正規化
+    
+    Returns:
+        (canonical_theme, source)
+        source: "canonical" | "rules" | "raw"
+    """
+    # 1. canonical が groups に存在するか確認
+    groups = rules.get("theme_normalization", {}).get("groups", {})
+    if raw_theme in groups:
+        return raw_theme, "canonical"
+    
+    # 2. mapping に存在するか確認
+    mapping = rules.get("theme_normalization", {}).get("mapping", {})
+    if raw_theme in mapping:
+        return mapping[raw_theme], "rules"
+    
+    # 3. どちらにも無い場合
+    return raw_theme, "raw"
+def normalize_themes(raw_themes: list, rules: dict) -> tuple[list, list]:
+    """複数テーマを正規化
+    
+    Returns:
+        (canonical_themes, normalization_log)
+    """
+    print(f"[DEBUG] normalize_themes called with rules type: {type(rules)}")
+    print(f"[DEBUG] rules is None: {rules is None}")
+    
+    if rules is None:
+        print("[ERROR] rules is None in normalize_themes!")
+        return [], []
+    
+    canonical_themes = []
+    normalization_log = []
+
+    for raw_theme in raw_themes:
+        print(f"[DEBUG] Processing raw_theme: {raw_theme}")
+        canonical, source = normalize_theme(raw_theme, rules)
+        canonical_themes.append(canonical)
+        normalization_log.append({
+            "raw": raw_theme,
+            "normalized": canonical,
+            "source": source
+        })
+
+    return canonical_themes, normalization_log
+
 def extract_text_units(knowledge_core: Dict) -> tuple[List[str], List[str]]:
     """center_pins と knowledge_points からテキスト抽出"""
     center_pin_texts = []
@@ -67,58 +115,67 @@ def calculate_text_quality_score(center_pin_texts: List[str], knowledge_point_te
     
     return max(0.0, min(1.0, text_quality_score)), details
 
-def calculate_semantic_purity_score(knowledge_core: Dict) -> tuple[float, Dict]:
-    """semantic_purity_score を計算"""
+
+
+def calculate_semantic_purity_score(knowledge_core: Dict, rules: Dict) -> tuple[float, Dict]:
+    """semantic_purity_score を計算（theme_normalization 対応）"""
     center_pins = knowledge_core.get("center_pins", [])
-    
+
     if not center_pins:
         return 0.5, {"warning": "no_center_pins"}
-    
+
     # テーマ分布を抽出
-    themes = []
+    raw_themes = []
     for pin in center_pins:
         if isinstance(pin, dict) and "labels" in pin:
             labels = pin["labels"]
             if isinstance(labels, dict) and "business_theme" in labels:
                 pin_themes = labels["business_theme"]
                 if isinstance(pin_themes, list):
-                    themes.extend(pin_themes)
-    
-    if not themes:
+                    raw_themes.extend(pin_themes)
+
+    if not raw_themes:
         return 0.5, {"warning": "no_themes_found"}
+
+    # テーマを正規化（タプルをアンパック）
+    canonical_themes, normalization_log = normalize_themes(raw_themes, rules)
     
-    # dominant_theme_ratio 計算
-    theme_counts = Counter(themes)
-    most_common_count = theme_counts.most_common(1)[0][1] if theme_counts else 0
-    dominant_theme_ratio = most_common_count / len(themes) if themes else 0.0
-    
-    # topic_entropy_score 計算（散らばりの逆数）
-    total = len(themes)
+    # canonical テーマのカウント
+    canonical_counts = Counter(canonical_themes)
+    most_common_count = canonical_counts.most_common(1)[0][1] if canonical_counts else 0
+    dominant_theme_ratio = most_common_count / len(canonical_themes) if canonical_themes else 0.0
+
+    # topic_entropy_score 計算
+    total = len(canonical_themes)
     entropy = 0.0
-    for count in theme_counts.values():
+    for count in canonical_counts.values():
         if count > 0:
             prob = count / total
             entropy -= prob * math.log(prob) if prob > 0 else 0
-    max_entropy = math.log(len(theme_counts)) if len(theme_counts) > 1 else 1
+    max_entropy = math.log(len(canonical_counts)) if len(canonical_counts) > 1 else 1
     topic_entropy_score = 1 - (entropy / max_entropy) if max_entropy > 0 else 0.5
-    
-    # topic_transition_stability （簡略版: ランダムに 0.7～0.9）
+
+    # topic_transition_stability（固定値 v2.1）
     topic_transition_stability = 0.75
-    
+
     semantic_purity_score = (
         0.4 * dominant_theme_ratio +
         0.3 * topic_entropy_score +
         0.3 * topic_transition_stability
     )
-    
+
+    # normalized_theme_counts を含める
     details = {
         "dominant_theme_ratio": round(dominant_theme_ratio, 2),
         "topic_entropy_score": round(topic_entropy_score, 2),
         "topic_transition_stability": round(topic_transition_stability, 2),
-        "unique_themes": len(theme_counts),
-        "total_theme_mentions": len(themes)
+        "unique_canonical_themes": len(canonical_counts),
+        "unique_raw_themes": len(set(raw_themes)),
+        "total_theme_mentions": len(canonical_themes),
+        "normalized_theme_counts": dict(canonical_counts),
+        "normalization_log": normalization_log
     }
-    
+
     return max(0.0, min(1.0, semantic_purity_score)), details
 
 def calculate_business_fit_score(knowledge_core: Dict, rules: Dict) -> tuple[float, Dict]:
@@ -191,7 +248,7 @@ def build_scoring_result(insight_json: Dict, weights: Dict, rules: Dict) -> Dict
     text_quality_score, tq_details = calculate_text_quality_score(
         center_pin_texts, knowledge_point_texts
     )
-    semantic_purity_score, sp_details = calculate_semantic_purity_score(knowledge_core)
+    semantic_purity_score, sp_details = calculate_semantic_purity_score(knowledge_core, rules)
     business_fit_score, bf_details = calculate_business_fit_score(knowledge_core, rules)
     
     # 総合スコアを計算
@@ -239,3 +296,12 @@ def score_insight_json(insight_json: Dict, weights_path: str, rules_path: str) -
     """メイン関数: insight JSON をスコアリング"""
     weights, rules = load_scoring_config(weights_path, rules_path)
     return build_scoring_result(insight_json, weights, rules)
+
+
+
+
+
+
+
+
+

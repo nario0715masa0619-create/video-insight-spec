@@ -1,0 +1,38 @@
+
+def normalize_theme(raw_theme: str, rules: dict) -> str:
+    """単一テーマを正規化"""
+    mapping = rules.get("theme_normalization", {}).get("mapping", {})
+    return mapping.get(raw_theme, raw_theme)
+
+def normalize_themes(raw_themes: list, rules: dict) -> list:
+    """複数テーマを正規化"""
+    return [normalize_theme(t, rules) for t in raw_themes]
+
+def extract_canonical_themes(knowledge_core: dict, rules: dict) -> tuple[list, dict]:
+    """
+    center_pins から正規化済みテーマと元テーマの対応を抽出
+    
+    返り値:
+    - canonical_themes: 正規化済みテーマリスト
+    - theme_mapping: 正規化テーマ → 元テーマリストの対応表
+    """
+    center_pins = knowledge_core.get("center_pins", [])
+    canonical_themes = []
+    theme_mapping = {}
+    
+    for pin in center_pins:
+        if isinstance(pin, dict) and "labels" in pin:
+            labels = pin["labels"]
+            if isinstance(labels, dict) and "business_theme" in labels:
+                raw_themes = labels["business_theme"]
+                if isinstance(raw_themes, list):
+                    for raw_theme in raw_themes:
+                        canonical = normalize_theme(raw_theme, rules)
+                        canonical_themes.append(canonical)
+                        
+                        if canonical not in theme_mapping:
+                            theme_mapping[canonical] = []
+                        if raw_theme not in theme_mapping[canonical]:
+                            theme_mapping[canonical].append(raw_theme)
+    
+    return canonical_themes, theme_mapping
