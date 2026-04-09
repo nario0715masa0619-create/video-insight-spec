@@ -1,105 +1,4 @@
 {
-  "business_fit_mapping": {
-    "theme_business_value": {
-      "分析": 0.85,
-      "セールス": 0.9,
-      "マーケティング": 0.95,
-      "カスタマーサクセス": 0.75,
-      "Webマーケティング": 0.9,
-      "プロダクト開発": 0.8
-    },
-    "business_stage": {
-      "nurture": 0.75,
-      "upsell": 0.65,
-      "unknown": 0.5,
-      "retention": 0.7,
-      "acquisition": 0.8
-    },
-    "content_type": {
-      "sales_pitch": 0.7,
-      "awareness": 0.6,
-      "tutorial": 0.9,
-      "unknown": 0.5,
-      "webinar": 0.85
-    }
-  },
-  "theme_normalization": {
-    "groups": {
-      "カスタマーサクセス": {
-        "parent_domain": "post_sales",
-        "description": "顧客支援・LTV最大化"
-      },
-      "マーケティング": {
-        "parent_domain": "go_to_market",
-        "description": "集客・販促・広告運用"
-      },
-      "セールス": {
-        "parent_domain": "sales",
-        "description": "営業・販売"
-      },
-      "プロダクト開発": {
-        "parent_domain": "product",
-        "description": "商品・サービス開発"
-      },
-      "分析": {
-        "parent_domain": "analytics",
-        "description": "市場・データ分析"
-      },
-      "ビジネス戦略": {
-        "parent_domain": "strategy",
-        "description": "ビジネスモデル・戦略企画"
-      }
-    },
-    "changelog": [
-      {
-        "changes": "Initial mapping from 60 themes to 5 canonical categories",
-        "source": "manual_curation",
-        "version": "1.0",
-        "date": "2026-04-09"
-      },
-      {
-        "changes": "Added mappings for 集客, コピーライティング, ウェブデザイン, リードナーチャリング, ビジネスモデル構築; added ビジネス戦略 category",
-        "source": "manual_curation",
-        "version": "1.1",
-        "date": "2026-04-09"
-      },
-      {
-        "changes": "Added mappings for 集客, コピーライティング, ウェブデザイン, リードナーチャリング, ビジネスモデル構築",
-        "source": "manual_curation",
-        "version": "1.1",
-        "date": "2026-04-09"
-      }
-    ],
-    "version": "1.1",
-    "mapping": {
-      "ダイレクトレスポンスマーケティング": "マーケティング",
-      "広告": "マーケティング",
-      "Webマーケティング": "マーケティング",
-      "データ分析": "分析",
-      "商品開発": "プロダクト開発",
-      "営業": "セールス",
-      "カスタマーサクセス": "カスタマーサクセス",
-      "プロダクト開発": "プロダクト開発",
-      "マーケティング": "マーケティング",
-      "市場分析": "分析",
-      "SNSマーケティング": "マーケティング",
-      "集客": "マーケティング",
-      "コピーライティング": "セールス",
-      "ウェブデザイン": "セールス",
-      "リードナーチャリング": "マーケティング",
-      "ビジネスモデル構築": "ビジネス戦略",
-      "ビジネスモデル": "ビジネス戦略"
-    },
-    "created_by": "manual_curation",
-    "created_at": "2026-04-09"
-  },
-  "text_quality_thresholds": {
-    "duplication_rate_threshold": 0.25,
-    "short_fragment_min_tokens": 10,
-    "noise_rate_threshold": 0.2,
-    "missing_rate_threshold": 0.3
-  },
-  "version": "v2.1",
   "normalization": {
     "method": "minmax",
     "output_range": [
@@ -108,10 +7,274 @@
     ],
     "rounding_decimal_places": 2
   },
-  "rules_version": "1.0",
+  "theme_normalization": {
+    "changelog": {
+      "2.0": {
+        "source": "design_review_perplexity",
+        "changes": "階層化導入（canonical + cluster + source + confidence）",
+        "date": "2026-04-09"
+      }
+    },
+    "cluster_mapping": {
+      "ビジネスモデル構築": {
+        "canonical": "ビジネス戦略",
+        "cluster": "business_model",
+        "confidence": 0.95
+      },
+      "広告": {
+        "canonical": "マーケティング",
+        "cluster": "digital_marketing",
+        "confidence": 0.9
+      },
+      "Webマーケティング": {
+        "canonical": "マーケティング",
+        "cluster": "digital_marketing",
+        "confidence": 1.0
+      },
+      "コピーライティング": {
+        "canonical": "マーケティング",
+        "cluster": "content_marketing",
+        "confidence": 0.95
+      },
+      "リードナーチャリング": {
+        "canonical": "セールス",
+        "cluster": "lead_nurturing",
+        "confidence": 0.95
+      },
+      "集客": {
+        "canonical": "マーケティング",
+        "cluster": "digital_marketing",
+        "confidence": 0.9
+      },
+      "ウェブデザイン": {
+        "canonical": "プロダクト開発",
+        "cluster": "product_design",
+        "confidence": 0.9
+      },
+      "市場分析": {
+        "canonical": "分析",
+        "cluster": "data_analytics",
+        "confidence": 1.0
+      },
+      "ダイレクトレスポンスマーケティング": {
+        "canonical": "マーケティング",
+        "cluster": "direct_response",
+        "confidence": 1.0
+      },
+      "SNSマーケティング": {
+        "canonical": "マーケティング",
+        "cluster": "digital_marketing",
+        "confidence": 1.0
+      }
+    },
+    "level_definitions": {
+      "level_2_cluster": "分析・詳細分類用（canonical配下3-5個）",
+      "level_1_canonical": "統計・スコアリング用（6-8個、有限固定）",
+      "level_0_raw": "Gemini出力（未統制、多数）"
+    },
+    "version": "2.0",
+    "created_at": "2026-04-09",
+    "schema": "hierarchical_v1.0",
+    "groups": {
+      "ビジネス戦略": {
+        "description": "経営戦略・ビジネスモデル",
+        "parent_domain": "strategy",
+        "id": "business_strategy",
+        "default_cluster": "business_model",
+        "clusters": {
+          "business_model": {
+            "examples": [
+              "ビジネスモデル",
+              "ビジネスモデル構築"
+            ],
+            "description": "ビジネスモデル・収益構造"
+          }
+        },
+        "raw_themes": [
+          "ビジネスモデル",
+          "ビジネスモデル構築",
+          "事業計画"
+        ],
+        "business_value": 0.75
+      },
+      "分析": {
+        "description": "データ分析・インサイト抽出",
+        "parent_domain": "insights",
+        "id": "analytics",
+        "default_cluster": "data_analytics",
+        "clusters": {
+          "business_intelligence": {
+            "examples": [
+              "BI",
+              "ダッシュボード"
+            ],
+            "description": "BI・レポート"
+          },
+          "data_analytics": {
+            "examples": [
+              "データ分析",
+              "市場分析"
+            ],
+            "description": "データ収集・分析"
+          }
+        },
+        "raw_themes": [
+          "市場分析",
+          "データ分析",
+          "顧客分析",
+          "BI",
+          "ダッシュボード"
+        ],
+        "business_value": 0.85
+      },
+      "セールス": {
+        "description": "受注・商談・営業プロセス",
+        "parent_domain": "go_to_market",
+        "id": "sales",
+        "default_cluster": "sales_execution",
+        "clusters": {
+          "lead_nurturing": {
+            "examples": [
+              "リードナーチャリング"
+            ],
+            "description": "リード養成・パイプライン管理"
+          },
+          "sales_execution": {
+            "examples": [
+              "営業",
+              "セールス",
+              "提案"
+            ],
+            "description": "営業実行・クロージング"
+          }
+        },
+        "raw_themes": [
+          "営業",
+          "セールス",
+          "リードナーチャリング",
+          "提案"
+        ],
+        "business_value": 0.9
+      },
+      "マーケティング": {
+        "description": "顧客獲得・認知向上・ブランド構築",
+        "parent_domain": "go_to_market",
+        "id": "marketing",
+        "default_cluster": "digital_marketing",
+        "clusters": {
+          "content_marketing": {
+            "examples": [
+              "コピーライティング"
+            ],
+            "description": "コンテンツ制作・ライティング"
+          },
+          "direct_response": {
+            "examples": [
+              "ダイレクトレスポンスマーケティング"
+            ],
+            "description": "ダイレクトメール・DRM"
+          },
+          "digital_marketing": {
+            "examples": [
+              "Webマーケティング",
+              "SNSマーケティング"
+            ],
+            "description": "Web・SNS・デジタル広告"
+          }
+        },
+        "raw_themes": [
+          "Webマーケティング",
+          "SNSマーケティング",
+          "デジタル広告",
+          "ダイレクトレスポンスマーケティング",
+          "コピーライティング",
+          "マーケティング",
+          "集客",
+          "広告",
+          "メールマーケティング"
+        ],
+        "business_value": 0.95
+      },
+      "カスタマーサクセス": {
+        "description": "顧客成功・リテンション",
+        "parent_domain": "retention",
+        "id": "customer_success",
+        "default_cluster": "retention",
+        "clusters": {
+          "retention": {
+            "examples": [
+              "カスタマーサクセス",
+              "顧客満足度"
+            ],
+            "description": "顧客維持・拡大営業"
+          }
+        },
+        "raw_themes": [
+          "カスタマーサクセス",
+          "顧客満足度"
+        ],
+        "business_value": 0.75
+      },
+      "プロダクト開発": {
+        "description": "製品企画・設計・開発",
+        "parent_domain": "product",
+        "id": "product_development",
+        "default_cluster": "product_design",
+        "clusters": {
+          "product_management": {
+            "examples": [
+              "商品開発",
+              "プロダクト開発"
+            ],
+            "description": "プロダクト企画・管理"
+          },
+          "product_design": {
+            "examples": [
+              "ウェブデザイン",
+              "UX",
+              "UI"
+            ],
+            "description": "ユーザー体験・デザイン"
+          }
+        },
+        "raw_themes": [
+          "商品開発",
+          "プロダクト開発",
+          "ウェブデザイン",
+          "UX",
+          "UI"
+        ],
+        "business_value": 0.8
+      }
+    }
+  },
+  "rules_version": "2.0",
   "semantic_purity_thresholds": {
     "minimum_dominant_theme_ratio": 0.5,
-    "entropy_normalization_method": "shannon",
-    "topic_transition_max_per_segment": 2
+    "entropy_normalization_method": "shannon"
+  },
+  "version": "v2.1",
+  "created_at": "2026-04-09",
+  "text_quality_thresholds": {
+    "duplication_rate": 0.25,
+    "missing_rate": 0.3,
+    "noise_rate": 0.2,
+    "short_fragment_min_tokens": 10
+  },
+  "business_fit_mapping": {
+    "content_type": {
+      "sales_pitch": 0.7,
+      "awareness": 0.6,
+      "tutorial": 0.9,
+      "unknown": 0.5,
+      "webinar": 0.85
+    },
+    "business_stage": {
+      "nurture": 0.75,
+      "upsell": 0.65,
+      "unknown": 0.5,
+      "retention": 0.7,
+      "acquisition": 0.8
+    }
   }
 }
