@@ -1,0 +1,47 @@
+{
+  "business_fit_mapping": {
+    "content_type": {
+      "sales_pitch": 0.7,
+      "awareness": 0.6,
+      "tutorial": 0.9,
+      "unknown": 0.5,
+      "webinar": 0.85
+    },
+    "business_stage": {
+      "nurture": 0.75,
+      "upsell": 0.65,
+      "unknown": 0.5,
+      "retention": 0.7,
+      "acquisition": 0.8
+    },
+    "theme_business_value": {
+      "市場分析": 0.8,
+      "ビジネスモデル": 0.8,
+      "セールス": 0.9,
+      "マーケティング": 0.95,
+      "Webマーケティング": 0.9,
+      "データ分析": 0.85
+    }
+  },
+  "text_quality_thresholds": {
+    "duplication_rate_threshold": 0.25,
+    "short_fragment_min_tokens": 10,
+    "noise_rate_threshold": 0.2,
+    "missing_rate_threshold": 0.3
+  },
+  "version": "v2.1",
+  "normalization": {
+    "method": "minmax",
+    "output_range": [
+      0.0,
+      1.0
+    ],
+    "rounding_decimal_places": 2
+  },
+  "rules_version": "2026-04-09",
+  "semantic_purity_thresholds": {
+    "minimum_dominant_theme_ratio": 0.5,
+    "entropy_normalization_method": "shannon",
+    "topic_transition_max_per_segment": 2
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "ranking_score": {
+    "quality_score_weight": 0.75,
+    "business_fit_score_weight": 0.25
+  },
+  "quality_score": {
+    "semantic_purity_weight": 0.55,
+    "text_quality_weight": 0.45
+  },
+  "text_quality_score": {
+    "noise_rate_weight": 0.25,
+    "duplication_rate_weight": 0.25,
+    "short_fragment_rate_weight": 0.25,
+    "missing_rate_weight": 0.25
+  },
+  "semantic_purity_score": {
+    "topic_entropy_score_weight": 0.3,
+    "topic_transition_stability_weight": 0.3,
+    "dominant_theme_ratio_weight": 0.4
+  },
+  "business_fit_score": {
+    "business_stage_confidence_weight": 0.35,
+    "theme_business_value_score_weight": 0.3,
+    "content_type_confidence_weight": 0.35
+  },
+  "version": "v2.1",
+  "rules_version": "2026-04-09"
+}
