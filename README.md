@@ -283,3 +283,37 @@ YouTube 動画の center_pin（学習ポイント）に対して品質指標を�
 - **Phase 2 (次)**: Gemini が raw_themes から cluster 候補生成 → 人間レビュー → JSON 更新
 - **Phase 3 (将来)**: Embedding で新 raw_theme 自動割当（canonical は不変）
 
+
+
+
+## Phase 7-4: Embedding Integration (2026-04-09)
+
+**目標**: 残存 unmapped テーマを embedding ベースで自動マッピング
+
+**実装内容**
+- Sentence Transformer (all-MiniLM-L6-v2) を使用した embedding ベースのクラスタリング
+- 6 個の残存 unmapped テーマを embedding 類似度で既存 canonical に自動割り当て
+- 手動レビューで広告運用と動画編集の割り当てを修正
+
+**スコア改善結果**
+- 平均 semantic_purity: 0.59 → **0.61** (+0.02, +3.4%)
+- 新規マッピング: 6 個追加（合計 39 個）
+- config version: v2.1 → **v2.2**
+
+**主要成果物**
+- scripts/embedding_mapper.py: Embedding ベースのマッピング実装
+- scripts/embedding_init.py: Embedding モデル初期化
+- data/embedding_mapping_result.json: Embedding マッピング結果
+- data/remaining_unmapped_themes.json: 残存 unmapped テーマリスト
+
+**スコア分析**
+| ファイル | Phase 7-3 | Phase 7-4 | 改善 |
+|---|---|---|---|
+| insight_spec_01 | 0.65 | 0.65 | → |
+| insight_spec_02 | 0.53 | 0.53 | → |
+| insight_spec_03 | 0.55 | 0.55 | → |
+| insight_spec_04 | 0.72 | 0.75 | ⬆️ |
+| insight_spec_05 | 0.50 | 0.44 | ⬇️ |
+| insight_spec_mirirepi | 0.56 | 0.76 | ⬆️⬆️ |
+| **平均** | 0.59 | **0.61** | ⬆️ |
+

@@ -600,3 +600,44 @@ A: 必ず rules_version を確認。
 
 
 
+
+
+
+## 18. Phase 7-4: Embedding Integration
+
+### 18.1 実装概要
+Phase 7-3 後に残存した 6 個の unmapped テーマに対して、Sentence Transformer (all-MiniLM-L6-v2) を使用した embedding ベースのクラスタリングを実装。各テーマの embedding を計算し、既存の 6 canonical との cosine similarity を比較して自動マッピング。
+
+### 18.2 アルゴリズム
+1. **Embedding モデルロード**: sentence-transformers/all-MiniLM-L6-v2 (384 次元)
+2. **Canonical 代表テーマ取得**: 各 canonical から最初の 5 テーマを抽出
+3. **類似度計算**: unmapped テーマと各 canonical の代表テーマ群との cosine similarity を計算
+4. **最高スコア選択**: 最も高い similarity を示す canonical を推奨
+5. **手動レビュー**: 妥当性を確認し、必要に応じて修正
+
+### 18.3 マッピング結果（6 個）
+| raw_theme | 推奨 canonical | 信頼度 | 状態 |
+|---|---|---|---|
+| コンテンツ制作 | マーケティング | 0.78 | ✅ |
+| コンバージョン改善 | マーケティング | 0.81 | ✅ |
+| 広告運用 | マーケティング | 0.85 | ✅ 修正 |
+| 行動心理学 | 分析 | 0.45 | ✅ |
+| 動画マーケティング | マーケティング | 0.87 | ✅ |
+| 動画編集 | プロダクト開発 | 0.80 | ✅ 修正 |
+
+### 18.4 スコア改善
+- 平均 semantic_purity: 0.59 → 0.61 (+0.02)
+- insight_spec_mirirepi: 0.56 → 0.76 (+0.20)
+- insight_spec_04: 0.72 → 0.75 (+0.03)
+
+### 18.5 実装上の注意
+- Embedding モデルは固定（all-MiniLM-L6-v2）。日本語対応で多言語対応。
+- Canonical 数は固定（6 個）。新規 canonical の自動生成は禁止。
+- マッピング結果は常に human review を経て確定。
+- embedding confidence (0.45–0.87) は参考値。最終的には手動判断を優先。
+
+### 18.6 今後の拡張（Phase 3 後期）
+- Embedding モデルの fine-tuning （domain-specific）
+- Confidence threshold の動的調整
+- cluster ごとの embedding centroid 計算
+
