@@ -145,6 +145,36 @@ video-insight-spec/
 - SOC 2 / ISO 27001 対応: Year 1 内に取得予定
 - バックアップ・災害対応: 稼働保証 99.9% SLA を目指す
 
+
+## Quality Scoring Engine v2.1
+
+### 目的
+
+YouTube 動画の center_pin（学習ポイント）に対して品質指標を計算し、
+レポート生成を補助します。
+
+計算指標:
+- text_quality_score: テキスト品質
+- semantic_purity_score: セマンティック純度
+- business_fit_score: ビジネス適合度
+- quality_score: 統合品質（テキスト45% + セマンティック55%）
+- ranking_score: ランキング用（品質75% + ビジネス適合25%）
+
+### スコアリングの特徴
+
+1. Data-Driven ルール: config/scoring_rules.json で管理
+2. テーマ正規化: raw_theme → canonical_theme に統一
+3. 版管理: score_version / rules_version / theme_normalization_version
+4. 説明可能性: score_details に中間値を完全保持
+
+### v2.1 の簡易実装
+
+固定値項目:
+- noise_rate: 0.05
+- duplication_rate: 0.02
+- topic_transition_stability: 0.75
+
+将来: v2.2 で実データベース計算に差し替え予定
 ## ロードマップ
 
 ### フェーズ 6（進行中）
@@ -204,5 +234,7 @@ video-insight-spec/
 - luvira-catalog-spec.md - 料金プラン・ユースケース仕様書
 - sales-script-insight.md - 営業スクリプト
 - 映像構造解析（JSON）サービスカタログ - 株式会社ルヴィラ.html - Web公開用カタログ
+
+
 
 
