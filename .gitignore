@@ -1,78 +1,19 @@
-# ========== Environment Variables & Secrets ==========
-.env
-.env.local
-.env.*.local
-!.env.example
+# ログ
+logs/
+*.log
 
-# ========== API Keys & Credentials ==========
-*.key
-*.pem
-*.p12
-credentials.json
-service-account-key.json
+# 一時ファイル
+batch_refine_work/
+*.bak
+*.old
+*.broken
+fix_*.py
 
-# ========== Python ==========
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+# 結果ファイル
+quality_check_results.json
+report.json
+pipeline_results_*.json
 
-# ========== Virtual Environment ==========
-venv/
-ENV/
-env/
-.venv
-
-# ========== IDE ==========
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.DS_Store
-
-# ========== Project-specific ==========
-test_output/
-phase2_2_output/
-quality_validation_results/
-*.db.backup
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-.pytest_cache/
-.env.test
-*.db.backup
+# バックアップ
+*.backup
+README.md.*

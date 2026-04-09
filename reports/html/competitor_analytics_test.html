@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competitor Analytics</title>
+    <style>
+        * {{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }}
+
+        body {{
+            font-family: 'Segoe UI', 'メイリオ', sans-serif;
+            background-color: #f5f5f5;
+            color: #333333;
+            line-height: 1.6;
+        }}
+
+        .container {{
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }}
+
+        .page-header {{
+            border-bottom: 3px solid #1a73e8;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }}
+
+        h1 {{
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1a73e8;
+        }}
+
+        h2 {{
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1a73e8;
+        }}
+
+        h3 {{
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a73e8;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }}
+
+        p {{
+            margin-bottom: 10px;
+            font-size: 14px;
+        }}
+
+        .meta-info {{
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 5px;
+        }}
+
+        .section {{
+            margin-bottom: 40px;
+        }}
+
+        /* Portfolio Table */
+        .portfolio-table {{
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }}
+
+        .portfolio-table thead {{
+            background-color: #1a73e8;
+            color: white;
+        }}
+
+        .portfolio-table thead th {{
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+        }}
+
+        .portfolio-table tbody td {{
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+        }}
+
+        .portfolio-table tbody tr:hover {{
+            background-color: #e8f0fe;
+        }}
+
+        .text-right {{
+            text-align: right;
+        }}
+
+        .text-center {{
+            text-align: center;
+        }}
+
+        .metric-positive {{
+            color: #34a853;
+            font-weight: 600;
+        }}
+
+        .metric-negative {{
+            color: #ea4335;
+            font-weight: 600;
+        }}
+
+        /* Summary Section */
+        .summary {{
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #1a73e8;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }}
+
+        /* Growth Section */
+        .growth-section {{
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-left: 4px solid #34a853;
+            border-radius: 4px;
+        }}
+
+        .period {{
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 15px;
+        }}
+
+        .growth-items {{
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }}
+
+        .growth-item {{
+            background-color: white;
+            padding: 15px;
+            border-left: 3px solid #34a853;
+            border-radius: 4px;
+        }}
+
+        .growth-item h4 {{
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }}
+
+        .growth-metric {{
+            display: flex;
+            gap: 15px;
+            margin-bottom: 8px;
+        }}
+
+        .delta {{
+            color: #34a853;
+            font-weight: 600;
+        }}
+
+        .growth-rate {{
+            color: #34a853;
+            font-weight: 600;
+        }}
+
+        .engagement-delta {{
+            font-size: 12px;
+            color: #666666;
+        }}
+
+        .no-growth-message {{
+            background-color: white;
+            padding: 15px;
+            border-left: 3px solid #999999;
+            border-radius: 4px;
+            color: #666666;
+            font-style: italic;
+        }}
+
+        /* Theme Section */
+        .theme-item {{
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }}
+
+        .courses {{
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }}
+
+        .course {{
+            background-color: white;
+            padding: 15px;
+            border-left: 3px solid #1a73e8;
+            border-radius: 4px;
+        }}
+
+        .course h4 {{
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }}
+
+        .course-metrics {{
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: #666666;
+        }}
+
+        .representative-pin {{
+            background-color: #f9f9f9;
+            font-size: 13px;
+            padding: 10px;
+            border-left: 3px solid #1a73e8;
+            border-radius: 4px;
+            margin-top: 10px;
+            line-height: 1.5;
+        }}
+
+        .courses-overflow {{
+            font-size: 12px;
+            color: #999999;
+            font-style: italic;
+            margin-top: 10px;
+        }}
+
+        .footer {{
+            border-top: 2px solid #e0e0e0;
+            padding-top: 20px;
+            margin-top: 40px;
+            text-align: right;
+        }}
+
+        .footer p {{
+            font-size: 12px;
+            color: #999999;
+        }}
+
+        /* Responsive Design */
+        @media (max-width: 768px) {{
+            .container {{
+                padding: 15px;
+            }}
+
+            h1 {{
+                font-size: 22px;
+            }}
+
+            h2 {{
+                font-size: 18px;
+            }}
+
+            .portfolio-table {{
+                font-size: 12px;
+                overflow-x: auto;
+            }}
+
+            .portfolio-table thead th,
+            .portfolio-table tbody td {{
+                padding: 8px;
+            }}
+
+            .growth-metric {{
+                flex-direction: column;
+                gap: 5px;
+            }}
+
+            .course-metrics {{
+                flex-direction: column;
+                gap: 5px;
+            }}
+        }}
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="page-header">
+        <h1>📊 COMPETITOR ANALYTICS REPORT</h1>
+        <p class="meta-info">Generated: 2026-03-26 22:36:53 (JST)</p>
+        <p class="meta-info">Target: 自社講座セット</p>
+        <p class="meta-info">Period: 直近7日間（2026-03-26〜2026-04-02）</p>
+    </div>
+<section class="section">
+<h2>📈 PORTFOLIO OVERVIEW</h2>
+<div class="summary"><strong>要約:</strong> 5講座 / 合計 246,629 views / 平均エンゲージメント率 1.71%</div>
+<table class="portfolio-table">
+<thead>
+<tr>
+<th>Lecture ID</th>
+<th>Title</th>
+<th class="text-right">Views</th>
+<th class="text-right">Engagement Rate</th>
+<th>Funnel Stage</th>
+<th>Difficulty</th>
+<th class="text-center">Pins</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td>
+<td title="#01【独学で習得】初心者でも分かるwebマーケティング講座">#01【独学で習得】初心者でも分かるwebマーケティング講座</td>
+<td class="text-right">118,000</td>
+<td class="text-right metric-positive">1.61%</td>
+<td>認知</td>
+<td>beginner</td>
+<td class="text-center">9</td>
+</tr>
+<tr>
+<td>02</td>
+<td title="#02【独学で習得】初心者でも分かるwebマーケティング講座／3C分析">#02【独学で習得】初心者でも分かるwebマーケティング講座／3…</td>
+<td class="text-right">47,739</td>
+<td class="text-right metric-positive">1.68%</td>
+<td>比較検討</td>
+<td>beginner</td>
+<td class="text-center">10</td>
+</tr>
+<tr>
+<td>03</td>
+<td title="#03【独学で習得】初心者でも分かるwebマーケティング講座／LPO">#03【独学で習得】初心者でも分かるwebマーケティング講座／LPO</td>
+<td class="text-right">33,800</td>
+<td class="text-right metric-positive">1.89%</td>
+<td>クロージング</td>
+<td>beginner</td>
+<td class="text-center">11</td>
+</tr>
+<tr>
+<td>04</td>
+<td title="#04【独学で習得】初心者でも分かるwebマーケティング講座／売れるキャッチコピー">#04【独学で習得】初心者でも分かるwebマーケティング講座／売れるキ…</td>
+<td class="text-right">26,026</td>
+<td class="text-right metric-positive">1.75%</td>
+<td>興味・関心</td>
+<td>beginner</td>
+<td class="text-center">11</td>
+</tr>
+<tr>
+<td>05</td>
+<td title="#05【独学で習得】初心者でも分かるwebマーケティング講座／Googleアナリティクス">#05【独学で習得】初心者でも分かるwebマーケティング講座／Goog…</td>
+<td class="text-right">21,064</td>
+<td class="text-right metric-positive">1.60%</td>
+<td>教育</td>
+<td>beginner</td>
+<td class="text-center">11</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>📊 GROWTH HIGHLIGHTS</h2>
+<div class="growth-section">
+<div class="period">Period: 直近7日間（2026-03-26〜2026-04-02）</div>
+<div class="growth-items">
+<div class="growth-item">
+<h4>Lecture 01: #01【独学で習得】初心者でも分かるwebマーケティング講座</h4>
+<div class="growth-metric">
+<span class="delta">+2,166 views</span>
+<span class="growth-rate">+1.87%</span>
+</div>
+<div class="engagement-delta">Engagement: +0.01%</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section">
+<h2>🎨 THEME ANALYSIS</h2>
+<div class="theme-item">
+<h3>マーケティング</h3>
+<p><strong>要約:</strong> マーケティングテーマの講座が全体を牽引。特に Lecture 01 が中核（118,000 views）。</p>
+<div class="courses">
+<div class="course">
+<h4>Lecture 01</h4>
+<div class="course-metrics">
+<span>118,000 views</span>
+<span class="metric-positive">1.61% engagement</span>
+</div>
+<blockquote class="representative-pin">集客したユーザーを商品の購入や申し込みに結びつけるためには、LPO（ランディングページ最適化）と呼ばれる施策が必要である。</blockquote>
+</div>
+<div class="course">
+<h4>Lecture 02</h4>
+<div class="course-metrics">
+<span>47,739 views</span>
+<span class="metric-positive">1.68% engagement</span>
+</div>
+<blockquote class="representative-pin">Webマーケティングで勝ち抜くための基本フレームワークが3C分析である。市場・顧客（Customer）、競合（Competitor）、自社（Company）の3つの「C」を分析することで、Web上でどのように戦えばよいかが明確になる。</blockquote>
+</div>
+<div class="course">
+<h4>Lecture 03</h4>
+<div class="course-metrics">
+<span>33,800 views</span>
+<span class="metric-positive">1.89% engagement</span>
+</div>
+<blockquote class="representative-pin">LPO（Landing Page Optimization）とは、ランディングページ（ユーザーが最初に訪れるページ）を最適化し、成約率を向上させる施策のことです。</blockquote>
+</div>
+<p><strong>代表講座:</strong> Lecture 01</p>
+</div>
+</div>
+<div class="theme-item">
+<h3>Webマーケティング</h3>
+<p><strong>要約:</strong> Webマーケティングテーマの講座が全体を牽引。特に Lecture 01 が中核（118,000 views）。</p>
+<div class="courses">
+<div class="course">
+<h4>Lecture 01</h4>
+<div class="course-metrics">
+<span>118,000 views</span>
+<span class="metric-positive">1.61% engagement</span>
+</div>
+<blockquote class="representative-pin">Webマーケティングの全体像を把握することで、ビジネスの成功確率は飛躍的に高まる。自社の商品やスキルに対して、競合が強すぎない市場や集客チャネルを見極め、広告などを適切に活用して効率的に収益を得るビジネスモデルを組み立てることが可能になる。</blockquote>
+</div>
+<div class="course">
+<h4>Lecture 02</h4>
+<div class="course-metrics">
+<span>47,739 views</span>
+<span class="metric-positive">1.68% engagement</span>
+</div>
+<blockquote class="representative-pin">比較検討されるのがWebマーケティングの基本だが、自身の専門性や属人性を活かして「ファン」を作ることができれば、比較されずに商品を売ることができる。</blockquote>
+</div>
+<div class="course">
+<h4>Lecture 05</h4>
+<div class="course-metrics">
+<span>21,064 views</span>
+<span class="metric-positive">1.60% engagement</span>
+</div>
+<blockquote class="representative-pin">Webマーケティングにおいて、キャッチコピーやデザインのパターンを比較するA/Bテストを実施する際、Googleオプティマイズなどの無料ツールを活用する。</blockquote>
+</div>
+<p><strong>代表講座:</strong> Lecture 01</p>
+</div>
+</div>
+<div class="theme-item">
+<h3>自社分析</h3>
+<p><strong>要約:</strong> 自社分析テーマの講座が全体を牽引。特に Lecture 02 が中核（47,739 views）。</p>
+<div class="courses">
+<div class="course">
+<h4>Lecture 02</h4>
+<div class="course-metrics">
+<span>47,739 views</span>
+<span class="metric-positive">1.68% engagement</span>
+</div>
+<blockquote class="representative-pin">自社分析の手法として、自社の「グッドポイント（良いところ）」と「バッドポイント（悪いところ）」をそれぞれ100個ずつ書き出すワークを行う。途中で手が止まっても無理やり絞り出すことで、ホームページで伝えるべき隠れた強みを発見できる。</blockquote>
+</div>
+<p><strong>代表講座:</strong> Lecture 02</p>
+</div>
+</div>
+<div class="theme-item">
+<h3>コピーライティング</h3>
+<p><strong>要約:</strong> コピーライティングテーマの講座が全体を牽引。特に Lecture 03 が中核（33,800 views）。</p>
+<div class="courses">
+<div class="course">
+<h4>Lecture 03</h4>
+<div class="course-metrics">
+<span>33,800 views</span>
+<span class="metric-positive">1.89% engagement</span>
+</div>
+<blockquote class="representative-pin">Webサイトの文章は、中学生が読んで理解し、迷わず注文できるレベルまで噛み砕いて表現することが必須です。</blockquote>
+</div>
+<div class="course">
+<h4>Lecture 04</h4>
+<div class="course-metrics">
+<span>26,026 views</span>
+<span class="metric-positive">1.75% engagement</span>
+</div>
+<blockquote class="representative-pin">キャッチコピーを作成する第一歩は、サイトを訪れるユーザーの性別や年齢などの属性を明確にすることである。</blockquote>
+</div>
+<p><strong>代表講座:</strong> Lecture 03</p>
+</div>
+</div>
+<div class="theme-item">
+<h3>Webデザイン</h3>
+<p><strong>要約:</strong> Webデザインテーマの講座が全体を牽引。特に Lecture 03 が中核（33,800 views）。</p>
+<div class="courses">
+<div class="course">
+<h4>Lecture 03</h4>
+<div class="course-metrics">
+<span>33,800 views</span>
+<span class="metric-positive">1.89% engagement</span>
+</div>
+<blockquote class="representative-pin">Webページのデザインは、奇抜さよりもユーザーが慣れ親しんだ「分かりやすい基本レイアウト」を採用するべきです。</blockquote>
+</div>
+<div class="course">
+<h4>Lecture 04</h4>
+<div class="course-metrics">
+<span>26,026 views</span>
+<span class="metric-positive">1.75% engagement</span>
+</div>
+<blockquote class="representative-pin">Webサイトを開いた際に最初に目に入る「メインビジュアル」とは、主に背景の写真や画像と、そこに添えられるキャッチコピーの組み合わせを指す。</blockquote>
+</div>
+<p><strong>代表講座:</strong> Lecture 03</p>
+</div>
+</div>
+<div class="theme-item">
+<h3>Web制作</h3>
+<p><strong>要約:</strong> Web制作テーマの講座が全体を牽引。特に Lecture 03 が中核（33,800 views）。</p>
+<div class="courses">
+<div class="course">
+<h4>Lecture 03</h4>
+<div class="course-metrics">
+<span>33,800 views</span>
+<span class="metric-positive">1.89% engagement</span>
+</div>
+<blockquote class="representative-pin">Web制作において、綺麗でかっこいいデザインが必ずしも売れるページにつながるわけではありません。</blockquote>
+</div>
+<p><strong>代表講座:</strong> Lecture 03</p>
+</div>
+</div>
+<div class="theme-item">
+<h3>Webサイト制作</h3>
+<p><strong>要約:</strong> Webサイト制作テーマの講座が全体を牽引。特に Lecture 03 が中核（33,800 views）。</p>
+<div class="courses">
+<div class="course">
+<h4>Lecture 03</h4>
+<div class="course-metrics">
+<span>33,800 views</span>
+<span class="metric-positive">1.89% engagement</span>
+</div>
+<blockquote class="representative-pin">Webサイトの制作を外部の制作会社に依頼する際、全てを丸投げしてはいけません。</blockquote>
+</div>
+<p><strong>代表講座:</strong> Lecture 03</p>
+</div>
+</div>
+<div class="theme-item">
+<h3>データ分析</h3>
+<p><strong>要約:</strong> データ分析テーマの講座が全体を牽引。特に Lecture 05 が中核（21,064 views）。</p>
+<div class="courses">
+<div class="course">
+<h4>Lecture 05</h4>
+<div class="course-metrics">
+<span>21,064 views</span>
+<span class="metric-positive">1.60% engagement</span>
+</div>
+<blockquote class="representative-pin">Googleアナリティクスを導入するには、大きく分けて3つのステップを踏む必要がある。まず1つ目に「Googleアカウントの作成」、2つ目に「Googleアナリティクスアカウントの作成」、そして3つ目に「トラッキングコードの設置」を行う。</blockquote>
+</div>
+<p><strong>代表講座:</strong> Lecture 05</p>
+</div>
+</div>
+</section>
+
+    <div class="footer">
+        <p>Last Updated: 2026-03-26 22:36:53 (JST)</p>
+    </div>
+</div>
+</body>
+</html>

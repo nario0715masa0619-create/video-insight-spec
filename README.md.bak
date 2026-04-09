@@ -145,36 +145,6 @@ video-insight-spec/
 - SOC 2 / ISO 27001 対応: Year 1 内に取得予定
 - バックアップ・災害対応: 稼働保証 99.9% SLA を目指す
 
-
-## Quality Scoring Engine v2.1
-
-### 目的
-
-YouTube 動画の center_pin（学習ポイント）に対して品質指標を計算し、
-レポート生成を補助します。
-
-計算指標:
-- text_quality_score: テキスト品質
-- semantic_purity_score: セマンティック純度
-- business_fit_score: ビジネス適合度
-- quality_score: 統合品質（テキスト45% + セマンティック55%）
-- ranking_score: ランキング用（品質75% + ビジネス適合25%）
-
-### スコアリングの特徴
-
-1. Data-Driven ルール: config/scoring_rules.json で管理
-2. テーマ正規化: raw_theme → canonical_theme に統一
-3. 版管理: score_version / rules_version / theme_normalization_version
-4. 説明可能性: score_details に中間値を完全保持
-
-### v2.1 の簡易実装
-
-固定値項目:
-- noise_rate: 0.05
-- duplication_rate: 0.02
-- topic_transition_stability: 0.75
-
-将来: v2.2 で実データベース計算に差し替え予定
 ## ロードマップ
 
 ### フェーズ 6（進行中）
@@ -209,13 +179,9 @@ YouTube 動画の center_pin（学習ポイント）に対して品質指標を�
 - PHASE7_1_DATA_ANONYMIZATION.md（確定版）: 実績データ匿名化・統合ガイド
 - 4月スケジュール・GDPR 対応・品質チェック（レコード保持率 ≥ 95%、PII ゼロ）
 
-🔄 **Phase 7-2 実装中（Phase 7.2.1 完了）**
-- PHASE7_2_AUTO_GENERATION.md: YouTube ダウンロード & メタデータ抽出エンジン
-  - ✅ youtube_channel_downloader.py: チャンネルから自動ダウンロード（11 個の MP4、合計 115.7 MB）
-  - ✅ youtube_metadata_file_extractor.py: メタデータ自動抽出
-  - ✅ results/all_channels_metadata.json: 講座動画メタデータ
-  - 📅 Phase 7.2.2: Markdown → HTML → PDF パイプライン（5/26 予定）
-  - 📅 Phase 7.2.3: APScheduler 統合（6/9 予定）
+🔜 **Phase 7-2 予定**
+- PHASE7_2_AUTO_GENERATION.md: レポート自動生成エンジン設計
+- Python 自動化スクリプト（Markdown → HTML → PDF パイプライン）
 - APScheduler / cron 設定
 
 ---
@@ -234,7 +200,4 @@ YouTube 動画の center_pin（学習ポイント）に対して品質指標を�
 - luvira-catalog-spec.md - 料金プラン・ユースケース仕様書
 - sales-script-insight.md - 営業スクリプト
 - 映像構造解析（JSON）サービスカタログ - 株式会社ルヴィラ.html - Web公開用カタログ
-
-
-
 
