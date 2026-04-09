@@ -238,3 +238,48 @@ YouTube 動画の center_pin（学習ポイント）に対して品質指標を�
 
 
 
+
+
+## Theme Hierarchy Design v2.0
+
+### 階層構造
+
+**Level 0 - raw_theme**: Gemini 出力（未統制、多数）
+**Level 1 - canonical_theme**: 統計用（6個有限固定）- semantic_purity_score 計算
+**Level 2 - cluster**: 分析用（canonical 配下 3-5 個）- score_details 記録
+
+### 正規化アルゴリズム（3段階）
+
+1. Exact Match: cluster_mapping 直接マッピング → (canonical, cluster, "cluster_exact", 1.0)
+2. Group Member: groups の raw_themes に存在 → (canonical, default_cluster, "group_member", 0.95)
+3. Fallback: 未マップ → (raw_theme, "unclassified", "unmapped", 0.0)
+
+### Canonical Categories（6個）
+
+- **マーケティング** (0.95): 顧客獲得・認知向上・ブランド構築
+- **セールス** (0.90): 受注・商談・営業プロセス
+- **プロダクト開発** (0.80): 製品企画・設計・開発
+- **分析** (0.85): データ分析・インサイト抽出
+- **ビジネス戦略** (0.75): 経営戦略・ビジネスモデル
+- **カスタマーサクセス** (0.75): 顧客成功・リテンション
+
+### 設計原則
+
+- semantic_purity_score は canonical のみ使用（スコア一貫性）
+- cluster 分布は score_details に記録（詳細度確保）
+- source フィールドで信頼度を可視化
+- canonical 数は絶対に有限のまま（Embedding導入時も不変）
+- ザル化防止：制約条件・版管理・人間レビュー必須
+
+### テスト結果（v2.0）
+
+6 ファイル平均 semantic_purity_score: 0.53
+- ✅ insight_spec_01: 0.65, insight_spec_04: 0.70
+- ⚠️ insight_spec_02,03: 0.45（Phase 2 トリガー）
+
+### Phase 進化パス
+
+- **Phase 1 (完了)**: 手動 canonical + cluster 定義
+- **Phase 2 (次)**: Gemini が raw_themes から cluster 候補生成 → 人間レビュー → JSON 更新
+- **Phase 3 (将来)**: Embedding で新 raw_theme 自動割当（canonical は不変）
+
