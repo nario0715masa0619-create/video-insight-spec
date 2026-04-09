@@ -1,0 +1,55 @@
+{
+  "generation_timestamp": "2026-04-09T21:41:26.630322",
+  "phase": "Phase 7-5 Final Statistics",
+  "summary": {
+    "total_files": 6,
+    "avg_semantic_purity": 0.61,
+    "std_semantic_purity": 0.12,
+    "min_semantic_purity": 0.44,
+    "max_semantic_purity": 0.76,
+    "total_unmapped": 0
+  },
+  "detailed_stats": {
+    "total_files": 6,
+    "semantic_purity": [
+      0.65,
+      0.53,
+      0.55,
+      0.75,
+      0.44,
+      0.76
+    ],
+    "quality_score": [
+      0.8,
+      0.73,
+      0.74,
+      0.85,
+      0.69,
+      0.86
+    ],
+    "ranking_score": [
+      0.73,
+      0.67,
+      0.68,
+      0.76,
+      0.64,
+      0.77
+    ],
+    "canonical_distribution": {
+      "マーケティング": 116,
+      "ビジネス戦略": 8,
+      "プロダクト開発": 13,
+      "セールス": 9,
+      "分析": 22
+    },
+    "source_distribution": {
+      "group_member": 77,
+      "cluster_exact": 91
+    },
+    "unmapped_themes": [],
+    "semantic_purity_mean": 0.61,
+    "semantic_purity_std": 0.12,
+    "semantic_purity_min": 0.44,
+    "semantic_purity_max": 0.76
+  }
+}

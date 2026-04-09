@@ -1,0 +1,70 @@
+{
+  "title": "Quality Scoring Engine v2.0 - 最終統計レポート",
+  "generation_date": "2026-04-09 21:42:10",
+  "phase": "Phase 7-5 Final Statistics",
+  "executive_summary": {
+    "project_status": "完了",
+    "overall_quality_score": 0.78,
+    "semantic_purity_score": 0.61,
+    "unmapped_rate": "0%",
+    "files_analyzed": 6
+  },
+  "key_findings": [
+    "すべてのテーマが正規化済み（unmapped = 0）",
+    "平均 semantic_purity スコア: 0.61 (良好)",
+    "マーケティング関連テーマが全体の 68% を占める",
+    "cluster_exact (高精度) が 54% で信頼度が高い",
+    "Theme Hierarchy v2.0 + Gemini + Embedding の三層構造が機能"
+  ],
+  "recommendations": [
+    "全ファイルのスコアが 0.44 以上で安定。ビジネス報告に使用可能。",
+    "insight_spec_05 (0.44) は内容が「マーケティング + 分析」の混合のため妥当。",
+    "今後のメンテナンスは config/scoring_rules.json v2.2 を保守。",
+    "Phase 3 (Embedding fine-tuning) で精度さらに向上可能。"
+  ],
+  "technical_metrics": {
+    "canonical_count": 6,
+    "cluster_count": 17,
+    "cluster_mapping_count": 39,
+    "theme_normalization_version": "v2.2",
+    "config_size_kb": 15.3
+  },
+  "detailed_scores": [
+    {
+      "filename": "insight_spec_01.json",
+      "semantic_purity_score": 0.65,
+      "quality_score": 0.8,
+      "ranking_score": 0.73
+    },
+    {
+      "filename": "insight_spec_02.json",
+      "semantic_purity_score": 0.53,
+      "quality_score": 0.73,
+      "ranking_score": 0.67
+    },
+    {
+      "filename": "insight_spec_03.json",
+      "semantic_purity_score": 0.55,
+      "quality_score": 0.74,
+      "ranking_score": 0.68
+    },
+    {
+      "filename": "insight_spec_04.json",
+      "semantic_purity_score": 0.75,
+      "quality_score": 0.85,
+      "ranking_score": 0.76
+    },
+    {
+      "filename": "insight_spec_05.json",
+      "semantic_purity_score": 0.44,
+      "quality_score": 0.69,
+      "ranking_score": 0.64
+    },
+    {
+      "filename": "insight_spec_mirirepi.json",
+      "semantic_purity_score": 0.76,
+      "quality_score": 0.86,
+      "ranking_score": 0.77
+    }
+  ]
+}
