@@ -8,13 +8,27 @@
     "rounding_decimal_places": 2
   },
   "theme_normalization": {
-    "changelog": {
-      "2.0": {
-        "source": "design_review_perplexity",
-        "changes": "階層化導入（canonical + cluster + source + confidence）",
-        "date": "2026-04-09"
+    "changelog": [
+      {
+        "changes": "Phase 2 Gemini クラスタリング - 新規クラスタ 7 個、マッピング 23 個追加",
+        "date": "2026-04-09",
+        "source": "gemini_clustering_phase2",
+        "version": "2.1"
+      },
+      {
+        "changes": "Phase 2 Gemini クラスタリング - 新規クラスタ 7 個、マッピング 23 個追加",
+        "date": "2026-04-09",
+        "source": "gemini_clustering_phase2",
+        "version": "2.1"
+      },
+      {
+        "2.0": {
+          "source": "design_review_perplexity",
+          "changes": "階層化導入（canonical + cluster + source + confidence）",
+          "date": "2026-04-09"
+        }
       }
-    },
+    ],
     "cluster_mapping": {
       "ビジネスモデル構築": {
         "canonical": "ビジネス戦略",
@@ -65,6 +79,121 @@
         "canonical": "マーケティング",
         "cluster": "digital_marketing",
         "confidence": 1.0
+      },
+      "EC": {
+        "canonical": "マーケティング",
+        "cluster": "digital_marketing",
+        "confidence": 0.85
+      },
+      "競合分析": {
+        "canonical": "分析",
+        "cluster": "market_research",
+        "confidence": 0.9
+      },
+      "価格戦略": {
+        "canonical": "ビジネス戦略",
+        "cluster": "pricing_strategy",
+        "confidence": 0.95
+      },
+      "ブランディング": {
+        "canonical": "マーケティング",
+        "cluster": "branding",
+        "confidence": 0.95
+      },
+      "コンテンツマーケティング": {
+        "canonical": "マーケティング",
+        "cluster": "content_marketing",
+        "confidence": 1.0
+      },
+      "戦略": {
+        "canonical": "ビジネス戦略",
+        "cluster": "business_strategy_planning",
+        "confidence": 0.9
+      },
+      "市場調査": {
+        "canonical": "分析",
+        "cluster": "market_research",
+        "confidence": 0.95
+      },
+      "SEO": {
+        "canonical": "マーケティング",
+        "cluster": "digital_marketing",
+        "confidence": 0.95
+      },
+      "リサーチ": {
+        "canonical": "分析",
+        "cluster": "market_research",
+        "confidence": 0.85
+      },
+      "自社分析": {
+        "canonical": "分析",
+        "cluster": "business_intelligence",
+        "confidence": 0.85
+      },
+      "戦略立案": {
+        "canonical": "ビジネス戦略",
+        "cluster": "business_strategy_planning",
+        "confidence": 0.95
+      },
+      "LPO": {
+        "canonical": "マーケティング",
+        "cluster": "conversion_optimization",
+        "confidence": 0.95
+      },
+      "Webデザイン": {
+        "canonical": "プロダクト開発",
+        "cluster": "product_design",
+        "confidence": 0.9
+      },
+      "UI/UX": {
+        "canonical": "プロダクト開発",
+        "cluster": "product_design",
+        "confidence": 0.95
+      },
+      "サイト改善": {
+        "canonical": "マーケティング",
+        "cluster": "conversion_optimization",
+        "confidence": 0.85
+      },
+      "CRO（コンバージョン率最適化）": {
+        "canonical": "マーケティング",
+        "cluster": "conversion_optimization",
+        "confidence": 0.95
+      },
+      "Web制作": {
+        "canonical": "プロダクト開発",
+        "cluster": "web_development",
+        "confidence": 0.9
+      },
+      "UI/UXデザイン": {
+        "canonical": "プロダクト開発",
+        "cluster": "product_design",
+        "confidence": 0.95
+      },
+      "コンバージョン最適化": {
+        "canonical": "マーケティング",
+        "cluster": "conversion_optimization",
+        "confidence": 0.95
+      },
+      "Webサイト制作": {
+        "canonical": "プロダクト開発",
+        "cluster": "web_development",
+        "confidence": 0.9
+      },
+      "外注管理": {
+        "canonical": "プロダクト開発",
+        "cluster": "project_management",
+        "confidence": 0.8
+      },
+      "ディレクション": {
+        "canonical": "プロダクト開発",
+        "cluster": "product_management",
+        "confidence": 0.85
+      },
+      "Webサイト改善": {
+        "canonical": "マーケティング",
+        "cluster": "conversion_optimization",
+        "confidence": 0.85
       }
     },
     "level_definitions": {
@@ -72,8 +201,8 @@
       "level_1_canonical": "統計・スコアリング用（6-8個、有限固定）",
       "level_0_raw": "Gemini出力（未統制、多数）"
     },
-    "version": "2.0",
-    "created_at": "2026-04-09",
+    "version": "2.1",
+    "created_at": "2026-04-09 21:00:18",
     "schema": "hierarchical_v1.0",
     "groups": {
       "ビジネス戦略": {
@@ -88,6 +217,19 @@
               "ビジネスモデル構築"
             ],
             "description": "ビジネスモデル・収益構造"
+          },
+          "pricing_strategy": {
+            "description": "価格戦略・収益モデル",
+            "raw_themes": [
+              "価格戦略"
+            ]
+          },
+          "business_strategy_planning": {
+            "description": "ビジネス戦略策定・経営計画",
+            "raw_themes": [
+              "戦略",
+              "戦略立案"
+            ]
           }
         },
         "raw_themes": [
@@ -116,6 +258,14 @@
               "市場分析"
             ],
             "description": "データ収集・分析"
+          },
+          "market_research": {
+            "description": "市場調査・競合分析",
+            "raw_themes": [
+              "競合分析",
+              "市場調査",
+              "リサーチ"
+            ]
           }
         },
         "raw_themes": [
@@ -180,6 +330,22 @@
               "SNSマーケティング"
             ],
             "description": "Web・SNS・デジタル広告"
+          },
+          "conversion_optimization": {
+            "description": "コンバージョン率最適化（CRO, LPO）",
+            "raw_themes": [
+              "LPO",
+              "CRO（コンバージョン率最適化）",
+              "コンバージョン最適化",
+              "サイト改善",
+              "Webサイト改善"
+            ]
+          },
+          "branding": {
+            "description": "ブランディング・ブランド構築",
+            "raw_themes": [
+              "ブランディング"
+            ]
           }
         },
         "raw_themes": [
@@ -235,6 +401,19 @@
               "UI"
             ],
             "description": "ユーザー体験・デザイン"
+          },
+          "web_development": {
+            "description": "Web サイト・Web アプリケーション開発",
+            "raw_themes": [
+              "Web制作",
+              "Webサイト制作"
+            ]
+          },
+          "project_management": {
+            "description": "プロジェクト管理・外注管理",
+            "raw_themes": [
+              "外注管理"
+            ]
           }
         },
         "raw_themes": [
@@ -248,7 +427,7 @@
       }
     }
   },
-  "rules_version": "2.0",
+  "rules_version": "2.1",
   "semantic_purity_thresholds": {
     "minimum_dominant_theme_ratio": 0.5,
     "entropy_normalization_method": "shannon"

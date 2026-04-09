@@ -1,0 +1,171 @@
+{
+  "classifications": [
+    {
+      "raw_theme": "EC",
+      "recommended_canonical": "マーケティング",
+      "recommended_cluster": "digital_marketing",
+      "confidence": 0.85,
+      "reasoning": "EC（電子商取引）サイトの集客や売上向上は、デジタルマーケティングの主要な応用領域であるため既存クラスターへ分類。"
+    },
+    {
+      "raw_theme": "競合分析",
+      "recommended_canonical": "分析",
+      "recommended_cluster": "market_research",
+      "confidence": 0.9,
+      "reasoning": "他社の動向や市場環境を調査・分析するプロセスであるため、分析カテゴリ内に「market_research」を新設して分類。"
+    },
+    {
+      "raw_theme": "価格戦略",
+      "recommended_canonical": "ビジネス戦略",
+      "recommended_cluster": "pricing_strategy",
+      "confidence": 0.95,
+      "reasoning": "収益モデルや市場でのポジショニングに直結する中核的なビジネス上の意思決定であるため、専用のクラスターを新設。"
+    },
+    {
+      "raw_theme": "ブランディング",
+      "recommended_canonical": "マーケティング",
+      "recommended_cluster": "branding",
+      "confidence": 0.95,
+      "reasoning": "企業や商品の認知形成、価値向上を担うマーケティングの重要領域であるため新規提案。"
+    },
+    {
+      "raw_theme": "コンテンツマーケティング",
+      "recommended_canonical": "マーケティング",
+      "recommended_cluster": "content_marketing",
+      "confidence": 1.0,
+      "reasoning": "既存のクラスター「content_marketing」と完全に一致するため。"
+    },
+    {
+      "raw_theme": "戦略",
+      "recommended_canonical": "ビジネス戦略",
+      "recommended_cluster": "business_strategy_planning",
+      "confidence": 0.9,
+      "reasoning": "ビジネス全体の方向性を定める上位概念であるため、戦略策定を意味するクラスターを新設して分類。"
+    },
+    {
+      "raw_theme": "市場調査",
+      "recommended_canonical": "分析",
+      "recommended_cluster": "market_research",
+      "confidence": 0.95,
+      "reasoning": "顧客ニーズや市場トレンドをデータやリサーチから導き出すプロセスであるため。"
+    },
+    {
+      "raw_theme": "SEO",
+      "recommended_canonical": "マーケティング",
+      "recommended_cluster": "digital_marketing",
+      "confidence": 0.95,
+      "reasoning": "検索エンジン最適化はデジタルマーケティングの代表的な手法であり、既存クラスターに内包可能。"
+    },
+    {
+      "raw_theme": "リサーチ",
+      "recommended_canonical": "分析",
+      "recommended_cluster": "market_research",
+      "confidence": 0.85,
+      "reasoning": "データ収集や市場調査のプロセスを広く指すため、市場調査と同様のクラスターに分類。"
+    },
+    {
+      "raw_theme": "自社分析",
+      "recommended_canonical": "分析",
+      "recommended_cluster": "business_intelligence",
+      "confidence": 0.85,
+      "reasoning": "自社のリソースやパフォーマンスを分析・可視化するプロセスであるため、既存のBI領域にマッピング。"
+    },
+    {
+      "raw_theme": "戦略立案",
+      "recommended_canonical": "ビジネス戦略",
+      "recommended_cluster": "business_strategy_planning",
+      "confidence": 0.95,
+      "reasoning": "ビジネス戦略を策定する具体的なアクションであるため、「戦略」と同一のクラスターへ分類。"
+    },
+    {
+      "raw_theme": "LPO",
+      "recommended_canonical": "マーケティング",
+      "recommended_cluster": "conversion_optimization",
+      "confidence": 0.95,
+      "reasoning": "ランディングページのコンバージョン率を高める施策であるため、最適化関連をまとめた新規クラスターに分類。"
+    },
+    {
+      "raw_theme": "Webデザイン",
+      "recommended_canonical": "プロダクト開発",
+      "recommended_cluster": "product_design",
+      "confidence": 0.9,
+      "reasoning": "ユーザー向けのインターフェースを設計・構築するプロダクトデザインの一部として分類。"
+    },
+    {
+      "raw_theme": "UI/UX",
+      "recommended_canonical": "プロダクト開発",
+      "recommended_cluster": "product_design",
+      "confidence": 0.95,
+      "reasoning": "ユーザー体験とインターフェース設計はプロダクトデザインの核心要素であるため。"
+    },
+    {
+      "raw_theme": "サイト改善",
+      "recommended_canonical": "マーケティング",
+      "recommended_cluster": "conversion_optimization",
+      "confidence": 0.85,
+      "reasoning": "Webサイトの改善は主にCVR向上やユーザー行動最適化のマーケティング施策として行われることが多いため。"
+    },
+    {
+      "raw_theme": "CRO（コンバージョン率最適化）",
+      "recommended_canonical": "マーケティング",
+      "recommended_cluster": "conversion_optimization",
+      "confidence": 0.95,
+      "reasoning": "マーケティングファネルにおける顧客転換率を最大化する施策であるため。"
+    },
+    {
+      "raw_theme": "Web制作",
+      "recommended_canonical": "プロダクト開発",
+      "recommended_cluster": "web_development",
+      "confidence": 0.9,
+      "reasoning": "Webサイトというデジタルプロダクトを構築するエンジニアリング・制作プロセスであるため新設クラスターに分類。"
+    },
+    {
+      "raw_theme": "UI/UXデザイン",
+      "recommended_canonical": "プロダクト開発",
+      "recommended_cluster": "product_design",
+      "confidence": 0.95,
+      "reasoning": "プロダクトのユーザー体験向上を目的とするデザイン領域であり、既存クラスターと合致。"
+    },
+    {
+      "raw_theme": "コンバージョン最適化",
+      "recommended_canonical": "マーケティング",
+      "recommended_cluster": "conversion_optimization",
+      "confidence": 0.95,
+      "reasoning": "CROやLPOと同義であり、マーケティング成果を最大化する手法であるため集約。"
+    },
+    {
+      "raw_theme": "Webサイト制作",
+      "recommended_canonical": "プロダクト開発",
+      "recommended_cluster": "web_development",
+      "confidence": 0.9,
+      "reasoning": "Web制作と同様にデジタルプロダクトの開発プロセスであるため。"
+    },
+    {
+      "raw_theme": "外注管理",
+      "recommended_canonical": "プロダクト開発",
+      "recommended_cluster": "project_management",
+      "confidence": 0.8,
+      "reasoning": "制作や開発を外部リソースに委託し、進行管理を行うプロジェクトマネジメント業務として分類。"
+    },
+    {
+      "raw_theme": "ディレクション",
+      "recommended_canonical": "プロダクト開発",
+      "recommended_cluster": "product_management",
+      "confidence": 0.85,
+      "reasoning": "プロダクト開発や制作の進行を指揮し、要件をまとめる役割であるため既存のプロダクトマネジメント領域に分類。"
+    },
+    {
+      "raw_theme": "Webサイト改善",
+      "recommended_canonical": "マーケティング",
+      "recommended_cluster": "conversion_optimization",
+      "confidence": 0.85,
+      "reasoning": "「サイト改善」と同様に、主にCVR向上を目的としたマーケティング・グロースハック文脈で語られるため。"
+    }
+  ],
+  "notes": "未マップテーマ群には、LPOやCROなどの「コンバージョン改善」に関するテーマが複数見受けられたため、マーケティングカテゴリに新規クラスター「conversion_optimization」を提案し集約しました。また、プロダクト開発カテゴリにおいて、Web制作や外注管理などの実務的なテーマが含まれていたため、「web_development」「project_management」を新設しています。これにより、既存のcanonical配下のクラスター数は上限の5個以内に適切に収まっています。",
+  "phase2_summary": {
+    "total_classified": 23,
+    "new_clusters_proposed": 7,
+    "confidence_average": 0.91
+  }
+}

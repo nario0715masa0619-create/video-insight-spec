@@ -304,10 +304,10 @@ def build_scoring_result(insight_json: Dict, weights: Dict, rules: Dict) -> Dict
     
     return result
 
-def score_insight_json(insight_json: Dict, weights_path: str, rules_path: str) -> Dict[str, Any]:
+def score_insight_json(insight_json: Dict, weights: Dict, rules: Dict) -> tuple:
     """メイン関数: insight JSON をスコアリング"""
-    weights, rules = load_scoring_config(weights_path, rules_path)
     return build_scoring_result(insight_json, weights, rules)
+
 
 
 

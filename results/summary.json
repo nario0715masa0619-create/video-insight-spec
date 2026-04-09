@@ -1,0 +1,43 @@
+{
+  "total_files": 6,
+  "average_semantic_purity": 0.59,
+  "generation_timestamp": "2026-04-09T21:09:55.176910",
+  "scores": [
+    {
+      "filename": "insight_spec_01.json",
+      "semantic_purity_score": 0.65,
+      "quality_score": 0.8,
+      "ranking_score": 0.73
+    },
+    {
+      "filename": "insight_spec_02.json",
+      "semantic_purity_score": 0.53,
+      "quality_score": 0.73,
+      "ranking_score": 0.67
+    },
+    {
+      "filename": "insight_spec_03.json",
+      "semantic_purity_score": 0.55,
+      "quality_score": 0.74,
+      "ranking_score": 0.68
+    },
+    {
+      "filename": "insight_spec_04.json",
+      "semantic_purity_score": 0.72,
+      "quality_score": 0.84,
+      "ranking_score": 0.75
+    },
+    {
+      "filename": "insight_spec_05.json",
+      "semantic_purity_score": 0.5,
+      "quality_score": 0.72,
+      "ranking_score": 0.66
+    },
+    {
+      "filename": "insight_spec_mirirepi.json",
+      "semantic_purity_score": 0.56,
+      "quality_score": 0.75,
+      "ranking_score": 0.69
+    }
+  ]
+}
