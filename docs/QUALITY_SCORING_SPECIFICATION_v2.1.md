@@ -593,3 +593,8 @@ A: 必ず rules_version を確認。
 - [ ] Git に仕様書をコミット
   コマンド: git add docs/QUALITY_SCORING_SPECIFICATION_v2.1.md
   コマンド: git commit -m "docs: Quality Scoring Engine v2.1 仕様書完成"
+
+
+
+
+
