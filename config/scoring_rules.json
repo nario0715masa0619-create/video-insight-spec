@@ -44,6 +44,10 @@
       "分析": {
         "parent_domain": "analytics",
         "description": "市場・データ分析"
+      },
+      "ビジネス戦略": {
+        "parent_domain": "strategy",
+        "description": "ビジネスモデル・戦略企画"
       }
     },
     "changelog": [
@@ -52,9 +56,21 @@
         "source": "manual_curation",
         "version": "1.0",
         "date": "2026-04-09"
+      },
+      {
+        "changes": "Added mappings for 集客, コピーライティング, ウェブデザイン, リードナーチャリング, ビジネスモデル構築; added ビジネス戦略 category",
+        "source": "manual_curation",
+        "version": "1.1",
+        "date": "2026-04-09"
+      },
+      {
+        "changes": "Added mappings for 集客, コピーライティング, ウェブデザイン, リードナーチャリング, ビジネスモデル構築",
+        "source": "manual_curation",
+        "version": "1.1",
+        "date": "2026-04-09"
       }
     ],
-    "version": "1.0",
+    "version": "1.1",
     "mapping": {
       "ダイレクトレスポンスマーケティング": "マーケティング",
       "広告": "マーケティング",
@@ -66,7 +82,13 @@
       "プロダクト開発": "プロダクト開発",
       "マーケティング": "マーケティング",
       "市場分析": "分析",
-      "SNSマーケティング": "マーケティング"
+      "SNSマーケティング": "マーケティング",
+      "集客": "マーケティング",
+      "コピーライティング": "セールス",
+      "ウェブデザイン": "セールス",
+      "リードナーチャリング": "マーケティング",
+      "ビジネスモデル構築": "ビジネス戦略",
+      "ビジネスモデル": "ビジネス戦略"
     },
     "created_by": "manual_curation",
     "created_at": "2026-04-09"
