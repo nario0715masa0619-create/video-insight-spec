@@ -1,6 +1,12 @@
 import os
 import json
 import sys
+import io
+
+# Unicode 対応
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+
 sys.path.insert(0, 'scripts')
 
 from quality_scoring_engine import load_scoring_config, score_insight_json
@@ -25,9 +31,9 @@ def load_all_insights():
                 insight = json.load(f)
                 insight['_filename'] = filename
                 insights.append(insight)
-                print(f"✅ {filename} 読み込み")
+                print(f"OK {filename} read")
         except Exception as e:
-            print(f"❌ {filename}: {e}")
+            print(f"NG {filename}: {e}")
     
     return insights, filenames
 
@@ -38,7 +44,6 @@ def apply_scoring_batch(insights, filenames, weights, rules):
     scores = []
     
     for insight, filename in zip(insights, filenames):
-        # score_insight_json は dict を返す
         score_result = score_insight_json(insight, weights, rules)
         
         scored_insights.append(score_result)
@@ -65,7 +70,7 @@ def save_scored_insights(scored_insights):
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(insight, f, ensure_ascii=False, indent=2)
         
-        print(f"✅ {output_filename} 保存")
+        print(f"OK {output_filename} saved")
 
 def generate_summary(scores):
     """サマリー JSON生成"""
@@ -82,31 +87,31 @@ def generate_summary(scores):
     return summary
 
 def main():
-    print("=== スコアリング一括処理開始 ===\n")
+    print("=== Scoring batch process start ===\n")
     
-    print("【Step 0: Config 読み込み】")
+    print("Step 0: Load config")
     weights, rules = load_scoring_config('config/scoring_weights.json', 'config/scoring_rules.json')
-    print(f"✅ Config 読み込み\n")
+    print(f"OK Config loaded\n")
     
-    print("【Step 1: Insights 読み込み】")
+    print("Step 1: Load insights")
     insights, filenames = load_all_insights()
-    print(f"✅ {len(insights)} ファイル読み込み\n")
+    print(f"OK {len(insights)} files loaded\n")
     
-    print("【Step 2: スコアリング適用】")
+    print("Step 2: Apply scoring")
     scored_insights, scores = apply_scoring_batch(insights, filenames, weights, rules)
-    print(f"✅ スコアリング完了\n")
+    print(f"OK Scoring complete\n")
     
-    print("【Step 3: 結果保存】")
+    print("Step 3: Save results")
     save_scored_insights(scored_insights)
-    print(f"✅ 保存完了\n")
+    print(f"OK Save complete\n")
     
-    print("【Step 4: サマリー生成】")
+    print("Step 4: Generate summary")
     summary = generate_summary(scores)
-    print(f"✅ summary.json 生成\n")
+    print(f"OK summary.json generated\n")
     
-    print("=== 処理完了 ===")
-    print(f"平均 semantic_purity_score: {summary['average_semantic_purity']}")
-    print(f"出力先: results/")
+    print("=== Process complete ===")
+    print(f"Average semantic_purity_score: {summary['average_semantic_purity']}")
+    print(f"Output directory: results/")
 
 if __name__ == '__main__':
     main()

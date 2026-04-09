@@ -10,6 +10,12 @@
   "theme_normalization": {
     "changelog": [
       {
+        "changes": "Phase 7-4 Embedding 統合 - 残存 unmapped 6 個を embedding ベースで自動マッピング",
+        "date": "2026-04-09",
+        "source": "embedding_mapper_phase3",
+        "version": "2.2"
+      },
+      {
         "changes": "Phase 2 Gemini クラスタリング - 新規クラスタ 7 個、マッピング 23 個追加",
         "date": "2026-04-09",
         "source": "gemini_clustering_phase2",
@@ -194,6 +200,36 @@
         "canonical": "マーケティング",
         "cluster": "conversion_optimization",
         "confidence": 0.85
+      },
+      "コンテンツ制作": {
+        "canonical": "マーケティング",
+        "cluster": "digital_marketing",
+        "confidence": 0.7804045081138611
+      },
+      "コンバージョン改善": {
+        "canonical": "マーケティング",
+        "cluster": "digital_marketing",
+        "confidence": 0.8078962564468384
+      },
+      "広告運用": {
+        "canonical": "マーケティング",
+        "cluster": "digital_marketing",
+        "confidence": 0.85
+      },
+      "行動心理学": {
+        "canonical": "分析",
+        "cluster": "data_analytics",
+        "confidence": 0.4543919861316681
+      },
+      "動画マーケティング": {
+        "canonical": "マーケティング",
+        "cluster": "digital_marketing",
+        "confidence": 0.8705511689186096
+      },
+      "動画編集": {
+        "canonical": "プロダクト開発",
+        "cluster": "product_design",
+        "confidence": 0.8
       }
     },
     "level_definitions": {
@@ -201,7 +237,7 @@
       "level_1_canonical": "統計・スコアリング用（6-8個、有限固定）",
       "level_0_raw": "Gemini出力（未統制、多数）"
     },
-    "version": "2.1",
+    "version": "2.2",
     "created_at": "2026-04-09 21:00:18",
     "schema": "hierarchical_v1.0",
     "groups": {
@@ -427,7 +463,7 @@
       }
     }
   },
-  "rules_version": "2.1",
+  "rules_version": "2.2",
   "semantic_purity_thresholds": {
     "minimum_dominant_theme_ratio": 0.5,
     "entropy_normalization_method": "shannon"
