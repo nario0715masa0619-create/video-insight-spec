@@ -76,3 +76,7 @@ wheels/
 .pytest_cache/
 .env.test
 *.db.backup
+
+# ========== Generated Reports & Logs ==========
+reports/
+logs/
