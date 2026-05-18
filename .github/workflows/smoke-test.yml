@@ -1,0 +1,48 @@
+name: Smoke Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+
+    env:
+      PYTHONUTF8: "1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run smoke test
+        run: |
+          python competitor_analytics_generator.py --lecture-ids "01,02" --archive-dir "sample_archive"
+
+      - name: Verify outputs
+        run: |
+          test -d reports/competitor_analytics
+          test -d reports/html
+          test -d reports/text
+          find reports/competitor_analytics -type f | grep "\.json$"
+          find reports/html -type f | grep "\.html$"
+          find reports/text -type f | grep "\.txt$"
+
+      - name: Upload generated reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-test-reports
+          path: reports/
