@@ -45,8 +45,8 @@ YouTube動画の洞察・競合分析システム。動画視聴データを構�
 実装ファイル：
 - html_formatter.py - レスポンシブCSSを使用したHTML生成
 - text_formatter.py - マークダウン変換
-- executive_summary_formatter.py - 1ページサマリー生成
-- report_generator.py - オーケストレーション
+- executive_summary_formatter.py - 1ページサマリー生成（※現在フォーマッタ自体は実装済みですが、主実行経路の report_generator.py には未統合です）
+- report_generator.py - オーケストレーション（現在は HTML / Text のみ出力）
 
 ## フェーズ5：商品化・営業資料
 
@@ -137,7 +137,7 @@ Year 3予測（シナリオB）：
 - reports/competitor_analytics/ - 生JSON
 - reports/html/ - HTMLレポート
 - reports/text/ - テキスト/マークダウンレポート
-- reports/executive_summary/ - 1ページサマリー
+- reports/executive_summary/ - 1ページサマリー（※フォーマッタの実装は完了していますが、自動出力パイプラインには未統合です）
 - reports/samples/ - PoCサンプルレポート（フェーズ6）
 
 ## ビジネスモデル
