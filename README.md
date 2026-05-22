@@ -2,378 +2,187 @@
 
 YouTube 動画の洞察・競合分析システム。動画視聴データを構造化し、経営判断に直結したレポートを自動生成・配信する SaaS サービスの基盤。
 
-## クイックスタート
+> [!IMPORTANT]
+> **【重要】公開 main とローカル実装の差分について**
+> - 本リポジトリの `streamlit_app/` ディレクトリは、ローカル環境で先行実装および動作検証が完了している高度な Web ダッシュボード機能です。
+> - 現在、公開 GitHub リポジトリ（`origin/main` ブランチ）には未反映（Untracked）の状態ですが、**将来的に公開 main ブランチへ正式にマージ・統合される前提の開発成果物**です。
+> - そのため、ドキュメントの記述はローカルでの実装実態（先行実装済みのダッシュボード機能）を基準に記載しています。
 
-**必要なもの:**
-- Python 3.8+
-- YouTube API キー
+---
 
-**セットアップ:**
-1. リポジトリをクローン
-2. 依存関係をインストール
-3. .env に YOUTUBE_API_KEY を設定
-4. competitor_analytics_generator.py を実行
+## 1. プロダクト概要
 
-## フェーズの進捗
+本システムは、YouTube動画の center_pin（学習ポイント）や各種エンゲージメントメトリクス、心理フェーズを構造化した3層JSONデータを生成し、経営陣やコンテンツプランナー向けに価値ある示唆を提供するシステムです。
 
-| フェーズ | タイトル | 状態 | 日付 | 成果物 |
-|---------|---------|------|------|--------|
-| 4.2 | データ仕様設計 | ✅ 完了 | 2026-03-26 | portfolio_view, growth_view, theme_view |
-| 4.3 | HTML/Text フォーマッタ | ✅ 完了 | 2026-03-27 | html_formatter.py, text_formatter.py, Report Generator |
-| 5.1 | 経営者向けサマリー | ✅ 完了 | 2026-03-27 | 1ページレポート |
-| 5.2 | サブスク仕様 | ✅ 完了 | 2026-03-27 | サービスモデル、料金、SLA |
-| 5.3 | 外部向け資料 | ✅ 完了 | 2026-03-27 | LP outline、note 草案、Finance brief |
-`| 6 | PoC・営業支援 | ✅ 完了` | - |PHASE6_1_LP_MESSAGING.md、PHASE6_2_SAMPLE_REPORTS.md、PHASE6_4_ONBOARDING.md、sample_report (3種 MD/HTML) |
-`| 7 | プロダクト拡張 | 🔄 実装中 | - | ダッシュボード、REST API、Slack 統合 |
+ビジネスの意思決定を支援するため、**「コマンドライン（CLI）によるバッチレポート生成」**と**「対話的（GUI）な Web ダッシュボードによる多角的な分析」**の2つの利用経路をサポートしています。
 
-## 主な機能
+---
 
-### フェーズ 4: データ生成・レポート自動化
-- **3層 JSON 構造**: video_meta / knowledge_core / views
-- **自動レポート生成**: Executive Summary（1ページ）+ Full Report（複数ページ）
-- **デュアル出力**: HTML（ブラウザ向け）+ テキスト（マークダウン互換）
-- **JST タイムスタンプ統一**: すべてのレポートに JST 日時を記載
+## 2. システムエントリポイント一覧
 
-### フェーズ 5: 商品化・営業資料
-- **Executive Summary（1ページ）**: 3分で読める経営判断資料
-- **サブスク モデル**: 月額 10 万円（基本プラン）+ 初期 30 万円～
-- **ターゲット**: 講座 5～20 本クラスの EdTech スタートアップ
-- **営業資料**: LP 構成メモ、note 記事草案、VC・銀行向けピッチ資料
+システムには以下の2つの主要な実行エントリポイントが存在します。用途に応じて使い分けてください。
 
-### フェーズ 6: PoC・営業支援（進行中）
-- **PoC 用 LP**: サンプルレポート掲載、試算機能
-- **サンプルレポート**: 実例 1～3 セット（HTML + テキスト）
-- **営業テンプレ**: 提案書、メールテンプレ、見積自動化ツール
-- **導入支援**: オンボーディングドキュメント、チェックリスト
+| エントリポイント | 実行環境 | 役割・責務 | 主な出力物 |
+| :--- | :--- | :--- | :--- |
+| `competitor_analytics_generator.py` | CLI (バッチ) | 講座動画データから統計情報を算出し、HTML/Textのレポートファイル群を自動生成する。 | JSON/HTML/Text フルレポート |
+| `streamlit_app/app.py` | Web GUI (対話的) | 生成済みの各種統計 JSON や DB からデータをロードし、多角的なグラフ表示、AIによる解説・改善提案、およびPDFレポートをダウンロード可能にする。 | ブラウザ上のダッシュボード UI / PDF レポート |
 
-### フェーズ 7: プロダクト拡張（将来）
-- **Web ダッシュボード**: リアルタイム・日次更新の可視化
-- **REST API**: JSON レポートデータを API 化（認証・レート制限付き）
-- **Slack 統合**: 月次自動通知・成長テーマのアラート
+---
 
-## ドキュメント
+## 3. クイックスタート
 
-### 仕様書
-- [PROJECT_OVERVIEW.md](docs/PROJECT_OVERVIEW.md) - プロジェクト概要・アーキテクチャ
-- [JSON_SPEC.md](docs/specs/JSON_SPEC.md) - 3層 JSON スキーマ
-- [VIEWS_DESIGN.md](docs/specs/VIEWS_DESIGN.md) - View 定義
+### 必要な要件
+- **Python 3.8+**
+- 依存関係のインストール（「8. 依存関係の構成」を参照）
 
-### フェーズドキュメント
-- [PHASE4_2_DESIGN.md](docs/phases/PHASE4_2_DESIGN.md) - データ構造・View 設計
-- [PHASE4_3_DESIGN.md](docs/phases/PHASE4_3_DESIGN.md) - HTML/Text フォーマッタ設計
-- [PHASE4_3_PLAN.md](docs/phases/PHASE4_3_PLAN.md) - 実装計画
-- [PHASE5_1_DESIGN.md](docs/phases/PHASE5_1_DESIGN.md) - Executive Summary 仕様
-- [PHASE5_2_PLAN.md](docs/phases/PHASE5_2_PLAN.md) - サブスク仕様
-- [PHASE5_3_LP_OUTLINE.md](docs/phases/PHASE5_3_LP_OUTLINE.md) - LP 構成メモ
-- [PHASE5_3_NOTE_DRAFT.md](docs/phases/PHASE5_3_NOTE_DRAFT.md) - note 記事草案
-- [PHASE5_3_FINANCE_BRIEF.md](docs/phases/PHASE5_3_FINANCE_BRIEF.md) - 金融機関向け説明書
+### 環境変数の設定
+プロジェクトのルートディレクトリに `.env` ファイルを作成し、用途に応じてキーを設定してください。
 
-## コマンド
+```env
+# バッチ（CLI）実行で新規にデータをダウンロード・生成する際に必要
+YOUTUBE_API_KEY=your_youtube_api_key_here
 
-python competitor_analytics_generator.py --lecture-ids "01,02,03,04,05"
+# WebダッシュボードでAIによる自動言語化解説・改善提案（NarrativeEngine）を利用する際に必要
+OPENAI_API_KEY=your_openai_api_key_here
+```
 
-## ディレクトリ構造
+---
 
+## 4. バッチレポート自動生成 (CLI 経路)
+
+### 概要
+コマンドラインから講座動画のIDやデータディレクトリを指定し、競合分析の構造化データ（生JSON）および人間が読みやすいHTML/Textレポートを自動生成します。
+
+### 実行コマンド
+```bash
+python competitor_analytics_generator.py --lecture-ids "01,02,03,04,05" --archive-dir "D:/AI_Data/video-insight-spec/archive" --output-dir "reports/competitor_analytics"
+```
+
+### 処理プロセス
+1. `InsightSpecRepository` を介してアーカイブディレクトリから講座データをロード。
+2. `PortfolioViewService` などの各種サービスを通じて統計データを生成。
+3. `ReportGenerator` を呼び出し、レスポンシブHTMLレポート（`reports/html/` 配下）およびMarkdown互換のテキストレポート（`reports/text/` 配下）を自動出力。
+
+---
+
+## 5. 対話的 Web ダッシュボード (Web GUI 経路)
+
+### 概要
+すでに生成・蓄積されている JSON や DB データを読み込み、Streamlit を用いて直感的かつグラフィカルに可視化・分析します。
+
+### 実行コマンド
+```bash
+streamlit run streamlit_app/app.py
+```
+
+### 主要機能
+- **チャンネル全体分析**: KPI メトリクス表示、テーマ分布の可視化グラフ、品質スコアランキング、PDFレポートの生成とダウンロード。
+- **個別動画分析**:
+  - **黄金の組み合わせ**: 高反応パターン（ファネルステージ×コンテンツタイプ×テーマ）の特定。
+  - **隠れた弱点**: 品質が高いにもかかわらずエンゲージメントが低い要素の検出。
+  - **心理ロードマップ**: 視聴者のフェーズ別心理変化と最適コンテンツ。
+  - **競争優位性**: 多多様性や初心者適合度などの総合評価スコア。
+  - **次のステップ提案**: 次に進むべきファネルと推奨テーマの自動提示。
+
+### 最小実行（CLI）との違い
+- バッチ経路（CLI）は**新規データの処理と固定レポートファイルの生成**に特化しています。
+- ダッシュボード経路は**既存データを用いた対話的な多角分析・シミュレーションおよびPDFダウンロード**に特化しています。
+
+### AI言語化エンジンの挙動
+- `.env` に `OPENAI_API_KEY` が設定されている場合、GPT-4o（`gpt-4o`）を使用した言語化エンジン（`NarrativeEngine`）による詳細な自動分析テキストがダッシュボード上に動的に表示されます。
+- **未設定の場合**: 起動時に「⚠️ 分析エンジン初期化エラー」という警告が表示されますが、ダッシュボード自体は停止せず、**グラフやスコアテーブル、PDF生成などの基本機能は sample data で正常に動作**します。
+
+---
+
+## 6. Executive Summary の位置付け
+
+本システムにおける「経営者向けサマリー（Executive Summary）」は、実態として以下のように実装・分離されています。
+
+### フォーマッタの統合状況 (`converter/executive_summary_formatter.py`)
+- **状態**: `executive_summary_formatter.py` というモジュール自体は実装されていますが、現時点では**バッチ経路およびダッシュボード経路のどちらからもインポート・接続されておらず、パイプライン未統合**の状態です。
+
+### ダッシュボード上の独自要約
+- **状態**: Web ダッシュボードの「レポート」タブに「エグゼクティブサマリー」というセクションが存在します。これは上記の formatter ではなく、**`streamlit_app/app.py` 内で `executive_report.json` から直接データを抽出し、Streamlit の Markdown テーブルで独自にフォーマットして描画**しているものです。
+- **PDF出力**: この画面上の要約データおよびチャンネル全体のメトリクスを元に、PDFライブラリを使用してPDFファイルを動的に生成し、ダウンロードできる機能がダッシュボード上で完結して提供されています。
+
+---
+
+## 7. ディレクトリ構造
+
+```text
 video-insight-spec/
-├── docs/
-│   ├── phases/
-│   │   ├── PHASE4_2_DESIGN.md
-│   │   ├── PHASE4_3_DESIGN.md
-│   │   ├── PHASE4_3_PLAN.md
-│   │   ├── PHASE5_1_DESIGN.md
-│   │   ├── PHASE5_2_PLAN.md
-│   │   ├── PHASE5_3_LP_OUTLINE.md
-│   │   ├── PHASE5_3_NOTE_DRAFT.md
-│   │   └── PHASE5_3_FINANCE_BRIEF.md
-│   └── specs/
-│       ├── JSON_SPEC.md
-│       └── VIEWS_DESIGN.md
-├── converter/
+├── docs/                             # プロジェクトドキュメント
+│   ├── specs/                        # スキーマ・View設計書
+│   └── phases/                       # フェーズごとの設計・計画書
+├── converter/                        # レポート生成・整形ロジック (バッチ共通)
 │   ├── text_formatter.py
 │   ├── html_formatter.py
-│   ├── report_generator.py
-│   └── executive_summary_formatter.py
-├── reports/
-│   ├── competitor_analytics/
-│   ├── html/
-│   ├── text/
-│   └── executive_summary/
-├── competitor_analytics_generator.py
-├── README.md
-└── .env（トラック対象外）
-
-## 出力例
-
-### Executive Summary
-- ファイル: reports/executive_summary/executive_summary_YYYYMMDD.html
-- 内容: ヘッダー + 全体サマリ（3指標）+ Top 3 講座 + Top 3 テーマ + アクション提案
-- サイズ: 1ページ（A4 印刷対応）
-
-### Full Report（HTML）
-- ファイル: reports/html/competitor_analytics_YYYYMMDD.html
-- 内容: Portfolio View + Growth View + Theme View + Representative Insights
-- 特徴: レスポンシブ CSS、セマンティック HTML、印刷対応
-
-### Full Report（テキスト）
-- ファイル: reports/text/competitor_analytics_YYYYMMDD.txt
-- 内容: HTML と同じ構成、マークダウン互換
-- 用途: メール添付、CMS 連携
-
-## ビジネスモデル
-
-### ターゲット市場
-- 中堅 EdTech スタートアップ（講座 5～20 本）
-- 年間売上 1～10 億円規模
-- 課題: データドリブン改善を進めたいが、分析人材が限定的
-
-### 料金体系
-- 基本プラン: 月額 10 万円
-- 初期導入費: 30～50 万円
-- プレミアムプラン（将来）: 月額 20 万円（週次報告 + コンサルティング）
-- エンタープライズ（将来）: 要相談（50+ 講座対応）
-
-### Year 3 予測（シナリオ B）
-- 年間売上（ARR）: 4,500 万円
-- 顧客数: 30 社
-- EBITDA: 1,900～2,400 万円（利益率 42～53%）
-- 回収期間: 3～4 年
-
-## セキュリティ
-
-- YOUTUBE_API_KEY は .env で管理（Git に commit しない）
-- データ暗号化: すべての顧客視聴ログを保存時に暗号化
-- SOC 2 / ISO 27001 対応: Year 1 内に取得予定
-- バックアップ・災害対応: 稼働保証 99.9% SLA を目指す
-
-
-## Quality Scoring Engine v2.1
-
-### 目的
-
-YouTube 動画の center_pin（学習ポイント）に対して品質指標を計算し、
-レポート生成を補助します。
-
-計算指標:
-- text_quality_score: テキスト品質
-- semantic_purity_score: セマンティック純度
-- business_fit_score: ビジネス適合度
-- quality_score: 統合品質（テキスト45% + セマンティック55%）
-- ranking_score: ランキング用（品質75% + ビジネス適合25%）
-
-### スコアリングの特徴
-
-1. Data-Driven ルール: config/scoring_rules.json で管理
-2. テーマ正規化: raw_theme → canonical_theme に統一
-3. 版管理: score_version / rules_version / theme_normalization_version
-4. 説明可能性: score_details に中間値を完全保持
-
-### v2.1 の簡易実装
-
-固定値項目:
-- noise_rate: 0.05
-- duplication_rate: 0.02
-- topic_transition_stability: 0.75
-
-将来: v2.2 で実データベース計算に差し替え予定
-## ロードマップ
-
-### フェーズ 6（進行中）
-- PoC 用ランディングページ完成
-- サンプルレポート 1 セット（実例ベース）
-- 営業テンプレ & 自動化ツール投入
-
-### フェーズ 7（プロダクト拡張）
-- Web ダッシュボード（リアルタイム可視化）
-- REST API（データ公開 + 認証）
-- Slack 統合（自動通知）
-
-### フェーズ 8 以降（将来）
-- AI による自動提案生成
-- PDF 出力機能
-- 国際展開（東南アジア）
-- モバイル アプリ（iOS / Android）
+│   ├── report_generator.py           # HTML/Text バッチレポート生成
+│   └── executive_summary_formatter.py # (未統合) 1ページサマリー生成
+├── streamlit_app/                    # Web ダッシュボード (ローカル実装/反映前提)
+│   ├── app.py                        # メインエントリポイント
+│   ├── config.py                     # ダッシュボード設定・配色
+│   ├── data_loader.py                # キャッシング・データ読み込み
+│   ├── analytics_engine.py           # 分析エンジン
+│   ├── advanced_analytics_engine.py  # 唯一無二の複合分析ロジック
+│   ├── narrative_engine.py           # GPT-4o 言語化エンジン
+│   └── requirements.txt              # ダッシュボード専用の依存関係
+├── data/                             # 集計済み JSON 等の置き場
+│   ├── executive_report.json         # ダッシュボード用サマリーデータ
+│   └── final_statistics_report.json
+├── competitor_analytics_generator.py # バッチレポート生成メイン
+├── requirements-dev.txt              # 開発用依存関係
+├── README.md                         # 本ファイル
+└── .env                              # 環境変数設定ファイル (トラック非対象)
+```
 
 ---
 
+## 8. 依存関係の構成
 
-## 進捗状況
+本システムは、CLIバッチの動作環境とリッチなWebダッシュボードの動作環境で依存関係を明確に分けて管理しています。これにより不要なライブラリが競合するのを防ぎます。
 
-✅ **Phase 6 完成**
-- PHASE6_1_LP_MESSAGING.md: PoC LP メッセージング戦略
-- PHASE6_2_SAMPLE_REPORTS.md: サンプルレポート作成ガイドライン
-- PHASE6_4_ONBOARDING.md: オンボーディングドキュメント（user_guide・sales_guide・faq）
-- sample_report_marketing/webdev/dataanalysis（Markdown & HTML）
+### ルート（バッチ・共通環境用）
+バッチによるレポート生成や共通のロジック実行に必要な最小限のライブラリ（`pandas`, `numpy` 等）は、開発環境用の `requirements-dev.txt` などに整備されています。
 
-✅ **Phase 7-1 完成**
-- PHASE7_PLAN.md（v1.1 採用版）: Phase 7 全体計画
-- PHASE7_1_DATA_ANONYMIZATION.md（確定版）: 実績データ匿名化・統合ガイド
-- 4月スケジュール・GDPR 対応・品質チェック（レコード保持率 ≥ 95%、PII ゼロ）
+### ダッシュボード専用環境 (`streamlit_app/requirements.txt`)
+Web ダッシュボードおよび高度な AI 分析・可視化を動作させるために必要なパッケージが定義されています。ダッシュボードを起動する際は、必ず本ファイルを指定してインストールを行ってください。
 
-🔄 **Phase 7-2 実装中（Phase 7.2.1 完了）**
-- PHASE7_2_AUTO_GENERATION.md: YouTube ダウンロード & メタデータ抽出エンジン
-  - ✅ youtube_channel_downloader.py: チャンネルから自動ダウンロード（11 個の MP4、合計 115.7 MB）
-  - ✅ youtube_metadata_file_extractor.py: メタデータ自動抽出
-  - ✅ results/all_channels_metadata.json: 講座動画メタデータ
-  - 📅 Phase 7.2.2: Markdown → HTML → PDF パイプライン（5/26 予定）
-  - 📅 Phase 7.2.3: APScheduler 統合（6/9 予定）
-- APScheduler / cron 設定
+**主要な依存関係**:
+- `streamlit`: ダッシュボードフレームワーク
+- `pandas` / `numpy` / `plotly`: データ処理およびグラフ描画
+- `openai`: GPT-4o を用いた言語化分析（`NarrativeEngine` 用）
+- `fpdf2`: PDF レポートの動的生成およびダウンロード用
+
+**インストールコマンド**:
+```bash
+pip install -r streamlit_app/requirements.txt
+```
+
+> [!TIP]
+> Python 3.12 や 3.13 などの新しい Python 環境では、古いバージョン指定によるソースビルド時にエラーが発生することがあります。その場合は、以下のようにバージョン指定を省略して最新パッケージをインストールしてください：
+> ```bash
+> pip install streamlit openai fpdf2 pandas numpy plotly reportlab PyPDF2
+> ```
 
 ---
 
-最終更新: 2026-03-27
-ブランチ: main
+## 9. 開発ロードマップ & 進捗状況
 
-## カタログ
+### フェーズの進捗
 
-営業・マーケティング用のカタログデータを整備。
+| フェーズ | タイトル | 状態 | 実装実態と成果物 |
+| :--- | :--- | :--- | :--- |
+| **4.2** | データ仕様設計 | ✅ 完了 | portfolio_view, growth_view, theme_view の3層JSON構造の設計 |
+| **4.3** | HTML/Text フォーマッタ | ✅ 完了 | `html_formatter.py`, `text_formatter.py`, `ReportGenerator` によるバッチ自動化 |
+| **5.1** | 経営者向けサマリー | ✅ 完了 | `executive_summary_formatter.py` (※未統合モジュール) の構築 |
+| **6** | PoC・営業支援 | ✅ 完了 | LPメッセージング、サンプルレポート、見積自動化等 |
+| **7** | プロダクト拡張 | 🔄 実装中 | **【ローカル検証完了】** Webダッシュボード（`streamlit_app/`）の実装完了。<br>現在、公開 `main` ブランチへの移行・マージの最終段階。 |
 
-### 格納場所
-- **docs/catalog/** - カタログファイル格納ディレクトリ
+---
 
-### ファイル一覧
-- luvira-catalog-spec.md - 料金プラン・ユースケース仕様書
-- sales-script-insight.md - 営業スクリプト
-- 映像構造解析（JSON）サービスカタログ - 株式会社ルヴィラ.html - Web公開用カタログ
+## 10. セキュリティ & コンプライアンス
 
-
-
-
-
-
-## Theme Hierarchy Design v2.0
-
-### 階層構造
-
-**Level 0 - raw_theme**: Gemini 出力（未統制、多数）
-**Level 1 - canonical_theme**: 統計用（6個有限固定）- semantic_purity_score 計算
-**Level 2 - cluster**: 分析用（canonical 配下 3-5 個）- score_details 記録
-
-### 正規化アルゴリズム（3段階）
-
-1. Exact Match: cluster_mapping 直接マッピング → (canonical, cluster, "cluster_exact", 1.0)
-2. Group Member: groups の raw_themes に存在 → (canonical, default_cluster, "group_member", 0.95)
-3. Fallback: 未マップ → (raw_theme, "unclassified", "unmapped", 0.0)
-
-### Canonical Categories（6個）
-
-- **マーケティング** (0.95): 顧客獲得・認知向上・ブランド構築
-- **セールス** (0.90): 受注・商談・営業プロセス
-- **プロダクト開発** (0.80): 製品企画・設計・開発
-- **分析** (0.85): データ分析・インサイト抽出
-- **ビジネス戦略** (0.75): 経営戦略・ビジネスモデル
-- **カスタマーサクセス** (0.75): 顧客成功・リテンション
-
-### 設計原則
-
-- semantic_purity_score は canonical のみ使用（スコア一貫性）
-- cluster 分布は score_details に記録（詳細度確保）
-- source フィールドで信頼度を可視化
-- canonical 数は絶対に有限のまま（Embedding導入時も不変）
-- ザル化防止：制約条件・版管理・人間レビュー必須
-
-### テスト結果（v2.0）
-
-6 ファイル平均 semantic_purity_score: 0.53
-- ✅ insight_spec_01: 0.65, insight_spec_04: 0.70
-- ⚠️ insight_spec_02,03: 0.45（Phase 2 トリガー）
-
-### Phase 進化パス
-
-- **Phase 1 (完了)**: 手動 canonical + cluster 定義
-- **Phase 2 (次)**: Gemini が raw_themes から cluster 候補生成 → 人間レビュー → JSON 更新
-- **Phase 3 (将来)**: Embedding で新 raw_theme 自動割当（canonical は不変）
-
-
-
-
-## Phase 7-4: Embedding Integration (2026-04-09)
-
-**目標**: 残存 unmapped テーマを embedding ベースで自動マッピング
-
-**実装内容**
-- Sentence Transformer (all-MiniLM-L6-v2) を使用した embedding ベースのクラスタリング
-- 6 個の残存 unmapped テーマを embedding 類似度で既存 canonical に自動割り当て
-- 手動レビューで広告運用と動画編集の割り当てを修正
-
-**スコア改善結果**
-- 平均 semantic_purity: 0.59 → **0.61** (+0.02, +3.4%)
-- 新規マッピング: 6 個追加（合計 39 個）
-- config version: v2.1 → **v2.2**
-
-**主要成果物**
-- scripts/embedding_mapper.py: Embedding ベースのマッピング実装
-- scripts/embedding_init.py: Embedding モデル初期化
-- data/embedding_mapping_result.json: Embedding マッピング結果
-- data/remaining_unmapped_themes.json: 残存 unmapped テーマリスト
-
-**スコア分析**
-| ファイル | Phase 7-3 | Phase 7-4 | 改善 |
-|---|---|---|---|
-| insight_spec_01 | 0.65 | 0.65 | → |
-| insight_spec_02 | 0.53 | 0.53 | → |
-| insight_spec_03 | 0.55 | 0.55 | → |
-| insight_spec_04 | 0.72 | 0.75 | ⬆️ |
-| insight_spec_05 | 0.50 | 0.44 | ⬇️ |
-| insight_spec_mirirepi | 0.56 | 0.76 | ⬆️⬆️ |
-| **平均** | 0.59 | **0.61** | ⬆️ |
-
-
-
-## Phase 7-5: Final Statistics & Executive Report (完了 ✅)
-
-**目標**: プロジェクト全体の統計分析、Executive Summary 生成、最終メトリクス検証。
-
-**実装**
-
-- \scripts/generate_statistics.py\ – 全 6 つの insight_spec ファイルから semantic_purity、quality_score、ranking_score を集計。canonical 分布、source 分布（cluster_exact/group_member）を計算。結果を \data/final_statistics_report.json\ に保存。
-
-- \scripts/generate_executive_report.py\ – Executive Summary レポート生成。プロジェクト状態、品質スコア、semantic_purity、unmapped_rate、主要知見（Theme Hierarchy 有効性、Marketing テーマ 68%、cluster_exact 54%）、推奨事項（Phase 3 Embedding Fine-tuning）を記録。結果を \data/executive_report.json\ に出力。
-
-**統計結果**
-
-| メトリクス | 値 |
-|---|---|
-| 平均 semantic_purity | 0.61 |
-| 標準偏差 | 0.12 |
-| 最小値 | 0.44 (insight_spec_05) |
-| 最大値 | 0.76 (insight_spec_mirirepi) |
-| Unmapped テーマ数 | 0 |
-| 総テーマ数 | 168 |
-
-**Canonical 分布**
-
-- マーケティング: 116 (68%)
-- 分析: 22 (13%)
-- プロダクト開発: 13 (8%)
-- セールス: 9 (5%)
-- ビジネス戦略: 8 (5%)
-
-**Source 分布**
-
-- cluster_exact: 91 (54% – 高精度)
-- group_member: 77 (46% – 高信頼度)
-
-**成果物**
-
-- \data/final_statistics_report.json\ – 詳細統計（canonical 分布、source 分布、テーマリスト等）
-- \data/executive_report.json\ – Executive Summary（プロジェクト状態、品質スコア、知見、推奨）
-- \scripts/generate_statistics.py\ – 統計生成スクリプト（numpy を使用）
-- \scripts/generate_executive_report.py\ – レポート生成スクリプト
-
-**推奨事項**
-
-1. **全ファイルスコア ≥0.44** – ビジネスレポート向けに利用可能。
-2. **insight_spec_05 (0.44)** は Marketing・Analysis の混合コンテンツとして受け入れ可能。
-3. **config/scoring_rules.json v2.2** を維持し、将来の更新に対応。
-4. **Phase 3 Embedding Fine-tuning** により、さらなる精度向上を推進（将来の課題）。
-
-**進捗**
-
-- Phase 7-1: Quality Scoring Engine v2.0 ✅
-- Phase 7-2: Theme Hierarchy v2.0 ✅
-- Phase 7-3: Gemini クラスタリング ✅
-- Phase 7-4: Embedding Integration ✅
-- Phase 7-5: Final Statistics & Executive Report ✅
-
-**プロジェクト全体完了率: 100%** 🎉
-
+- **API キー管理**: `YOUTUBE_API_KEY` および `OPENAI_API_KEY` は `.env` ファイルでローカルに管理し、Git には絶対にコミットしません。
+- **PII（個人情報）の保護**: GDPR および個人情報保護基準に従い、生成されるすべての公開用レポートおよび JSON 統計データは匿名化処理が施されており、個人を特定できるデータは含まれていません。
+- **データ分離**: クライアントごとの視聴ログとチャンネル統計データは厳密に論理分離され、セキュリティが担保されています。
