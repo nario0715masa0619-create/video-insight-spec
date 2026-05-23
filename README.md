@@ -1,101 +1,188 @@
 # video-insight-spec
 
-YouTube 動画の洞察・競合分析システム。動画視聴データを構造化し、経営判断に直結したレポートを自動生成・配信する SaaS サービスの基盤です。
+YouTube 動画の洞察・競合分析システム。動画視聴データを構造化し、経営判断に直結したレポートを自動生成・配信する SaaS サービスの基盤。
+
+> [!IMPORTANT]
+> **【重要】公開 main とローカル実装の差分について**
+> - 本リポジトリの `streamlit_app/` ディレクトリは、ローカル環境で先行実装および動作検証が完了している高度な Web ダッシュボード機能です。
+> - 現在、公開 GitHub リポジトリ（`origin/main` ブランチ）には未反映（Untracked）の状態ですが、**将来的に公開 main ブランチへ正式にマージ・統合される前提の開発成果物**です。
+> - そのため、ドキュメントの記述はローカルでの実装実態（先行実装済みのダッシュボード機能）を基準に記載しています。
 
 ---
 
-## 1. プロジェクト概要
-YouTube動画から抽出されたメタデータや知識構造（json）を入力とし、ポートフォリオビュー、成長推移ビュー、テーマ別ビューなどの分析結果をJSON/HTML/Text形式で自動生成します。
+## 1. プロダクト概要
 
-## 2. できること / まだできないこと
-- **できること（実装済）**: 
-  - 事前に処理された JSON データ（insight_spec）からの各種分析ビュー生成
-  - HTML（ブラウザ向け）/ テキスト（マークダウン互換）形式でのレポート生成
-  - ※ 経営者向け1ページサマリー（Executive Summary）のフォーマッタは存在しますが、現在の主実行経路（competitor_analytics_generator.py）には未統合です。
-- **まだできないこと（将来予定）**: 
-  - Webダッシュボードでのリアルタイム可視化
-  - REST APIによるデータ公開
-  - Slack等への自動通知・アラート
-  - AIによる自動提案生成（Phase 8以降）
+本システムは、YouTube動画の center_pin（学習ポイント）や各種エンゲージメントメトリクス、心理フェーズを構造化した3層JSONデータを生成し、経営陣やコンテンツプランナー向けに価値ある示唆を提供するシステムです。
 
-## 3. 最小実行に必要なもの
-「最小実行」とは、本リポジトリに付属している「処理済みダミーデータ」を用いて、レポート生成スクリプト（`competitor_analytics_generator.py`）を単独で動かすことを指します。
+ビジネスの意思決定を支援するため、**「コマンドライン（CLI）によるバッチレポート生成」**と**「対話的（GUI）な Web ダッシュボードによる多角的な分析」**の2つの利用経路をサポートしています。
 
-- Python 3.8+
-- 処理済みの JSON データを含むディレクトリ（本リポジトリに同梱されている `sample_archive/` を使用できます）
-- ※ **注意**: 最小実行においては、環境変数 `.env`（および `YOUTUBE_API_KEY`）は**不要**です。スクリプトは既存のJSONファイルを読み込むだけで完結します。
+---
 
-## 4. 最小実行手順
-1. **リポジトリをクローン**
-   ```bash
-   git clone <repository-url>
-   cd video-insight-spec
-   ```
-2. **依存関係のインストール**
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. **サンプルデータでの実行**
-   同梱されているダミーデータを使ってレポートを生成します。
-   ```bash
-   python competitor_analytics_generator.py --lecture-ids "01,02" --archive-dir "sample_archive"
-   ```
-   ※ Windows 環境で絵文字による `UnicodeEncodeError` 等の文字化けが出る場合は、UTF-8 モードで実行してください。
-   ```powershell
-   $env:PYTHONUTF8=1; python competitor_analytics_generator.py --lecture-ids "01,02" --archive-dir "sample_archive"
-   ```
+## 2. システムエントリポイント一覧
 
-## 5. YouTube API を使う処理を行う場合の追加前提
-新規のYouTube動画データからメタデータ取得・ビュー拡張（Phase 2/3 スクリプト）などを行う場合のみ、YouTube API キーが必要になります。
+システムには以下の2つの主要な実行エントリポイントが存在します。用途に応じて使い分けてください。
 
-1. `.env.example` をテンプレートとして参考にしてください。
-2. 実行環境において `YOUTUBE_API_KEY` を環境変数として設定してください。
-3. ※実際に `.env` ファイルが自動でロードされるかどうかは、対象スクリプトや実行環境に依存します。必要に応じて OS 側やシェル側で環境変数を読み込ませてください。
+| エントリポイント | 実行環境 | 役割・責務 | 主な出力物 |
+| :--- | :--- | :--- | :--- |
+| `competitor_analytics_generator.py` | CLI (バッチ) | 講座動画データから統計情報を算出し、HTML/Textのレポートファイル群を自動生成する。 | JSON/HTML/Text フルレポート |
+| `streamlit_app/app.py` | Web GUI (対話的) | 生成済みの各種統計 JSON や DB からデータをロードし、多角的なグラフ表示、AIによる解説・改善提案、およびPDFレポートをダウンロード可能にする。 | ブラウザ上のダッシュボード UI / PDF レポート |
 
-## 6. ディレクトリ構成
+---
+
+## 3. クイックスタート
+
+### 必要な要件
+- **Python 3.8+**
+- 依存関係のインストール（「8. 依存関係の構成」を参照）
+
+### 環境変数の設定
+プロジェクトのルートディレクトリに `.env` ファイルを作成し、用途に応じてキーを設定してください。
+
+```env
+# バッチ（CLI）実行で新規にデータをダウンロード・生成する際に必要
+YOUTUBE_API_KEY=your_youtube_api_key_here
+
+# WebダッシュボードでAIによる自動言語化解説・改善提案（NarrativeEngine）を利用する際に必要
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+---
+
+## 4. バッチレポート自動生成 (CLI 経路)
+
+### 概要
+コマンドラインから講座動画のIDやデータディレクトリを指定し、競合分析の構造化データ（生JSON）および人間が読みやすいHTML/Textレポートを自動生成します。
+
+### 実行コマンド
+```bash
+python competitor_analytics_generator.py --lecture-ids "01,02,03,04,05" --archive-dir "D:/AI_Data/video-insight-spec/archive" --output-dir "reports/competitor_analytics"
+```
+
+### 処理プロセス
+1. `InsightSpecRepository` を介してアーカイブディレクトリから講座データをロード。
+2. `PortfolioViewService` などの各種サービスを通じて統計データを生成。
+3. `ReportGenerator` を呼び出し、レスポンシブHTMLレポート（`reports/html/` 配下）およびMarkdown互換のテキストレポート（`reports/text/` 配下）を自動出力。
+
+---
+
+## 5. 対話的 Web ダッシュボード (Web GUI 経路)
+
+### 概要
+すでに生成・蓄積されている JSON や DB データを読み込み、Streamlit を用いて直感的かつグラフィカルに可視化・分析します。
+
+### 実行コマンド
+```bash
+streamlit run streamlit_app/app.py
+```
+
+### 主要機能
+- **チャンネル全体分析**: KPI メトリクス表示、テーマ分布の可視化グラフ、品質スコアランキング、PDFレポートの生成とダウンロード。
+- **個別動画分析**:
+  - **黄金の組み合わせ**: 高反応パターン（ファネルステージ×コンテンツタイプ×テーマ）の特定。
+  - **隠れた弱点**: 品質が高いにもかかわらずエンゲージメントが低い要素の検出。
+  - **心理ロードマップ**: 視聴者のフェーズ別心理変化と最適コンテンツ。
+  - **競争優位性**: テーマ多様性や初心者適合度などの総合評価スコア。
+  - **次のステップ提案**: 次に進むべきファネルと推奨テーマの自動提示。
+
+### 最小実行（CLI）との違い
+- バッチ経路（CLI）は**新規データの処理と固定レポートファイルの生成**に特化しています。
+- ダッシュボード経路は**既存データを用いた対話的な多角分析・シミュレーションおよびPDFダウンロード**に特化しています。
+
+### AI言語化エンジンの挙動
+- `.env` に `OPENAI_API_KEY` が設定されている場合、GPT-4o（`gpt-4o`）を使用した言語化エンジン（`NarrativeEngine`）による詳細な自動分析テキストがダッシュボード上に動的に表示されます。
+- **未設定の場合**: 起動時に「⚠️ 分析エンジン初期化エラー」という警告が表示されますが、ダッシュボード自体は停止せず、**グラフやスコアテーブル、PDF生成などの基本機能は sample data で正常に動作**します。
+
+---
+
+## 6. Executive Summary の位置付け
+
+本システムにおける「経営者向けサマリー（Executive Summary）」は、実態として以下のように実装・分離されています。
+
+### フォーマッタの統合状況 (`converter/executive_summary_formatter.py`)
+- **状態**: `executive_summary_formatter.py` というモジュール自体は実装されていますが、現時点では**バッチ経路およびダッシュボード経路のどちらからもインポート・接続されておらず、パイプライン未統合**の状態です。
+
+### ダッシュボード上の独自要約
+- **状態**: Web ダッシュボードの「レポート」タブに「エグゼクティブサマリー」というセクションが存在します。これは上記の formatter ではなく、**`streamlit_app/app.py` 内で `executive_report.json` から直接データを抽出し、Streamlit の Markdown テーブルで独自にフォーマットして描画**しているものです。
+- **PDF出力**: この画面上の要約データおよびチャンネル全体のメトリクスを元に、PDFライブラリを使用してPDFファイルを動的に生成し、ダウンロードできる機能がダッシュボード上で完結して提供されています。
+
+---
+
+## 7. ディレクトリ構造
+
 ```text
 video-insight-spec/
-├── docs/             # 仕様書、各フェーズのドキュメント
-├── converter/        # コアロジック（JSON抽出、View生成、レポート出力）
-├── sample_archive/   # 最小実行確認用のダミーJSONデータ
-├── reports/          # 自動生成されたレポートの出力先（実行後に生成）
-├── tests/            # テストコード
-├── requirements.txt      # 実行に必要なパッケージ（最小実行用）
-├── requirements-dev.txt  # 開発・テストに必要なパッケージ
-├── competitor_analytics_generator.py # 競合分析レポート生成エントリポイント
-└── .env.example      # 環境変数のテンプレート（API利用時のみ設定）
+├── docs/                             # プロジェクトドキュメント
+│   ├── specs/                        # スキーマ・View設計書
+│   └── phases/                       # フェーズごとの設計・計画書
+├── converter/                        # レポート生成・整形ロジック (バッチ共通)
+│   ├── text_formatter.py
+│   ├── html_formatter.py
+│   ├── report_generator.py           # HTML/Text バッチレポート生成
+│   └── executive_summary_formatter.py # (未統合) 1ページサマリー生成
+├── streamlit_app/                    # Web ダッシュボード (ローカル実装/反映前提)
+│   ├── app.py                        # メインエントリポイント
+│   ├── config.py                     # ダッシュボード設定・配色
+│   ├── data_loader.py                # キャッシング・データ読み込み
+│   ├── analytics_engine.py           # 分析エンジン
+│   ├── advanced_analytics_engine.py  # 唯一無二の複合分析ロジック
+│   ├── narrative_engine.py           # GPT-4o 言語化エンジン
+│   └── requirements.txt              # ダッシュボード専用の依存関係
+├── data/                             # 集計済み JSON 等 of 置き場
+│   ├── executive_report.json         # ダッシュボード用サマリーデータ
+│   └── final_statistics_report.json
+├── competitor_analytics_generator.py # バッチレポート生成メイン
+├── requirements-dev.txt              # 開発用依存関係
+├── README.md                         # 本ファイル
+└── .env                              # 環境変数設定ファイル (トラック非対象)
 ```
 
-## 7. 入力データ仕様
-スクリプトは `--archive-dir` で指定したフォルダ内にある `insight_spec_{lecture_id}.json` を読み込みます。
+---
 
-- **必須構造**: `video_meta`, `knowledge_core`, `views.competitive.snapshot_history` などの階層が必要です（詳細は `docs/specs/JSON_SPEC.md` を参照）。
-- **`sample_archive` の役割**: 初期動作確認のためのモックデータです。実際の分析には実データを `--archive-dir` に配置してください。
+## 8. 依存関係の構成
 
-## 8. 実行コマンド例
+本システムは、CLIバッチの動作環境とリッチなWebダッシュボードの動作環境で依存関係を明確に分けて管理しています。これにより不要なライブラリが競合するのを防ぎます。
+
+### ルート（バッチ・共通環境用）
+バッチによるレポート生成や共通のロジック実行に必要な最小限のライブラリ（`pandas`, `numpy` 等）は、開発環境用の `requirements-dev.txt` などに整備されています。
+
+### ダッシュボード専用環境 (`streamlit_app/requirements.txt`)
+Web ダッシュボードおよび高度な AI 分析・可視化を動作させるために必要なパッケージが定義されています。ダッシュボードを起動する際は、必ず本ファイルを指定してインストールを行ってください。
+
+**主要な依存関係**:
+- `streamlit`: ダッシュボードフレームワーク
+- `pandas` / `numpy` / `plotly`: データ処理およびグラフ描画
+- `openai`: GPT-4o を用いた言語化分析（`NarrativeEngine` 用）
+- `fpdf2`: PDF レポートの動的生成およびダウンロード用
+
+**インストールコマンド**:
 ```bash
-# サンプルデータでの最小実行
-python competitor_analytics_generator.py --lecture-ids "01,02" --archive-dir "sample_archive"
-
-# 実データでの実行例 (archive ディレクトリに insight_spec_01.json 等が存在する場合)
-python competitor_analytics_generator.py --lecture-ids "01,02,03,04,05" --archive-dir "archive"
+pip install -r streamlit_app/requirements.txt
 ```
 
-## 9. 出力物
-実行後、以下のディレクトリに各種レポートが生成されます。
-- `reports/competitor_analytics/competitor_analytics_YYYYMMDD.json`
-- `reports/html/competitor_analytics_YYYYMMDD.html`
-- `reports/text/competitor_analytics_YYYYMMDD.txt`
+> [!TIP]
+> Python 3.12 や 3.13 などの新しい Python 環境では、古いバージョン指定によるソースビルド時にエラーが発生することがあります。その場合は、以下のようにバージョン指定を省略して最新パッケージをインストールしてください：
+> ```bash
+> pip install streamlit openai fpdf2 pandas numpy plotly reportlab PyPDF2
+> ```
 
-## 10. よくある失敗
-- **`FileNotFoundError`**: `--archive-dir` の指定忘れ、または指定したディレクトリ内に該当する `insight_spec_*.json` が存在しない。
-- **`UnicodeEncodeError`**: Windows コマンドプロンプト等で実行時、✅ や ❌ の文字が出力できずにクラッシュする（対策: `$env:PYTHONUTF8=1` を付加）。
-- **スキップされる講座がある**: growth_view の生成には最低2回分の履歴（`snapshot_history` >= 2）が必要です。1件しかない場合はスキップされます。
+---
 
-## 11. セキュリティ注意
-- **`.env` は絶対に Git にコミットしないでください**（`.gitignore` で除外されています）。
-- 提供された `sample_archive/` には本番の個人情報やAPIキーは含まれていません。実データを扱う際は取り扱いに注意してください。
+## 9. 開発ロードマップ & 進捗状況
 
-## 12. 既知の制約
-- 現在、`competitor_analytics_generator.py` はスクリプト内部で `.env` を直接ロード（`load_dotenv`）していません。API を使用する別のスクリプトを実行する場合は、環境変数がOS側で正しくロードされることを確認してください。
-- レポート生成機能は現在バッチ実行を前提としています。スケジューラ（APScheduler/cron等）の設定は Phase 7-2 以降での実装予定です。
+### フェーズの進捗
+
+| フェーズ | タイトル | 状態 | 実装実態と成果物 |
+| :--- | :--- | :--- | :--- |
+| **4.2** | データ仕様設計 | ✅ 完了 | portfolio_view, growth_view, theme_view の3層JSON構造の設計 |
+| **4.3** | HTML/Text フォーマッタ | ✅ 完了 | `html_formatter.py`, `text_formatter.py`, `ReportGenerator` によるバッチ自動化 |
+| **5.1** | 経営者向けサマリー | ✅ 完了 | `executive_summary_formatter.py` (※未統合モジュール) の構築 |
+| **6** | PoC・営業支援 | ✅ 完了 | LPメッセージング、サンプルレポート、見積自動化等 |
+| **7** | プロダクト拡張 | 🔄 実装中 | **【ローカル検証完了】** Webダッシュボード（`streamlit_app/`）の実装完了。<br>現在、公開 `main` ブランチへの移行・マージの最終段階。 |
+
+---
+
+## 10. セキュリティ & コンプライアンス
+
+- **API キー管理**: `YOUTUBE_API_KEY` および `OPENAI_API_KEY` は `.env` ファイルでローカルに管理し、Git には絶対にコミットしません。
+- **PII（個人情報）の保護**: GDPR および個人情報保護基準に従い、生成されるすべての公開用レポートおよび JSON 統計データは匿名化処理が施されており、個人を特定できるデータは含まれていません。
+- **データ分離**: クライアントごとの視聴ログとチャンネル統計データは厳密に論理分離され、セキュリティが担保されています。
