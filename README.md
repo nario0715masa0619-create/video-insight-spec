@@ -157,6 +157,12 @@ pip install -r streamlit_app/requirements.txt
 > pip install streamlit openai fpdf2 pandas numpy plotly reportlab PyPDF2
 > ```
 
+### 開発用の自動 CI テスト (GitHub Actions)
+プロジェクト全体の品質を維持するため、以下の 2 つの自動テストが CI にて毎コミット実行されます：
+1. **CLI バッチテスト (`smoke-test.yml`)**: サンプルデータを用いたレポートの自動生成とファイル出力の完全性を検証。
+2. **Streamlit ダッシュボード起動テスト (`streamlit-smoke-test.yml`)**: 依存パッケージの解決、構文チェック、およびヘッドレスでの起動健全性（ポート 8501 への正常応答）を自動検証。
+   - ※ 本テストは OpenAI の秘密鍵 (`OPENAI_API_KEY`) が未設定の環境でも、警告表示モードで正常にパスするよう堅牢に設計されています。
+
 ---
 
 ## 9. 開発ロードマップ & 進捗状況
