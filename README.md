@@ -110,7 +110,11 @@ streamlit run streamlit_app/app.py
 - **`Mk2_Sidecar_{id}.db` (SQLite)**: 要素の出現時間を記録するエビデンスDBですが、現行の実データ上の仕様として、ミリ秒時間情報（`start_ms`/`end_ms`）は一律で `(0, 0)` のプレースホルダー値として記録されています。そのため、「動画の何分何秒で話されているか」という秒単位の厳密な検索・質問には現段階では対応しておりません（動画・講座単位での質問を推奨）。
 
 > [!TIP]
-> 各データの詳細な構造、コード裏付けに基づく生成経路、および AI で実行可能な 30 以上の具体的な質問例については、[DATA_DELIVERABLES_AND_AI_USECASE_GUIDE.md](file:///D:/AI_%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E6%88%90%E6%9E%9C%E7%89%A9/video-insight-spec/docs/DATA_DELIVERABLES_AND_AI_USECASE_GUIDE.md) に社内用詳細ガイドとしてまとめています。
+> 納品データ資産のより詳しい構造や AI を活用した具体的な実戦ノウハウについては、以下の各種ドキュメントを併せてご参照ください。
+> - **技術・社内向け詳細ガイド**: [DATA_DELIVERABLES_AND_AI_USECASE_GUIDE.md](docs/DATA_DELIVERABLES_AND_AI_USECASE_GUIDE.md) （実データ構造、コード裏付け、制約事項などの詳細）
+> - **営業・提案者向けガイド**: [SALES_ENABLEMENT_AI_DELIVERABLES.md](docs/SALES_ENABLEMENT_AI_DELIVERABLES.md) （刺さる価値、想定問答、説明手順）
+> - **顧客向け紹介資料 (A4 1枚)**: [CLIENT_ONEPAGER_AI_DATASET.md](docs/CLIENT_ONEPAGER_AI_DATASET.md) （非技術者向けの分かりやすい価値訴求）
+> - **顧客向け AI プロンプトカタログ**: [CLIENT_AI_USECASE_PROMPTS.md](docs/CLIENT_AI_USECASE_PROMPTS.md) （実務でコピペして使える30個のAI質問例）
 
 ---
 
@@ -121,7 +125,10 @@ video-insight-spec/
 ├── docs/                             # プロジェクトドキュメント
 │   ├── specs/                        # スキーマ・View設計書
 │   ├── phases/                       # フェーズごとの設計・計画書
-│   └── DATA_DELIVERABLES_AND_AI_USECASE_GUIDE.md # (新規) 納品データとAI活用ガイド
+│   ├── DATA_DELIVERABLES_AND_AI_USECASE_GUIDE.md # 納品データとAI活用詳細ガイド
+│   ├── SALES_ENABLEMENT_AI_DELIVERABLES.md # 営業・提案用実戦ガイド
+│   ├── CLIENT_ONEPAGER_AI_DATASET.md     # 顧客向け1枚資料
+│   └── CLIENT_AI_USECASE_PROMPTS.md      # 顧客向け AI プロンプトカタログ
 ├── converter/                        # レポート生成・整形ロジック (バッチ共通)
 │   ├── text_formatter.py
 │   ├── html_formatter.py
