@@ -47,6 +47,22 @@ class ReportGenerator:
             text_file = dirs["text_dir"] / f"{output_filename}.txt"
             text_path = ReportGenerator._save_file(text_content, text_file)
 
+            # Executive Summary 生成 (HTML/Text)
+            from converter.executive_summary_formatter import ExecutiveSummaryFormatter
+            summary_content = ExecutiveSummaryFormatter.generate_executive_summary(data)
+            
+            # サマリーディレクトリの作成
+            summary_dir = Path(output_dir) / "executive_summary"
+            summary_dir.mkdir(parents=True, exist_ok=True)
+            
+            # HTML サマリー保存
+            html_summary_file = summary_dir / f"executive_summary_{output_filename.split('_')[-1]}.html"
+            ReportGenerator._save_file(summary_content["html"], html_summary_file)
+            
+            # Text サマリー保存
+            text_summary_file = summary_dir / f"executive_summary_{output_filename.split('_')[-1]}.txt"
+            ReportGenerator._save_file(summary_content["text"], text_summary_file)
+
             return {
                 "html": str(html_path),
                 "text": str(text_path)

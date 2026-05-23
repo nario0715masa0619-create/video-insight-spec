@@ -131,3 +131,33 @@ def get_score_level(score):
             return level_info
     return SCORE_LEVELS["改善必須"]
 
+
+@st.cache_resource
+def load_latest_competitor_analytics():
+    """最新の競合分析 JSON データをロード"""
+    # reports/competitor_analytics から探す
+    target_dir = Path(__file__).resolve().parent.parent / "reports" / "competitor_analytics"
+    if not target_dir.exists():
+        target_dir = Path("reports/competitor_analytics")
+        
+    if not target_dir.exists():
+        st.error("❌ 競合分析ディレクトリが見つかりません。")
+        return None
+        
+    json_files = list(target_dir.glob("competitor_analytics_*.json"))
+    if not json_files:
+        st.warning("⚠️ 競合分析データ (competitor_analytics_*.json) が見つかりません。")
+        return None
+        
+    # ファイル名でソートして最新のものを選択
+    latest_file = max(json_files, key=lambda p: p.name)
+    
+    try:
+        with open(latest_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return data
+    except Exception as e:
+        st.error(f"❌ 最新の競合分析データのロードに失敗しました: {e}")
+        return None
+
+

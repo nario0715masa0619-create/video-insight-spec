@@ -12,7 +12,7 @@ YouTube動画の洞察・競合分析システム。動画視聴データを構�
 | :--- | :--- | :--- | :--- |
 | **4.2** | データ仕様設計 | ✅ 完了 | 2026-03-26 |
 | **4.3** | HTML/Text フォーマッタ | ✅ 完了 | 2026-03-27 |
-| **5.1** | 経営者向けサマリー | ✅ 完了 | 2026-03-27（※ `executive_summary_formatter.py` 単体構築完了） |
+| **5.1** | 経営者向けサマリー | ✅ 完了 | 2026-03-27（※ 共通モジュールとして CLI / Streamlit へ完全統合・一本化完了） |
 | **5.2** | サブスク仕様 | ✅ 完了 | 2026-03-27 |
 | **5.3** | 外部向け資料 | ✅ 完了 | 2026-03-27 |
 | **6** | PoC・営業支援 | ✅ 完了 | LPメッセージング、サンプルレポート、見積自動化等 |
@@ -49,12 +49,12 @@ YouTube動画の洞察・競合分析システム。動画視聴データを構�
 ## フェーズ5：商品化・営業資料
 
 ### 5.1 - 経営者向けサマリー (Executive Summary)
-- **モジュール実装 (`converter/executive_summary_formatter.py`)**:
-  - 経営判断用のA4 1枚相当レポート（HTML/Text）を生成するモジュールは単体として実装されています。
-  - **【重要】実行経路との接続状況**: 本モジュールは現在、**CLIバッチレポート生成経路（`competitor_analytics_generator.py`）および対話的ダッシュボード経路（`streamlit_app/app.py`）のどちらからも未接続**であり、パイプラインには統合されていません。
-- **ダッシュボード上の独自要約**:
-  - 現在、Webダッシュボードの「レポート」タブに表示されているエグゼクティブサマリーは、上記の formatter モジュールではなく、**`streamlit_app/app.py` 内で `executive_report.json` からデータをロードし、独自に Markdown テーブルで描画**しているものです。
-  - また、ダッシュボード内にはこの画面要約を元に A4 相当の PDF を動的に生成してダウンロードする機能（FPDF による独自実装）が備わっています。
+- **正本化・一本化 (`converter/executive_summary_formatter.py`)**:
+  - 経営判断用のA4 1枚相当レポート（HTML/Text）を生成するモジュールを唯一の正本（シングルソース）として、すべての実行経路に完全統合しました。
+  - **バッチ経路（CLI）**: レポート生成バッチ（`competitor_analytics_generator.py`）の実行時に、`reports/executive_summary/` 配下へ HTML / Text 形式のエグゼクティブサマリーが自動出力・保存されます。
+  - **ダッシュボード経路（Web GUI）**: 新設された「🎯 競合分析サマリー」タブにおいて、共通ロジックをそのまま使用して HTML レポートが美しく画面上に動的描画されます。
+- **PDFおよびテキストダウンロード**:
+  - ダッシュボードの「🎯 競合分析サマリー」タブにおいて、共通ロジックから得られたテキストデータを元に PDF およびテキストファイルを動的に生成し、その場でダウンロードできる機能が共通ロジックをベースに完結して提供されています。
 
 ### 5.2 - サブスクリプション仕様
 - **サービスモデル**:
@@ -125,24 +125,27 @@ YouTube動画の洞察・競合分析システム。動画視聴データを構�
 ### 処理パイプラインおよび実行経路
 ```mermaid
 graph TD
+    subgraph "正本 (共通ロジック)"
+        L[executive_summary_formatter.py]
+    end
+
     subgraph "バッチ経路 (CLI)"
         A[YouTube API / Archive] --> B[構造化処理]
         B --> C[3層JSONデータ生成]
         C --> D[ReportGenerator]
         D --> E[HTML フルレポート]
         D --> F[Text フルレポート]
+        D -->|統合インポート| L
+        D -->|自動保存| M[reports/executive_summary/ HTML/Text]
     end
 
     subgraph "ダッシュボード経路 (Web GUI)"
         C --> G[streamlit_app/app.py]
         G --> H[グラフ / KPI表示]
-        G --> I[独自エグゼクティブサマリー]
-        G --> J[NarrativeEngine AI解説]
-        G --> K[PDFダウンロード出力]
-    end
-
-    subgraph "未統合モジュール"
-        C -.-> L[executive_summary_formatter.py]
+        G -->|統合インポート| L
+        G --> I[🎯 競合分析サマリータブ]
+        I --> J[HTML埋め込み表示]
+        I --> K[PDF/Textダウンロード出力]
     end
 ```
 

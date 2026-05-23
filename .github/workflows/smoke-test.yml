@@ -36,9 +36,12 @@ jobs:
           test -d reports/competitor_analytics
           test -d reports/html
           test -d reports/text
+          test -d reports/executive_summary
           find reports/competitor_analytics -type f | grep "\.json$"
           find reports/html -type f | grep "\.html$"
           find reports/text -type f | grep "\.txt$"
+          find reports/executive_summary -type f | grep "\.html$"
+          find reports/executive_summary -type f | grep "\.txt$"
 
       - name: Upload generated reports
         if: always()

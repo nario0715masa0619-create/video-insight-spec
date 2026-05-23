@@ -88,14 +88,14 @@ streamlit run streamlit_app/app.py
 
 ## 6. Executive Summary の位置付け
 
-本システムにおける「経営者向けサマリー（Executive Summary）」は、実態として以下のように実装・分離されています。
+本システムにおける「経営者向けサマリー（Executive Summary）」は、**`converter/executive_summary_formatter.py` を唯一の正本（シングルソース）**として一本化し、CLIバッチレポート生成経路と Streamlit Web ダッシュボード経路の双方から共通利用されています。
 
 ### フォーマッタの統合状況 (`converter/executive_summary_formatter.py`)
-- **状態**: `executive_summary_formatter.py` というモジュール自体は実装されていますが、現時点では**バッチ経路およびダッシュボード経路のどちらからもインポート・接続されておらず、パイプライン未統合**の状態です。
+- **状態**: **完全統合済み**。バッチ（CLI）実行時に `reports/executive_summary/` 配下へ HTML / Text 形式のサマリーファイルが自動出力・保存されます。
+- **ダッシュボードへの連携**: Web ダッシュボード上の新設タブ「🎯 競合分析サマリー」において、共通ロジックをそのまま使用して HTML レポートが美しく画面上に動的描画されます。
 
-### ダッシュボード上の独自要約
-- **状態**: Web ダッシュボードの「レポート」タブに「エグゼクティブサマリー」というセクションが存在します。これは上記の formatter ではなく、**`streamlit_app/app.py` 内で `executive_report.json` から直接データを抽出し、Streamlit の Markdown テーブルで独自にフォーマットして描画**しているものです。
-- **PDF出力**: この画面上の要約データおよびチャンネル全体のメトリクスを元に、PDFライブラリを使用してPDFファイルを動的に生成し、ダウンロードできる機能がダッシュボード上で完結して提供されています。
+### PDFおよびテキストダウンロード
+- **状態**: ダッシュボードの「🎯 競合分析サマリー」タブにおいて、共通ロジックから生成されたマークダウンテキストデータを元に PDF およびテキストファイルを動的に生成し、その場でダウンロードできる機能が共通ロジックをベースに完結して提供されています。
 
 ---
 
@@ -110,7 +110,7 @@ video-insight-spec/
 │   ├── text_formatter.py
 │   ├── html_formatter.py
 │   ├── report_generator.py           # HTML/Text バッチレポート生成
-│   └── executive_summary_formatter.py # (未統合) 1ページサマリー生成
+│   └── executive_summary_formatter.py # (統合済み) 唯一の正本サマリー生成
 ├── streamlit_app/                    # Web ダッシュボード (ローカル実装/反映前提)
 │   ├── app.py                        # メインエントリポイント
 │   ├── config.py                     # ダッシュボード設定・配色
@@ -173,7 +173,7 @@ pip install -r streamlit_app/requirements.txt
 | :--- | :--- | :--- | :--- |
 | **4.2** | データ仕様設計 | ✅ 完了 | portfolio_view, growth_view, theme_view の3層JSON構造の設計 |
 | **4.3** | HTML/Text フォーマッタ | ✅ 完了 | `html_formatter.py`, `text_formatter.py`, `ReportGenerator` によるバッチ自動化 |
-| **5.1** | 経営者向けサマリー | ✅ 完了 | `executive_summary_formatter.py` (※未統合モジュール) の構築 |
+| **5.1** | 経営者向けサマリー | ✅ 完了 | `executive_summary_formatter.py` を唯一の正本として CLI / Streamlit へ完全統合完了 |
 | **6** | PoC・営業支援 | ✅ 完了 | LPメッセージング、サンプルレポート、見積自動化等 |
 | **7** | プロダクト拡張 | ✅ 完了 | Webダッシュボード（`streamlit_app/`）の実装および公開 `main` ブランチへの統合完了。 |
 
