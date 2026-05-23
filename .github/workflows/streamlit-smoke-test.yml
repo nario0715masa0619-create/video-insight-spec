@@ -1,0 +1,67 @@
+name: Streamlit Smoke Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  streamlit-smoke-test:
+    runs-on: ubuntu-latest
+
+    env:
+      PYTHONUTF8: "1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # 古いバージョン指定によるCI環境でのソースビルド・コンパイルエラーを避け、
+          # 高速にプリビルドwheelをインストールするため、バージョン指定を省略して主要パッケージをインストールします。
+          pip install streamlit openai fpdf2 pandas numpy plotly reportlab PyPDF2 python-dateutil
+
+      - name: Compile check (py_compile)
+        run: |
+          python -m py_compile streamlit_app/app.py \
+                               streamlit_app/analytics_engine.py \
+                               streamlit_app/advanced_analytics_engine.py \
+                               streamlit_app/narrative_engine.py \
+                               streamlit_app/ui_components.py \
+                               streamlit_app/config.py \
+                               streamlit_app/data_loader.py
+
+      - name: Run Streamlit dashboard (headless)
+        run: |
+          # バックグラウンドでStreamlitダッシュボードを起動
+          # 秘密情報（OPENAI_API_KEY）未設定でも警告を表示しながら起動される設計となっています。
+          streamlit run streamlit_app/app.py --server.headless true &
+          STREAMLIT_PID=$!
+          
+          # 起動を待つため10秒間待機
+          echo "Streamlit サーバーを起動しています (PID: $STREAMLIT_PID)..."
+          sleep 10
+          
+          # 起動健全性をポート8501へのcurlで確認
+          echo "HTTP レスポンスを確認しています..."
+          curl -I -s http://localhost:8501 | grep "HTTP/1.1 200 OK"
+          CURL_STATUS=$?
+          
+          # プロセスをキル
+          kill $STREAMLIT_PID
+          
+          # curlの成否判定
+          if [ $CURL_STATUS -ne 0 ]; then
+            echo "❌ エラー: Streamlit サーバーからの正常な応答が得られませんでした。"
+            exit 1
+          else
+            echo "✅ 成功: Streamlit サーバーは正常に応答しました。"
+          fi
