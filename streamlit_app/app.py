@@ -35,9 +35,9 @@ with st.spinner("📂 データをロード中..."):
         st.warning(f"⚠️ 分析エンジン初期化エラー: {e}")
         analysis_available = False
 
-if exec_report is None:
-    st.error("❌ データが見つかりません")
-    st.stop()
+if not exec_report or 'lectures' not in exec_report:
+    st.warning("⚠️ 講座データが見つかりません。")
+    # フォールバック処理で必ず生成されるためここは通常通り通過します
 
 # ================================================================
 # モード選択
@@ -58,11 +58,14 @@ if analysis_mode == "チャンネル全体分析":
         st.subheader("KPI メトリクス")
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric("平均 Semantic Purity", f"{metrics.get('avg_semantic_purity', 0):.1f}")
+            val = metrics.get('avg_semantic_purity')
+            st.metric("平均 Semantic Purity", f"{val:.1f}" if val is not None else "未算出")
         with col2:
-            st.metric("平均 Quality Score", f"{metrics.get('avg_quality', 0):.1f}")
+            val = metrics.get('avg_quality')
+            st.metric("平均 Quality Score", f"{val:.1f}" if val is not None else "未算出")
         with col3:
-            st.metric("平均 Ranking Score", f"{metrics.get('avg_ranking', 0):.1f}")
+            val = metrics.get('avg_ranking')
+            st.metric("平均 Ranking Score", f"{val:.1f}" if val is not None else "未算出")
         
         st.markdown("---")
         
@@ -102,14 +105,14 @@ if analysis_mode == "チャンネル全体分析":
         lectures_dict = exec_report['lectures']
         ranking = []
         for lec_id, lec in sorted(lectures_dict.items(), 
-                                  key=lambda x: x[1].get('quality_score', 0), 
+                                  key=lambda x: x[1].get('quality_score') or 0, 
                                   reverse=True):
             ranking.append({
                 '順位': len(ranking) + 1,
                 '講座': f"講座{lec_id}",
                 'タイトル': lec.get('title', '')[:35],
-                'Quality': lec.get('quality_score', 0),
-                'Purity': lec.get('semantic_purity_score', 0)
+                'Quality': lec.get('quality_score') if lec.get('quality_score') is not None else "未算出",
+                'Purity': lec.get('semantic_purity_score') if lec.get('semantic_purity_score') is not None else "未算出"
             })
         
         st.dataframe(pd.DataFrame(ranking), use_container_width=True)
@@ -134,9 +137,9 @@ if analysis_mode == "チャンネル全体分析":
         
         | メトリクス | 値 |
         |---|---|
-        | 平均 Semantic Purity | {metrics.get('avg_semantic_purity', 0):.1f} |
-        | 平均 Quality Score | {metrics.get('avg_quality', 0):.1f} |
-        | 平均 Ranking Score | {metrics.get('avg_ranking', 0):.1f} |
+        | 平均 Semantic Purity | {f"{metrics.get('avg_semantic_purity'):.1f}" if metrics.get('avg_semantic_purity') is not None else "未算出"} |
+        | 平均 Quality Score | {f"{metrics.get('avg_quality'):.1f}" if metrics.get('avg_quality') is not None else "未算出"} |
+        | 平均 Ranking Score | {f"{metrics.get('avg_ranking'):.1f}" if metrics.get('avg_ranking') is not None else "未算出"} |
         | 総再生数 | {metrics.get('total_views', 0):,} |
         | 総いいね | {metrics.get('total_likes', 0):,} |
         | 総コメント | {metrics.get('total_comments', 0):,} |
@@ -152,9 +155,9 @@ if analysis_mode == "チャンネル全体分析":
             detail_data.append({
                 '講座': f"講座{lec_id}",
                 'タイトル': lec.get('title', '')[:40],
-                'Semantic Purity': lec.get('semantic_purity_score', 0),
-                'Quality Score': lec.get('quality_score', 0),
-                'Ranking Score': lec.get('ranking_score', 0),
+                'Semantic Purity': lec.get('semantic_purity_score') if lec.get('semantic_purity_score') is not None else "未算出",
+                'Quality Score': lec.get('quality_score') if lec.get('quality_score') is not None else "未算出",
+                'Ranking Score': lec.get('ranking_score') if lec.get('ranking_score') is not None else "未算出",
                 '再生数': metadata.get('views', 0),
                 'いいね': metadata.get('likes', 0),
                 'コメント': metadata.get('comments', 0)
@@ -295,11 +298,14 @@ else:
         if exec_data:
             col1, col2, col3 = st.columns(3)
             with col1:
-                st.metric("Semantic Purity", f"{exec_data.get('semantic_purity_score', 0):.1f}")
+                val = exec_data.get('semantic_purity_score')
+                st.metric("Semantic Purity", f"{val:.1f}" if val is not None else "未算出")
             with col2:
-                st.metric("Quality Score", f"{exec_data.get('quality_score', 0):.1f}")
+                val = exec_data.get('quality_score')
+                st.metric("Quality Score", f"{val:.1f}" if val is not None else "未算出")
             with col3:
-                st.metric("Ranking Score", f"{exec_data.get('ranking_score', 0):.1f}")
+                val = exec_data.get('ranking_score')
+                st.metric("Ranking Score", f"{val:.1f}" if val is not None else "未算出")
             
             st.markdown("---")
             
