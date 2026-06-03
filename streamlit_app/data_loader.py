@@ -37,7 +37,7 @@ def build_executive_report_from_specs(insight_specs):
         ranking_score = None
         
         # views metrics
-        metrics = spec.get("views", {}).get("metrics", {})
+        metrics = spec.get("views", {}).get("competitive", {}).get("metrics", {})
         views = metrics.get("view_count", 0)
         likes = metrics.get("like_count", 0)
         comments = metrics.get("comment_count", 0)
