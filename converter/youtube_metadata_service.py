@@ -26,15 +26,19 @@ class YouTubeMetadataService:
         self.api_key = api_key or os.getenv("YOUTUBE_API_KEY")
         self.logger = logging.getLogger(__name__)
         
-        if not self.api_key:
-            raise ValueError("❌ YOUTUBE_API_KEY が設定されていません。環境変数または引数で指定してください。")
+        self.available = bool(self.api_key)
+        if not self.available:
+            self.logger.warning("⚠️ YOUTUBE_API_KEY が設定されていません。API を呼び出すとエラーになります。")
+            self.youtube = None
+            return
         
         try:
             self.youtube = build("youtube", "v3", developerKey=self.api_key)
             self.logger.info("✅ YouTube API クライアントを初期化しました")
         except Exception as e:
             self.logger.error(f"❌ YouTube API 初期化エラー: {e}")
-            raise YouTubeAPIError(f"YouTube API 初期化失敗: {e}")
+            self.available = False
+            self.youtube = None
     
     def get_video_metadata(self, video_id: str) -> Dict[str, Any]:
         """
@@ -56,6 +60,8 @@ class YouTubeMetadataService:
             YouTubeAPIError: API 呼び出し失敗時
         """
         try:
+            if not self.available:
+                raise YouTubeAPIError("YOUTUBE_API_KEY が設定されていません")
             self.logger.info(f"📡 YouTube API から video_id '{video_id}' のメタデータを取得中...")
             
             request = self.youtube.videos().list(
@@ -105,6 +111,9 @@ class YouTubeMetadataService:
         """
         
         try:
+            if not self.available:
+                raise YouTubeAPIError("YOUTUBE_API_KEY が設定されていません")
+                
             from googleapiclient.discovery import build
             
             youtube = build('youtube', 'v3', developerKey=self.api_key)

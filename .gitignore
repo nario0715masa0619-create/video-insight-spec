@@ -80,3 +80,17 @@ wheels/
 # ========== Generated Reports & Logs ==========
 reports/
 logs/
+
+# ========== Temporary Work & Backup ==========
+batch_refine_work/
+demo/
+*.backup
+*.backup_*
+*.bak
+*.broken
+*.old
+*.log
+quality_check_results.json
+report.json
+search_results*.txt
+streamlit_app/*.pdf

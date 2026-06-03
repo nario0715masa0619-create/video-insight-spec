@@ -8,7 +8,6 @@ import json
 import sqlite3
 import tempfile
 from pathlib import Path
-from dotenv import load_dotenv
 import pytest
 import sys
 from pathlib import Path
@@ -18,7 +17,13 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
 # .env.test を読み込み
-load_dotenv("tests/.env.test")
+import sys
+from pathlib import Path
+_repo_root = Path(__file__).resolve().parent.parent
+if str(_repo_root) not in sys.path:
+    sys.path.insert(0, str(_repo_root))
+from env_loader import load_env
+load_env()
 
 # テスト用の基本定数
 TEST_LECTURE_ID = "01"

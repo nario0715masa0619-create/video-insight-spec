@@ -11,7 +11,6 @@ import csv
 import logging
 import argparse
 from pathlib import Path
-from dotenv import load_dotenv
 
 # ロガー設定
 logging.basicConfig(
@@ -21,7 +20,13 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # 環境変数読み込み
-load_dotenv()
+import sys
+from pathlib import Path
+_repo_root = Path(__file__).resolve().parent.parent
+if str(_repo_root) not in sys.path:
+    sys.path.insert(0, str(_repo_root))
+from env_loader import load_env
+load_env()
 
 try:
     from converter.youtube_metadata_service import YouTubeMetadataService, YouTubeAPIError

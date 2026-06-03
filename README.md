@@ -28,15 +28,26 @@ YouTube 動画の洞察・競合分析システム。動画視聴データを構
 - 依存関係のインストール（「8. 依存関係の構成」を参照）
 
 ### 環境変数の設定
-プロジェクトのルートディレクトリに `.env` ファイルを作成し、用途に応じてキーを設定してください。
+セキュリティと運用の観点から、秘密情報（APIキー等）の正本はユーザーのホームディレクトリ配下に配置する構成となっています。
 
-```env
-# バッチ（CLI）実行で新規にデータをダウンロード・生成する際に必要
-YOUTUBE_API_KEY=your_youtube_api_key_here
+1. **正本 .env のセットアップ（初回のみ）**
+   Windows の場合は以下の補助スクリプトを実行してください。
+   ```powershell
+   .\scripts\bootstrap_user_env.ps1
+   ```
+   これにより、`%USERPROFILE%\.video-insight-spec\.env` が作成されます。
 
-# WebダッシュボードでAIによる自動言語化解説・改善提案（NarrativeEngine）を利用する際に必要
-OPENAI_API_KEY=your_openai_api_key_here
-```
+2. **APIキーの設定**
+   作成された正本 `.env` をメモ帳等で開き、必要なキーを設定してください（詳細は `docs/ENVIRONMENT_SETUP.md` 参照）。
+
+3. **設定の確認**
+   以下のスクリプトを実行することで、必要な環境変数が正しく認識されているか確認できます。
+   ```bash
+   python scripts/check_environment.py
+   ```
+   
+> [!NOTE]
+> リポジトリ直下の `.env` はフォールバックとして動作しますが、誤って Git コミットしてしまうリスクを避けるため、原則としてホームディレクトリ側の `.env` を使用してください。
 
 ---
 

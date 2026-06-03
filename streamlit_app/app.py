@@ -5,6 +5,13 @@ import json
 from config import *
 from data_loader import *
 from analytics_engine import AnalyticsEngine
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 from converter.executive_summary_formatter import ExecutiveSummaryFormatter
 from advanced_analytics_engine import AdvancedAnalyticsEngine
 from narrative_engine import NarrativeEngine
@@ -21,9 +28,11 @@ with st.spinner("📂 データをロード中..."):
     advanced_analytics = AdvancedAnalyticsEngine()
     try:
         narrative_engine = NarrativeEngine()
-        analysis_available = True
+        analysis_available = getattr(narrative_engine, 'available', True)
+        if not analysis_available:
+            st.warning("⚠️ OPENAI_API_KEY が未設定のため、AI分析機能は制限されています")
     except Exception as e:
-        st.warning(f"⚠️ 分析エンジン初期化エラー")
+        st.warning(f"⚠️ 分析エンジン初期化エラー: {e}")
         analysis_available = False
 
 if exec_report is None:
