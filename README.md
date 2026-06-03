@@ -154,7 +154,6 @@ video-insight-spec/
 │   ├── narrative_engine.py           # GPT-4o 言語化エンジン
 │   └── requirements.txt              # ダッシュボード専用の依存関係
 ├── data/                             # 集計済み JSON 等 of 置き場
-│   ├── executive_report.json         # ダッシュボード用サマリーデータ
 │   └── final_statistics_report.json
 ├── competitor_analytics_generator.py # バッチレポート生成メイン
 ├── requirements-dev.txt              # 開発用依存関係

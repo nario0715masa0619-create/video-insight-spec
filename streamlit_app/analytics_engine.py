@@ -29,17 +29,23 @@ class AnalyticsEngine:
             views_list.append(metadata.get('views', 0))
             likes_list.append(metadata.get('likes', 0))
             comments_list.append(metadata.get('comments', 0))
-            sp_list.append(lec.get('semantic_purity_score', 0))
-            q_list.append(lec.get('quality_score', 0))
-            r_list.append(lec.get('ranking_score', 0))
+            sp = lec.get('semantic_purity_score')
+            if sp is not None: sp_list.append(sp)
+            q = lec.get('quality_score')
+            if q is not None: q_list.append(q)
+            r = lec.get('ranking_score')
+            if r is not None: r_list.append(r)
         
         return {
-            'avg_semantic_purity': round(np.mean(sp_list), 1) if sp_list else 0,
-            'avg_quality': round(np.mean(q_list), 1) if q_list else 0,
-            'avg_ranking': round(np.mean(r_list), 1) if r_list else 0,
+            'avg_semantic_purity': round(np.mean(sp_list), 1) if sp_list else None,
+            'avg_quality': round(np.mean(q_list), 1) if q_list else None,
+            'avg_ranking': round(np.mean(r_list), 1) if r_list else None,
             'total_views': sum(views_list),
             'total_likes': sum(likes_list),
-            'total_comments': sum(comments_list)
+            'total_comments': sum(comments_list),
+            'semantic_purity_count': len(sp_list),
+            'quality_count': len(q_list),
+            'ranking_count': len(r_list)
         }
 
     def get_funnel_stage_analysis(self, lecture_id):

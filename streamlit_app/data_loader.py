@@ -9,17 +9,52 @@ from config import DATA_DIR, EXEC_REPORT_PATH, SCORE_LEVELS
 
 @st.cache_resource
 def load_executive_report():
-    """Executive Report JSON をロード"""
+    """Executive Report JSON をロード（無ければ insight_spec から生成）"""
     try:
         with open(EXEC_REPORT_PATH, 'r', encoding='utf-8') as f:
             data = json.load(f)
         return data
-    except FileNotFoundError:
-        st.error(f"❌ ファイル不見つかり: {EXEC_REPORT_PATH}")
-        return None
-    except json.JSONDecodeError as e:
-        st.error(f"❌ JSON デコードエラー: {e}")
-        return None
+    except (FileNotFoundError, json.JSONDecodeError):
+        # フォールバック: insight_spec をロードして動的生成する
+        insight_specs = load_insight_specs()
+        return build_executive_report_from_specs(insight_specs)
+
+def build_executive_report_from_specs(insight_specs):
+    """insight_specs からダッシュボード表示用の View-Model を動的に生成する"""
+    lectures = {}
+    for lecture_id, spec in insight_specs.items():
+        # video_meta
+        video_meta = spec.get("video_meta", {})
+        title = video_meta.get("title", "")
+        
+        # calculate semantic purity
+        center_pins = spec.get("knowledge_core", {}).get("center_pins", [])
+        purity_scores = [pin.get("base_purity_score", 0) for pin in center_pins if isinstance(pin.get("base_purity_score"), (int, float))]
+        semantic_purity_score = round(sum(purity_scores) / len(purity_scores), 2) if purity_scores else None
+        
+        # quality & ranking are not in insight_spec
+        quality_score = None
+        ranking_score = None
+        
+        # views metrics
+        metrics = spec.get("views", {}).get("metrics", {})
+        views = metrics.get("view_count", 0)
+        likes = metrics.get("like_count", 0)
+        comments = metrics.get("comment_count", 0)
+        
+        lectures[lecture_id] = {
+            "title": title,
+            "semantic_purity_score": semantic_purity_score,
+            "quality_score": quality_score,
+            "ranking_score": ranking_score,
+            "metadata": {
+                "views": views,
+                "likes": likes,
+                "comments": comments
+            }
+        }
+    
+    return {"lectures": lectures}
 
 @st.cache_resource
 def load_insight_specs():
@@ -63,14 +98,17 @@ def transform_executive_report(exec_report):
         record = {
             "講座ID": f"講座{lecture_id}",
             "タイトル": data.get("title", ""),
-            "セマンティック純度スコア": data.get("semantic_purity_score", 0),
-            "品質スコア": data.get("quality_score", 0),
-            "ランキングスコア": data.get("ranking_score", 0),
+            "セマンティック純度スコア": data.get("semantic_purity_score", None),
+            "品質スコア": data.get("quality_score", None),
+            "ランキングスコア": data.get("ranking_score", None),
             "ビュー数": data.get("metadata", {}).get("views", 0),
             "いいね数": data.get("metadata", {}).get("likes", 0),
             "コメント数": data.get("metadata", {}).get("comments", 0)
         }
         records.append(record)
+    
+    if not records:
+        return pd.DataFrame(columns=["講座ID", "タイトル", "セマンティック純度スコア", "品質スコア", "ランキングスコア", "ビュー数", "いいね数", "コメント数"])
     
     df = pd.DataFrame(records)
     df["講座番号"] = df["講座ID"].str.extract(r'(\d+)').astype(int)
@@ -113,14 +151,21 @@ def create_theme_dataframe(theme_counts):
 
 def calculate_aggregate_metrics(df_exec):
     """集計メトリクスを計算"""
+    purity_series = pd.to_numeric(df_exec["セマンティック純度スコア"], errors='coerce').dropna()
+    quality_series = pd.to_numeric(df_exec["品質スコア"], errors='coerce').dropna()
+    ranking_series = pd.to_numeric(df_exec["ランキングスコア"], errors='coerce').dropna()
+    
     return {
         "講座数": len(df_exec),
         "総ビュー数": int(df_exec["ビュー数"].sum()),
         "総いいね数": int(df_exec["いいね数"].sum()),
         "総コメント数": int(df_exec["コメント数"].sum()),
-        "平均セマンティック純度": round(df_exec["セマンティック純度スコア"].mean(), 2),
-        "平均品質スコア": round(df_exec["品質スコア"].mean(), 2),
-        "平均ランキングスコア": round(df_exec["ランキングスコア"].mean(), 2)
+        "平均セマンティック純度": round(purity_series.mean(), 2) if not purity_series.empty else None,
+        "平均品質スコア": round(quality_series.mean(), 2) if not quality_series.empty else None,
+        "平均ランキングスコア": round(ranking_series.mean(), 2) if not ranking_series.empty else None,
+        "セマンティック純度_算出件数": len(purity_series),
+        "品質スコア_算出件数": len(quality_series),
+        "ランキングスコア_算出件数": len(ranking_series),
     }
 
 def get_score_level(score):

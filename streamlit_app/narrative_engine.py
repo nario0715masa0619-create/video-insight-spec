@@ -49,8 +49,8 @@ class NarrativeEngine:
     def explain_channel_overview(self, metrics):
         """チャンネル全体の解説"""
         prompt = f"""このYouTubeチャンネルの分析結果:
-- 平均Quality Score: {metrics.get('avg_quality', 0):.1f}
-- 平均Semantic Purity: {metrics.get('avg_semantic_purity', 0):.1f}
+- 平均Quality Score: {f"{metrics.get('avg_quality'):.1f}" if metrics.get('avg_quality') is not None else "未算出"}
+- 平均Semantic Purity: {f"{metrics.get('avg_semantic_purity'):.1f}" if metrics.get('avg_semantic_purity') is not None else "未算出"}
 - 総再生数: {metrics.get('total_views', 0):,}
 - 総いいね: {metrics.get('total_likes', 0):,}
 - 総コメント: {metrics.get('total_comments', 0):,}
