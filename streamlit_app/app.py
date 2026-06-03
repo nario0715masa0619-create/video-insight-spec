@@ -28,9 +28,11 @@ with st.spinner("📂 データをロード中..."):
     advanced_analytics = AdvancedAnalyticsEngine()
     try:
         narrative_engine = NarrativeEngine()
-        analysis_available = True
+        analysis_available = getattr(narrative_engine, 'available', True)
+        if not analysis_available:
+            st.warning("⚠️ OPENAI_API_KEY が未設定のため、AI分析機能は制限されています")
     except Exception as e:
-        st.warning(f"⚠️ 分析エンジン初期化エラー")
+        st.warning(f"⚠️ 分析エンジン初期化エラー: {e}")
         analysis_available = False
 
 if exec_report is None:

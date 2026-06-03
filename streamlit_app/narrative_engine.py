@@ -1,33 +1,37 @@
 import os
+import sys
 import json
 from openai import OpenAI
 from pathlib import Path
+
+# リポジトリルートを sys.path に追加して env_loader を読み込む
+repo_root = Path(__file__).resolve().parent.parent
+if str(repo_root) not in sys.path:
+    sys.path.insert(0, str(repo_root))
+from env_loader import load_env
+load_env()
 
 class NarrativeEngine:
     """GPT-4o を活用した言語化エンジン"""
     
     def __init__(self):
-        # .env ファイルから直接読み込む
-        env_file = Path(__file__).parent.parent / ".env"
-        api_key = ""
+        api_key = os.getenv("OPENAI_API_KEY")
+        self.available = bool(api_key)
         
-        if env_file.exists():
-            with open(env_file, 'r', encoding='utf-8') as f:
-                for line in f:
-                    if line.startswith("OPENAI_API_KEY="):
-                        api_key = line.split("=", 1)[1].strip()
-                        break
-        
-        if not api_key:
-            raise ValueError("❌ .env に OPENAI_API_KEY が見つかりません")
-        
-        self.client = OpenAI(api_key=api_key)
+        if self.available:
+            self.client = OpenAI(api_key=api_key)
+        else:
+            self.client = None
+            
         self.model = "gpt-4o"
         self.temperature = 0.7
         self.max_tokens = 4000
     
     def _call_gpt(self, user_prompt, system_prompt="あなたはYouTubeチャンネル分析の専門家です。日本語で、分かりやすく、ビジネス的観点から解説してください。"):
         """GPT API呼び出し"""
+        if not self.available:
+            return "⚠️ AI 分析エンジンは無効化されています。(OPENAI_API_KEY が未設定です)"
+            
         try:
             response = self.client.chat.completions.create(
                 model=self.model,

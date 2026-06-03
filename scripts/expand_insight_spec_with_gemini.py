@@ -15,7 +15,6 @@ import sys
 import argparse
 import logging
 from pathlib import Path
-from dotenv import load_dotenv
 
 from converter.gemini_llm_client import GeminiLLMClient
 from converter.center_pin_labeling_service import CenterPinLabelingService
@@ -26,7 +25,13 @@ logging.basicConfig(
     format='%(asctime)s [%(levelname)s] %(name)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
-load_dotenv()
+import sys
+from pathlib import Path
+_repo_root = Path(__file__).resolve().parent.parent
+if str(_repo_root) not in sys.path:
+    sys.path.insert(0, str(_repo_root))
+from env_loader import load_env
+load_env()
 
 
 def main():

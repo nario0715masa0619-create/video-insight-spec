@@ -7,7 +7,6 @@ Phase 3: Gemini Knowledge Labeling for insight_spec_XX.json
 import os, sys, json, time, logging
 from pathlib import Path
 from typing import Dict, List, Any, Optional
-from dotenv import load_dotenv
 
 try:
     import google.generativeai as genai
@@ -18,7 +17,13 @@ except ImportError:
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(name)s - %(message)s')
 logger = logging.getLogger(__name__)
-load_dotenv()
+import sys
+from pathlib import Path
+_repo_root = Path(__file__).resolve().parent.parent
+if str(_repo_root) not in sys.path:
+    sys.path.insert(0, str(_repo_root))
+from env_loader import load_env
+load_env()
 
 class GeminiKnowledgeLabeler:
     """insight_spec_XX.json の center_pins にラベルを付与するクラス"""

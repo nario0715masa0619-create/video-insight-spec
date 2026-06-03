@@ -5,12 +5,17 @@ import csv
 import subprocess
 import sys
 from pathlib import Path
-from dotenv import load_dotenv
 from googleapiclient.discovery import build
 from datetime import datetime
 
 # ========== 初期化 ==========
-load_dotenv()
+import sys
+from pathlib import Path
+_repo_root = Path(__file__).resolve().parent.parent.parent
+if str(_repo_root) not in sys.path:
+    sys.path.insert(0, str(_repo_root))
+from env_loader import load_env
+load_env()
 YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
 
 if not YOUTUBE_API_KEY:
