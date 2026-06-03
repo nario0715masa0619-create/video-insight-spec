@@ -107,6 +107,9 @@ def transform_executive_report(exec_report):
         }
         records.append(record)
     
+    if not records:
+        return pd.DataFrame(columns=["講座ID", "タイトル", "セマンティック純度スコア", "品質スコア", "ランキングスコア", "ビュー数", "いいね数", "コメント数"])
+    
     df = pd.DataFrame(records)
     df["講座番号"] = df["講座ID"].str.extract(r'(\d+)').astype(int)
     df = df.sort_values("講座番号").drop("講座番号", axis=1)

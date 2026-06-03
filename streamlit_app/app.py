@@ -39,6 +39,8 @@ if not exec_report or 'lectures' not in exec_report:
     st.warning("⚠️ 講座データが見つかりません。")
     # フォールバック処理で必ず生成されるためここは通常通り通過します
 
+lectures_dict = exec_report.get('lectures', {}) if exec_report else {}
+
 # ================================================================
 # モード選択
 analysis_mode = st.radio("**分析モード選択:**", 
@@ -102,7 +104,6 @@ if analysis_mode == "チャンネル全体分析":
         st.markdown("---")
         
         st.subheader("講座ランキング（Quality Score）")
-        lectures_dict = exec_report['lectures']
         ranking = []
         for lec_id, lec in sorted(lectures_dict.items(), 
                                   key=lambda x: x[1].get('quality_score') or 0, 
@@ -294,7 +295,7 @@ else:
     with tab1:
         st.subheader("動画品質メトリクス")
         
-        exec_data = exec_report['lectures'].get(f"{lecture_num:02d}")
+        exec_data = lectures_dict.get(f"{lecture_num:02d}")
         if exec_data:
             col1, col2, col3 = st.columns(3)
             with col1:
@@ -336,9 +337,9 @@ else:
                 この講座の基本指標:
                 - 講座ID: {lecture_num:02d}
                 - タイトル: {exec_data.get('title', '')}
-                - Semantic Purity: {exec_data.get('semantic_purity_score', 0):.1f}
-                - Quality Score: {exec_data.get('quality_score', 0):.1f}
-                - Ranking Score: {exec_data.get('ranking_score', 0):.1f}
+                - Semantic Purity: {f"{exec_data.get('semantic_purity_score'):.1f}" if exec_data.get('semantic_purity_score') is not None else "未算出"}
+                - Quality Score: {f"{exec_data.get('quality_score'):.1f}" if exec_data.get('quality_score') is not None else "未算出"}
+                - Ranking Score: {f"{exec_data.get('ranking_score'):.1f}" if exec_data.get('ranking_score') is not None else "未算出"}
                 - 再生数: {metadata.get('views', 0):,}
                 - いいね: {metadata.get('likes', 0):,} (1000再生あたり {engagement_metrics.get('likes_per_1000_views', 0):.2f})
                 - コメント: {metadata.get('comments', 0):,} (1000再生あたり {engagement_metrics.get('comments_per_1000_views', 0):.2f})
