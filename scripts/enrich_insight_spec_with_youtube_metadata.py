@@ -149,35 +149,31 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="YouTube メタデータで insight_spec を更新")
     parser.add_argument("--lecture-ids", type=str, default="01,02,03,04,05",
                         help="講座ID（カンマ区切り、デフォルト: 01,02,03,04,05）")
-    parser.add_argument("--archive-dir", type=str, default=None,
-                        help="アーカイブディレクトリ（デフォルト: .env の ARCHIVE_OUTPUT_DIR）")
+    parser.add_argument("--archive-dir", type=str, default=os.getenv("ARCHIVE_OUTPUT_DIR", "./archive"),
+                        help="アーカイブディレクトリ（デフォルト: 環境変数 ARCHIVE_OUTPUT_DIR または ./archive）")
     parser.add_argument("--csv-path", type=str, default="phase2_2_output/video_mapping.csv",
                         help="video_mapping.csv パス（デフォルト: phase2_2_output/video_mapping.csv）")
-    parser.add_argument("--api-key", type=str, default=None,
-                        help="YouTube API キー（デフォルト: .env の YOUTUBE_API_KEY）")
+    parser.add_argument("--api-key", type=str, default=os.getenv("YOUTUBE_API_KEY"),
+                        help="YouTube API キー（デフォルト: 環境変数 YOUTUBE_API_KEY）")
     
     args = parser.parse_args()
     
-    # archive_dir の決定
-    archive_dir = args.archive_dir or os.getenv("ARCHIVE_OUTPUT_DIR")
-    if not archive_dir:
-        logger.error("❌ アーカイブディレクトリが指定されていません（--archive-dir または ARCHIVE_OUTPUT_DIR）")
+    if not args.archive_dir:
+        logger.error("エラー: アーカイブディレクトリが指定されていません（--archive-dir または ARCHIVE_OUTPUT_DIR）。")
+        logger.error("正しい実行例:\n  python scripts/enrich_insight_spec_with_youtube_metadata.py\nまたは\n  python scripts/enrich_insight_spec_with_youtube_metadata.py --archive-dir /path/to/archive")
         sys.exit(1)
     
-    # csv_path の確認
     if not Path(args.csv_path).exists():
-        logger.error(f"❌ video_mapping.csv が見つかりません: {args.csv_path}")
+        logger.error(f"エラー: video_mapping.csv が見つかりません: {args.csv_path}")
+        logger.error("正しい実行例:\n  python scripts/enrich_insight_spec_with_youtube_metadata.py --csv-path /path/to/video_mapping.csv")
         sys.exit(1)
     
-    # lecture_ids をリストに変換
     lecture_ids = [lid.strip().zfill(2) for lid in args.lecture_ids.split(",")]
     
-    # YouTube API キーの確認
-    api_key = args.api_key or os.getenv("YOUTUBE_API_KEY")
-    if not api_key:
-        logger.error("❌ YouTube API キーが設定されていません（--api-key または YOUTUBE_API_KEY）")
+    if not args.api_key:
+        logger.error("エラー: YouTube API キーが設定されていません（--api-key または YOUTUBE_API_KEY）。")
+        logger.error("正しい実行例:\n  python scripts/enrich_insight_spec_with_youtube_metadata.py --api-key YOUR_API_KEY")
         sys.exit(1)
     
-    # 実行
-    success = enrich_insight_specs(archive_dir, args.csv_path, lecture_ids, api_key)
+    success = enrich_insight_specs(args.archive_dir, args.csv_path, lecture_ids, args.api_key)
     sys.exit(0 if success else 1)

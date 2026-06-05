@@ -423,6 +423,7 @@ if __name__ == "__main__":
         if not insight_specs:
             logger.error("エラー: --skip-whisper が指定されていますが、対象の insight_spec_*.json が見つかりません。")
             logger.error("入力ディレクトリを確認するか、--skip-whisper を削除して再実行してください。")
+            logger.error("正しい実行例:\n  python scripts/master_batch_refiner.py --skip-whisper\n  # (事前に ARCHIVE_OUTPUT_DIR に insight_spec_*.json が存在する必要があります)")
             sys.exit(1)
 
         logger.info(f"ロードした insight_spec の個数: {len(insight_specs)}")

@@ -48,14 +48,14 @@ def main():
     parser.add_argument(
         "--lecture-id",
         type=str,
-        required=True,
-        help="Lecture ID (e.g., '01')"
+        default=None,
+        help="Lecture ID (e.g., '01') (必須)"
     )
     parser.add_argument(
         "--archive-dir",
         type=str,
-        default=None,
-        help="Archive directory containing insight_spec files (uses ARCHIVE_OUTPUT_DIR from .env if not specified)"
+        default=os.getenv("ARCHIVE_OUTPUT_DIR", "./archive"),
+        help="Archive directory containing insight_spec files (default: env ARCHIVE_OUTPUT_DIR or ./archive)"
     )
     parser.add_argument(
         "--top-n",
@@ -66,13 +66,22 @@ def main():
     parser.add_argument(
         "--api-key",
         type=str,
-        help="Gemini API key (from .env if not specified)"
+        default=os.getenv("GEMINI_API_KEY"),
+        help="Gemini API key (default: env GEMINI_API_KEY)"
     )
     args = parser.parse_args()
 
+    if not args.lecture_id:
+        logger.error("エラー: --lecture-id が指定されていません。")
+        logger.error("正しい実行例:\n  python scripts/expand_insight_spec_with_gemini.py --lecture-id 01\nまたは\n  python scripts/expand_insight_spec_with_gemini.py --lecture-id 01 --archive-dir /path/to/archive")
+        return 1
+
     lecture_id = args.lecture_id
-    # ARCHIVE_OUTPUT_DIR を優先、なければ引数、なければデフォルト
-    archive_dir = args.archive_dir or os.getenv("ARCHIVE_OUTPUT_DIR", r"D:\Knowledge_Base\Brain_Marketing\archive")
+    archive_dir = args.archive_dir
+
+    if not archive_dir:
+        logger.error("エラー: アーカイブディレクトリが指定されていません（--archive-dir または ARCHIVE_OUTPUT_DIR）。")
+        return 1
 
     # ============================================================================
     # STEP 1: Initialize Components
