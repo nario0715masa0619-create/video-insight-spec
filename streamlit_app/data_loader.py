@@ -5,29 +5,16 @@ import sqlite3
 import pandas as pd
 from pathlib import Path
 import streamlit as st
-from config import DATA_DIR, EXEC_REPORT_PATH, SCORE_LEVELS
+from config import DATA_DIR, SCORE_LEVELS
 
 @st.cache_resource
 def load_executive_report():
-    """Executive Report JSON をロード（無ければ insight_spec から生成）"""
-    try:
-        with open(EXEC_REPORT_PATH, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-            
-        if not isinstance(data, dict):
-            st.warning("⚠️ executive_report.json が不正な形式です。insight_spec から再集計します。")
-            raise ValueError("Invalid data type")
-            
-        lectures = data.get("lectures")
-        if not lectures or not isinstance(lectures, dict):
-            st.warning("⚠️ executive_report.json に有効なデータがありません。insight_spec から再集計します。")
-            raise ValueError("Missing or invalid lectures")
-            
-        return data
-    except (FileNotFoundError, json.JSONDecodeError, ValueError):
-        # フォールバック: insight_spec をロードして動的生成する
-        insight_specs = load_insight_specs()
-        return build_executive_report_from_specs(insight_specs)
+    """
+    executive_report.json は廃止。
+    insight_spec_*.json から動的生成するのみ。
+    """
+    insight_specs = load_insight_specs()
+    return build_executive_report_from_specs(insight_specs)
 
 def build_executive_report_from_specs(insight_specs):
     """insight_specs からダッシュボード表示用の View-Model を動的に生成する"""

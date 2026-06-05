@@ -5,8 +5,6 @@ from datetime import datetime
 
 PROJECT_ROOT = Path(__file__).parent
 DATA_DIR = Path("D:/AI_Data/video-insight-spec/archive")
-EXEC_REPORT_PATH = Path("D:/AI_スクリプト成果物/video-insight-spec/data/executive_report.json")
-
 APP_TITLE = "📊 YouTubeチャンネル品質分析ダッシュボード"
 APP_SUBTITLE = "Streamlit Dashboard v1.0"
 VERSION = "v1.0"
