@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from streamlit_app.env_loader import ensure_env_loaded
+from streamlit_app.env_loader import ensure_env_loaded, is_demo_mode
 ensure_env_loaded()
 
 import streamlit as st
@@ -26,6 +26,14 @@ st.set_page_config(page_title=APP_TITLE, page_icon="📊", layout="wide")
 st.title(APP_TITLE)
 st.markdown(f"**{APP_SUBTITLE}** | 最終更新: {GENERATED_AT}")
 
+if is_demo_mode():
+    st.warning(
+        "⚠️ **デモモード**: API キーが設定されていません。"
+        "既存データの閲覧のみが可能です。"
+        "生成・拡張機能をご利用の場合は、"
+        "環境変数を設定してください。"
+    )
+
 # データロード
 with st.spinner("📂 データをロード中..."):
     exec_report = load_executive_report()
@@ -35,10 +43,11 @@ with st.spinner("📂 データをロード中..."):
     try:
         narrative_engine = NarrativeEngine()
         analysis_available = getattr(narrative_engine, 'available', True)
-        if not analysis_available:
+        if not analysis_available and not is_demo_mode():
             st.warning("⚠️ OPENAI_API_KEY が未設定のため、AI分析機能は制限されています")
     except Exception as e:
-        st.warning(f"⚠️ 分析エンジン初期化エラー: {e}")
+        if not is_demo_mode():
+            st.warning(f"⚠️ 分析エンジン初期化エラー: {e}")
         analysis_available = False
 
 if not exec_report or 'lectures' not in exec_report:

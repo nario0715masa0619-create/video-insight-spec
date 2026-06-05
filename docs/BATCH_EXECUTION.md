@@ -82,3 +82,23 @@ python scripts/master_batch_refiner.py
 ```bash
 python scripts/enrich_insight_spec_with_youtube_metadata.py --lecture-ids 01
 ```
+
+### デモモード
+
+API キー（YOUTUBE_API_KEY, GEMINI_API_KEY）がない場合でも、
+既存の insight_spec_*.json があればダッシュボードを完全に閲覧できます。
+
+\\ash
+# 自動判定（キーがなければデモモード）
+streamlit run streamlit_app/app.py
+
+# または明示的に指定
+export DEMO_MODE=1
+streamlit run streamlit_app/app.py
+\
+デモモードでは：
+✅ 既存データの表示・閲覧
+✅ quality_score の表示
+❌ 新規動画の処理（Whisper）
+❌ YouTube メタデータの補完（enrich_...）
+❌ Gemini 拡張（expand_...）
