@@ -13,8 +13,18 @@ def load_executive_report():
     try:
         with open(EXEC_REPORT_PATH, 'r', encoding='utf-8') as f:
             data = json.load(f)
+            
+        if not isinstance(data, dict):
+            st.warning("⚠️ executive_report.json が不正な形式です。insight_spec から再集計します。")
+            raise ValueError("Invalid data type")
+            
+        lectures = data.get("lectures")
+        if not lectures or not isinstance(lectures, dict):
+            st.warning("⚠️ executive_report.json に有効なデータがありません。insight_spec から再集計します。")
+            raise ValueError("Missing or invalid lectures")
+            
         return data
-    except (FileNotFoundError, json.JSONDecodeError):
+    except (FileNotFoundError, json.JSONDecodeError, ValueError):
         # フォールバック: insight_spec をロードして動的生成する
         insight_specs = load_insight_specs()
         return build_executive_report_from_specs(insight_specs)
