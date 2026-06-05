@@ -394,18 +394,68 @@ class MasterBatchRefiner:
 # ========== メイン処理 ==========
 
 if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Master Batch Refiner")
+    parser.add_argument("video_files", nargs="*", help="Optional video files to process")
+    parser.add_argument("--skip-whisper", action="store_true", help="Whisper による音声文字起こしをスキップ (既存の insight_spec_*.json を集計のみ)")
+    args = parser.parse_args()
+
     logger.info("="*60)
     logger.info("Master Batch Refiner 開始")
     logger.info("="*60)
 
+    if args.skip_whisper:
+        logger.info("軽量モード: Whisper をスキップします")
+        # 既存の insight_spec_*.json をロード
+        insight_specs = {}
+        for file in sorted(Path(ARCHIVE_OUTPUT_DIR).glob("insight_spec_*.json")):
+            try:
+                import re
+                m = re.search(r"insight_spec_(\d+)", file.name)
+                if m:
+                    lecture_id = m.group(1)
+                    with open(file, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                        insight_specs[lecture_id] = data
+            except Exception as e:
+                logger.warning(f"  ⚠️ {file.name} 読み込みエラー: {e}")
+
+        if not insight_specs:
+            logger.error("エラー: --skip-whisper が指定されていますが、対象の insight_spec_*.json が見つかりません。")
+            logger.error("入力ディレクトリを確認するか、--skip-whisper を削除して再実行してください。")
+            sys.exit(1)
+
+        logger.info(f"ロードした insight_spec の個数: {len(insight_specs)}")
+        logger.info("  => Whisper 等の動画処理をスキップしました")
+        
+        # 集計処理
+        logger.info("集計処理を実行します...")
+        try:
+            import sys
+            streamlit_app_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'streamlit_app')
+            if streamlit_app_dir not in sys.path:
+                sys.path.insert(0, streamlit_app_dir)
+            from data_loader import build_executive_report_from_specs
+            exec_report = build_executive_report_from_specs(insight_specs)
+            logger.info("✅ 集計完了")
+            logger.info(f"  => 集計結果（サマリー）: {len(exec_report.get('lectures', {}))} 講座分のデータが集計されました。")
+            # 廃止対象のためファイル出力はせず、ログ出力のみか、結果構造の簡易表示に留める
+            logger.info("  => 注意: executive_report.json の物理ファイル出力は廃止方針に基づきスキップされました。")
+        except Exception as e:
+            logger.error(f"❌ 集計エラー: {e}")
+            sys.exit(1)
+        
+        logger.info("="*60)
+        logger.info("✅ 軽量モード処理完了")
+        logger.info("="*60)
+        sys.exit(0)
+
+    # 従来通りの動画処理フロー
     refiner = MasterBatchRefiner()
 
-    # ビデオファイル取得
-    if len(sys.argv) > 1:
-        # コマンドライン引数で指定されたファイル
-        video_files = [sys.argv[1]]
+    if args.video_files:
+        video_files = [Path(f) for f in args.video_files]
     else:
-        # VIDEOS_INPUT_DIR から全 MP4 を取得
         video_files = sorted(Path(VIDEOS_INPUT_DIR).glob("*.mp4"))
 
     if not video_files:
@@ -414,7 +464,6 @@ if __name__ == "__main__":
 
     logger.info(f"処理対象: {len(video_files)} ファイル")
 
-    # 処理結果記録
     results = {
         "started_at": datetime.now().isoformat(),
         "total": len(video_files),
@@ -423,7 +472,6 @@ if __name__ == "__main__":
         "details": []
     }
 
-    # バッチ処理
     for video_file in tqdm(video_files, desc="Processing"):
         start_time = time.time()
         success = refiner.process_video(str(video_file))
@@ -443,12 +491,38 @@ if __name__ == "__main__":
                 "status": "failed"
             })
 
-    # 結果保存
     results["completed_at"] = datetime.now().isoformat()
-
     result_file = os.path.join(LOGS_DIR, f"processing_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
     with open(result_file, 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
+
+    # 全動画処理後に集計（オプショナル）
+    logger.info("動画処理完了。全 insight_spec の集計を実行します...")
+    insight_specs = {}
+    for file in sorted(Path(ARCHIVE_OUTPUT_DIR).glob("insight_spec_*.json")):
+        try:
+            import re
+            m = re.search(r"insight_spec_(\d+)", file.name)
+            if m:
+                lecture_id = m.group(1)
+                with open(file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    insight_specs[lecture_id] = data
+        except Exception as e:
+            pass
+
+    if insight_specs:
+        try:
+            import sys
+            streamlit_app_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'streamlit_app')
+            if streamlit_app_dir not in sys.path:
+                sys.path.insert(0, streamlit_app_dir)
+            from data_loader import build_executive_report_from_specs
+            exec_report = build_executive_report_from_specs(insight_specs)
+            logger.info("✅ 集計完了")
+            logger.info("  => 注意: executive_report.json の物理ファイル出力は廃止方針に基づきスキップされました。")
+        except Exception as e:
+            logger.error(f"❌ 集計エラー: {e}")
 
     logger.info("="*60)
     logger.info(f"✅ 処理完了: {results['success']}/{results['total']} 成功")
