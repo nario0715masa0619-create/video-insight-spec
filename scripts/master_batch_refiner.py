@@ -1,3 +1,9 @@
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from streamlit_app.env_loader import ensure_env_loaded
+ensure_env_loaded()
+
 # -*- coding: utf-8 -*-
 """
 Master Batch Refiner: MP4 → Mk2_Core_XX.json + Mk2_Sidecar_XX.db

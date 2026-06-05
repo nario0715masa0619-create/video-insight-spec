@@ -1,3 +1,9 @@
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from streamlit_app.env_loader import ensure_env_loaded
+ensure_env_loaded()
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
