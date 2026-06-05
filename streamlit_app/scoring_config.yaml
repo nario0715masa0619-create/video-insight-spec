@@ -1,0 +1,12 @@
+quality_score:
+  max_points: 100
+  weights:
+    labels: 30        # ラベル点配分
+    metadata: 40      # メタデータ点配分
+    structure: 30     # 構造化点配分
+  thresholds:
+    max_labels: 50    # ラベル満点の想定値
+    expected_metadata_keys: 8
+    max_structure_score: 20
+
+ranking_score: null   # 未実装（保留）

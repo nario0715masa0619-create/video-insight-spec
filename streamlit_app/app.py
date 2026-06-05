@@ -70,10 +70,10 @@ if analysis_mode == "チャンネル全体分析":
             st.metric("平均 Semantic Purity", f"{val:.1f}" if val is not None else "未算出")
         with col2:
             val = metrics.get('avg_quality')
-            st.metric("平均 Quality Score", f"{val:.1f}" if val is not None else "未算出")
+            st.metric("平均 Quality Score", f"{val:.1f}" if val is not None else "未算出", help="暫定ロジック。後からチューニング予定")
         with col3:
             val = metrics.get('avg_ranking')
-            st.metric("平均 Ranking Score", f"{val:.1f}" if val is not None else "未算出")
+            st.write("平均 Ranking Score: 未実装")
         
         st.markdown("---")
         
@@ -309,10 +309,12 @@ else:
                 st.metric("Semantic Purity", f"{val:.1f}" if val is not None else "未算出")
             with col2:
                 val = exec_data.get('quality_score')
-                st.metric("Quality Score", f"{val:.1f}" if val is not None else "未算出")
+                st.metric("Quality Score", f"{val:.1f}" if val is not None else "未算出", help="暫定ロジック。後からチューニング予定")
+                if val is not None:
+                    st.progress(min(max(val / 100.0, 0.0), 1.0))
             with col3:
                 val = exec_data.get('ranking_score')
-                st.metric("Ranking Score", f"{val:.1f}" if val is not None else "未算出")
+                st.write("Ranking Score: 未実装")
             
             st.markdown("---")
             

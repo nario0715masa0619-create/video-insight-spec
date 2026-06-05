@@ -29,8 +29,9 @@ def build_executive_report_from_specs(insight_specs):
         purity_scores = [pin.get("base_purity_score", 0) for pin in center_pins if isinstance(pin.get("base_purity_score"), (int, float))]
         semantic_purity_score = round(sum(purity_scores) / len(purity_scores), 2) if purity_scores else None
         
-        # quality & ranking are not in insight_spec
-        quality_score = None
+        # quality & ranking
+        from scoring import calculate_quality_score
+        quality_score = calculate_quality_score(spec)
         ranking_score = None
         
         # views metrics
