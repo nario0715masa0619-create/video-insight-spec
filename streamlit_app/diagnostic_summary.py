@@ -134,3 +134,72 @@ def extract_channel_diagnostic_summary(lectures: list) -> dict:
         result["next_action"] = "新たなファネル層向けのシリーズを展開"
         
     return result
+
+def extract_competitive_advantage_summary(advantage: dict) -> dict:
+    """
+    競争優位性スコアを「状態診断」に翻訳する。
+    """
+    result = {
+        "beginner_focus": "",
+        "theme_diversity_desc": "",
+        "content_richness": "",
+        "overall_positioning": ""
+    }
+    if not advantage:
+        return result
+        
+    bs = advantage.get("beginner_suitability", 0)
+    if bs > 70:
+        result["beginner_focus"] = "初心者向けに最適化された構成"
+    elif bs > 30:
+        result["beginner_focus"] = "幅広い層（初〜中級者）に対応する構成"
+    else:
+        result["beginner_focus"] = "上級者・専門家向けに特化した構成"
+        
+    td = advantage.get("theme_diversity", 0)
+    if td > 70:
+        result["theme_diversity_desc"] = "多角的なテーマを扱う網羅的コンテンツ"
+    elif td > 40:
+        result["theme_diversity_desc"] = "テーマの多様性は中程度"
+    else:
+        result["theme_diversity_desc"] = "単一テーマに特化した専門的コンテンツ"
+        
+    cd = advantage.get("content_diversity", 0)
+    if cd > 70:
+        result["content_richness"] = "コンテンツの豊かさは高い"
+    elif cd > 40:
+        result["content_richness"] = "コンテンツの豊かさは標準的"
+    else:
+        result["content_richness"] = "コンテンツの豊かさは限定的"
+        
+    result["overall_positioning"] = f"{result['beginner_focus']}であり、{result['theme_diversity_desc']}。{result['content_richness']}。"
+    
+    return result
+
+def extract_golden_pattern_summary(patterns: list) -> list:
+    """
+    高反応パターンの数字を削除し、構造的な勝因のみ抽出。
+    """
+    results = []
+    if not patterns:
+        return results
+        
+    for idx, p in enumerate(patterns):
+        funnel = p.get('funnel_stage', '不明')
+        ctype = p.get('content_type', '不明')
+        theme = p.get('theme', '不明')
+        results.append(f"パターン{idx+1}: {funnel}層 × {ctype} × {theme}")
+        
+    return results
+
+def extract_hidden_weakness_diagnosis(weakness_data: dict) -> dict:
+    """
+    品質とエンゲージメントのギャップを「なぜ起きているのか」の文脈に翻訳。
+    """
+    result = {
+        "state": "内容は充実しているが視聴者反応が期待値より低い",
+        "funnel": weakness_data.get("funnel_stage", "不明"),
+        "theme": weakness_data.get("themes", "不明"),
+        "content_preview": weakness_data.get("content", "")
+    }
+    return result

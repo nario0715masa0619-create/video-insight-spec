@@ -419,15 +419,17 @@ else:
             if analysis_available:
                 st.markdown("---")
                 st.subheader("分析")
+                from diagnostic_summary import extract_golden_pattern_summary
                 with st.spinner("分析中..."):
-                    prompt = f"""
-                    この講座の高反応パターンデータ (上位3つ):
-                    {json.dumps(golden[:3], ensure_ascii=False, indent=2)}
+                    gp_diag = extract_golden_pattern_summary(golden[:3])
+                    patterns_str = "\n                    - ".join(gp_diag)
                     
-                    これらのパターンについて:
-                    1) なぜこれらが高反応なのか
-                    2) 共通点は何か
-                    3) 他のコンテンツに活かせる点は何か
+                    prompt = f"""
+                    高反応パターンの構造的特徴:
+                    - {patterns_str}
+                    
+                    これらの構造がなぜビジネス上有効なのか、
+                    次にどの企画へ横展開すべきかを診断してください。
                     """
                     explanation = narrative_engine._call_gpt(prompt)
                     st.markdown(explanation)
@@ -447,20 +449,19 @@ else:
             
             if analysis_available:
                 st.markdown("---")
+                from diagnostic_summary import extract_hidden_weakness_diagnosis
                 st.subheader("改善ポイント")
                 for idx, w in enumerate(weaknesses[:2], 1):
                     with st.spinner(f"分析中..."):
-                        prompt = f"""
-                        隠れた弱点 #{idx}:
-                        - 要素ID: {w['element_id']}
-                        - コンテンツ: {w['content']}
-                        - 品質スコア: {w['base_purity_score']}
-                        - 実際のエンゲージメント: {w['actual_engagement']}
-                        - ギャップ: {w['gap']} (品質は高いが反応が低い)
-                        - ファネルステージ: {w['funnel_stage']}
-                        - テーマ: {w['themes']}
+                        hw_diag = extract_hidden_weakness_diagnosis(w)
                         
-                        なぜこのギャップが生じているのか、そして改善方法を具体的に提案してください。
+                        prompt = f"""
+                        コンテンツの状態:
+                        - {hw_diag['state']}
+                        - ファネル層: {hw_diag['funnel']}
+                        - テーマ: {hw_diag['theme']}
+                        
+                        なぜこの状態が生じているのか、どう構成を改善すべきか診断してください。
                         """
                         explanation = narrative_engine._call_gpt(prompt)
                         st.markdown(explanation)
@@ -529,15 +530,17 @@ else:
             if analysis_available:
                 st.markdown("---")
                 st.subheader("詳細分析")
+                from diagnostic_summary import extract_competitive_advantage_summary
                 with st.spinner("分析中..."):
+                    adv_diag = extract_competitive_advantage_summary(advantage)
                     prompt = f"""
-                    この講座の競争優位性分析結果:
-                    {json.dumps(advantage, ensure_ascii=False, indent=2)}
+                    この動画の構造的特徴:
+                    - {adv_diag.get('beginner_focus')} (beginner_suitability {advantage.get('beginner_suitability', 0):.1f})
+                    - {adv_diag.get('theme_diversity_desc')}
+                    - {adv_diag.get('content_richness')}
                     
-                    このスコアが示す:
-                    1) 強み領域は何か
-                    2) 改善すべき領域は何か
-                    3) 市場戦略上の位置付けは何か
+                    この構造から、市場ポジショニング、強み領域、改善方向を診断してください。
+                    根拠は構造情報のみ。スコアは最後に。
                     """
                     explanation = narrative_engine._call_gpt(prompt)
                     st.markdown(explanation)
