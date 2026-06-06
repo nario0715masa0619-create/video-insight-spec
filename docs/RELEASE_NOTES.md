@@ -1,3 +1,48 @@
+## v1.3.1 - メンテナンス性向上: Config 化とテスト・ドキュメント整備 (2026-06-07)
+
+### Added
+- `streamlit_app/diagnostic_config.yaml`: 診断要約の設定ファイル
+  - 診断閾値の一元管理（beginner_suitability, theme_diversity など）
+  - ラベル翻訳テーブル（theme, funnel, difficulty を日本語化）
+  - 将来のラベル追加に Python 修正不要な設計
+- 拡充テスト（3 → 8 テストケースに拡大）
+  - Config 読込テスト
+  - 閾値別の言語化テスト
+  - ラベル翻訳テスト
+  - フォールバック動作テスト
+  - 後戻り防止テスト（数字排除確認）
+- `docs/DIAGNOSTIC_ARCHITECTURE.md`: 診断要約アーキテクチャ設計書
+  - 「言語化ファースト」の基本原則
+  - Config ベースの拡張手法
+  - 新ラベル追加の手順
+- `docs/TEST_STRATEGY.md`: テスト戦略書
+  - ユニットテストの目的（後戻り防止）
+  - 重点テスト項目
+  - 将来 CI/CD への展開予定
+
+### Changed
+- `streamlit_app/diagnostic_summary.py`: Config 参照化
+  - `load_diagnostic_config()` で YAML を動的に読込
+  - スコア閾値を Config から取得
+  - ラベル翻訳を Config から取得
+  - 未定義ラベル時のフォールバック処理を追加
+
+### Impact
+- **メンテナンス性向上**: 新しいビジネスラベルや閾値変更が YAML ファイル修正のみで対応可能
+- **バグリスク低減**: Python コード修正が不要 → テスト範囲が固定
+- **将来の拡張性確保**: Config ベース設計で、ラベル体系の拡張に耐える
+- **チーム引継ぎ簡素化**: ドキュメントで設計思想と拡張手法を明記
+
+### Technical Notes
+- Config 読込時にエラーハンドリング済み（YAML パース失敗時は例外で通知）
+- 未定義ラベルはフォールバック（原文を維持）して、サイレント失敗を防止
+- テストは pytest 設定に組み込まれ、CI/CD 対応可能
+
+### Next Phase
+- [ ] 統合テスト（E2E）の実装
+- [ ] GitHub Actions による自動テスト・デプロイ
+- [ ] カバレッジ測定・最適化
+
 ## v1.3.0 - 言語化ファースト完全実装: 全主要タブの診断ベース統一化 (2026-06-07)
 
 ### Added
