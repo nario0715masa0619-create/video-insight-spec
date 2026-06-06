@@ -21,11 +21,14 @@ def build_executive_report_from_specs(insight_specs):
     lectures = {}
     for lecture_id, spec in insight_specs.items():
         # video_meta
-        video_meta = spec.get("video_meta", {})
+        video_meta = spec.get("video_meta") or {}
         title = video_meta.get("title", "")
         
         # calculate semantic purity
-        center_pins = spec.get("knowledge_core", {}).get("center_pins", [])
+        knowledge_core = spec.get("knowledge_core")
+        if not isinstance(knowledge_core, dict):
+            knowledge_core = {}
+        center_pins = knowledge_core.get("center_pins", [])
         purity_scores = [pin.get("base_purity_score", 0) for pin in center_pins if isinstance(pin.get("base_purity_score"), (int, float))]
         semantic_purity_score = round(sum(purity_scores) / len(purity_scores), 2) if purity_scores else None
         

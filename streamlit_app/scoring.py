@@ -23,7 +23,9 @@ def calculate_quality_score(insight_spec: dict) -> Optional[float]:
     thresholds = quality_config.get("thresholds", {"max_labels": 50, "expected_metadata_keys": 8, "max_structure_score": 20})
 
     # 1. ラベル付与数スコア
-    knowledge_core = insight_spec.get("knowledge_core", {})
+    knowledge_core = insight_spec.get("knowledge_core")
+    if not isinstance(knowledge_core, dict):
+        knowledge_core = {}
     center_pins = knowledge_core.get("center_pins", [])
     label_count = sum(1 for pin in center_pins if pin.get("label"))
     max_labels = thresholds.get("max_labels", 50)
