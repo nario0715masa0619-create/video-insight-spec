@@ -26,12 +26,17 @@ st.set_page_config(page_title=APP_TITLE, page_icon="📊", layout="wide")
 st.title(APP_TITLE)
 st.markdown(f"**{APP_SUBTITLE}** | 最終更新: {GENERATED_AT}")
 
+def get_quality_label(score):
+    if score is None: return "データ準備中"
+    if score >= 80: return f"{score:.1f} (優秀)"
+    if score >= 60: return f"{score:.1f} (良好)"
+    if score >= 40: return f"{score:.1f} (標準)"
+    return f"{score:.1f} (要改善)"
+
 if is_demo_mode():
-    st.warning(
-        "⚠️ **デモモード**: API キーが設定されていません。"
-        "既存データの閲覧のみが可能です。"
-        "生成・拡張機能をご利用の場合は、"
-        "環境変数を設定してください。"
+    st.info(
+        "ℹ️ **デモ環境**: サンプルデータによる分析結果をご覧いただけます。"
+        "（新規分析機能は制限されています）"
     )
 
 # データロード
@@ -72,17 +77,27 @@ if analysis_mode == "チャンネル全体分析":
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["📈 品質診断", "🎨 コンテンツ分析", "💡 改善提案", "📄 レポート", "🎯 競合分析サマリー"])
     
     with tab1:
-        st.subheader("KPI メトリクス")
+        st.subheader("📝 チャンネルの現状とサマリー")
+        if analysis_available:
+            with st.spinner("分析中..."):
+                overview = narrative_engine.explain_channel_overview(metrics)
+                st.info(overview)
+        else:
+            st.info("💡 **【総合評価】** 高い品質を維持していますが、まだ改善の余地があります。以下のKPIに基づき次のアクションを検討してください。")
+            
+        st.markdown("---")
+        st.subheader("📊 根拠となる主要KPI")
+        
         col1, col2, col3 = st.columns(3)
         with col1:
             val = metrics.get('avg_semantic_purity')
-            st.metric("平均 Semantic Purity", f"{val:.1f}" if val is not None else "未算出")
+            st.metric("平均 Semantic Purity", f"{val:.1f}" if val is not None else "データ準備中")
         with col2:
             val = metrics.get('avg_quality')
-            st.metric("平均 Quality Score", f"{val:.1f}" if val is not None else "未算出", help="暫定ロジック。後からチューニング予定")
+            st.metric("平均 Quality Score", get_quality_label(val))
         with col3:
             val = metrics.get('avg_ranking')
-            st.write("平均 Ranking Score: 未実装")
+            st.metric("平均 Ranking Score", "データ準備中")
         
         st.markdown("---")
         
@@ -93,14 +108,6 @@ if analysis_mode == "チャンネル全体分析":
             st.metric("総いいね", f"{metrics.get('total_likes', 0):,}")
         with col6:
             st.metric("総コメント", f"{metrics.get('total_comments', 0):,}")
-        
-        st.markdown("---")
-        
-        if analysis_available:
-            st.subheader("分析サマリー")
-            with st.spinner("分析中..."):
-                overview = narrative_engine.explain_channel_overview(metrics)
-                st.markdown(overview)
     
     with tab2:
         st.subheader("コンテンツ分析")
@@ -127,8 +134,8 @@ if analysis_mode == "チャンネル全体分析":
                 '順位': len(ranking) + 1,
                 '講座': f"講座{lec_id}",
                 'タイトル': lec.get('title', '')[:35],
-                'Quality': lec.get('quality_score') if lec.get('quality_score') is not None else "未算出",
-                'Purity': lec.get('semantic_purity_score') if lec.get('semantic_purity_score') is not None else "未算出"
+                'Quality': get_quality_label(lec.get('quality_score')),
+                'Purity': f"{lec.get('semantic_purity_score'):.1f}" if lec.get('semantic_purity_score') is not None else "データ準備中"
             })
         
         st.dataframe(pd.DataFrame(ranking), use_container_width=True)
@@ -171,9 +178,9 @@ if analysis_mode == "チャンネル全体分析":
             detail_data.append({
                 '講座': f"講座{lec_id}",
                 'タイトル': lec.get('title', '')[:40],
-                'Semantic Purity': lec.get('semantic_purity_score') if lec.get('semantic_purity_score') is not None else "未算出",
-                'Quality Score': lec.get('quality_score') if lec.get('quality_score') is not None else "未算出",
-                'Ranking Score': lec.get('ranking_score') if lec.get('ranking_score') is not None else "未算出",
+                'Semantic Purity': f"{lec.get('semantic_purity_score'):.1f}" if lec.get('semantic_purity_score') is not None else "データ準備中",
+                'Quality Score': get_quality_label(lec.get('quality_score')),
+                'Ranking Score': "データ準備中",
                 '再生数': metadata.get('views', 0),
                 'いいね': metadata.get('likes', 0),
                 'コメント': metadata.get('comments', 0)
@@ -308,42 +315,10 @@ else:
     
     # ========== Tab 1: 基本分析 ==========
     with tab1:
-        st.subheader("動画品質メトリクス")
-        
         exec_data = lectures_dict.get(f"{lecture_num:02d}")
-        if exec_data:
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                val = exec_data.get('semantic_purity_score')
-                st.metric("Semantic Purity", f"{val:.1f}" if val is not None else "未算出")
-            with col2:
-                val = exec_data.get('quality_score')
-                st.metric("Quality Score", f"{val:.1f}" if val is not None else "未算出", help="暫定ロジック。後からチューニング予定")
-                if val is not None:
-                    st.progress(min(max(val / 100.0, 0.0), 1.0))
-            with col3:
-                val = exec_data.get('ranking_score')
-                st.write("Ranking Score: 未実装")
-            
-            st.markdown("---")
-            
-            metadata = exec_data.get('metadata', {})
-            col4, col5, col6 = st.columns(3)
-            with col4:
-                st.metric("再生数", f"{metadata.get('views', 0):,}")
-            with col5:
-                st.metric("いいね", f"{metadata.get('likes', 0):,}")
-            with col6:
-                st.metric("コメント", f"{metadata.get('comments', 0):,}")
+        metadata = exec_data.get('metadata', {}) if exec_data else {}
         
-        st.markdown("---")
-        st.subheader("ビジネステーマ分布")
-        themes = analytics.get_theme_distribution(lecture_num)
-        if themes:
-            st.bar_chart(pd.Series(themes).sort_values(ascending=False))
-        
-        st.markdown("---")
-        st.subheader("総合評価")
+        st.subheader("📝 総合評価・結論")
         
         if analysis_available and exec_data:
             with st.spinner("分析中..."):
@@ -369,7 +344,42 @@ else:
                 4) 短期的な改善ポイント
                 """
                 summary = narrative_engine._call_gpt(prompt)
-                st.markdown(summary)
+                st.info(summary)
+        else:
+            st.info("💡 **【総合評価】** データを基にした分析結果がここに表示されます。（デモモード等ではテキストが制限されています）")
+            
+        st.markdown("---")
+        st.subheader("📊 根拠となる品質メトリクス")
+        
+        if exec_data:
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                val = exec_data.get('semantic_purity_score')
+                st.metric("Semantic Purity", f"{val:.1f}" if val is not None else "データ準備中")
+            with col2:
+                val = exec_data.get('quality_score')
+                st.metric("Quality Score", get_quality_label(val))
+                if val is not None:
+                    st.progress(min(max(val / 100.0, 0.0), 1.0))
+            with col3:
+                val = exec_data.get('ranking_score')
+                st.metric("Ranking Score", "データ準備中")
+            
+            st.markdown("---")
+            
+            col4, col5, col6 = st.columns(3)
+            with col4:
+                st.metric("再生数", f"{metadata.get('views', 0):,}")
+            with col5:
+                st.metric("いいね", f"{metadata.get('likes', 0):,}")
+            with col6:
+                st.metric("コメント", f"{metadata.get('comments', 0):,}")
+        
+        st.markdown("---")
+        st.subheader("ビジネステーマ分布")
+        themes = analytics.get_theme_distribution(lecture_num)
+        if themes:
+            st.bar_chart(pd.Series(themes).sort_values(ascending=False))
     
     # ========== Tab 2: 黄金の組み合わせ ==========
     with tab2:
