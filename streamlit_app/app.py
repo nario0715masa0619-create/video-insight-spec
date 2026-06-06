@@ -80,7 +80,9 @@ if analysis_mode == "チャンネル全体分析":
         st.subheader("📝 チャンネルの現状とサマリー")
         if analysis_available:
             with st.spinner("分析中..."):
-                overview = narrative_engine.explain_channel_overview(metrics)
+                from diagnostic_summary import extract_channel_diagnostic_summary
+                channel_diag = extract_channel_diagnostic_summary(list(lectures_dict.values()))
+                overview = narrative_engine.explain_channel_overview(metrics, channel_diag)
                 st.info(overview)
         else:
             st.info("💡 **【総合評価】** 高い品質を維持していますが、まだ改善の余地があります。以下のKPIに基づき次のアクションを検討してください。")
@@ -144,7 +146,9 @@ if analysis_mode == "チャンネル全体分析":
         st.subheader("改善提案")
         if analysis_available:
             with st.spinner("分析中..."):
-                proposal = narrative_engine.explain_channel_overview(metrics)
+                from diagnostic_summary import extract_channel_diagnostic_summary
+                channel_diag = extract_channel_diagnostic_summary(list(lectures_dict.values()))
+                proposal = narrative_engine.explain_channel_overview(metrics, channel_diag)
                 st.info(proposal)
     
     with tab4:

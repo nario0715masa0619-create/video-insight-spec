@@ -46,17 +46,38 @@ class NarrativeEngine:
         except Exception as e:
             return f"⚠️ GPT エラー: {str(e)}"
     
-    def explain_channel_overview(self, metrics):
+    def explain_channel_overview(self, metrics, channel_diag=None):
         """チャンネル全体の解説"""
-        prompt = f"""このYouTubeチャンネルの分析結果:
-- 平均Quality Score: {f"{metrics.get('avg_quality'):.1f}" if metrics.get('avg_quality') is not None else "未算出"}
-- 平均Semantic Purity: {f"{metrics.get('avg_semantic_purity'):.1f}" if metrics.get('avg_semantic_purity') is not None else "未算出"}
+        if channel_diag is None:
+            channel_diag = {}
+            
+        theme_str = ", ".join([f"{k} {v}%" for k, v in channel_diag.get("dominant_themes", {}).items()])
+        diff_str = ", ".join([f"{k} {v}%" for k, v in channel_diag.get("difficulty_distribution", {}).items()])
+        funnel_str = ", ".join([f"{k} {v}%" for k, v in channel_diag.get("funnel_coverage", {}).items()])
+        
+        prompt = f"""このチャンネルの全体構造:
+- 主要テーマ: {theme_str}
+- コンテンツレベル: {diff_str}
+- ファネルカバレッジ: {funnel_str}
+- 合計動画数: {channel_diag.get('total_lectures', 0)} 本
+- チャンネルの強み: {channel_diag.get('channel_strength', '')}
+- チャンネルの弱み: {channel_diag.get('strategic_weakness', '')}
+
+参考指標（根拠としてのみ使用）:
+- 平均Quality Score: {f"{metrics.get('avg_quality'):.1f}" if metrics.get('avg_quality') is not None else "データ準備中"}
+- 平均Semantic Purity: {f"{metrics.get('avg_semantic_purity'):.1f}" if metrics.get('avg_semantic_purity') is not None else "データ準備中"}
 - 総再生数: {metrics.get('total_views', 0):,}
 - 総いいね: {metrics.get('total_likes', 0):,}
 - 総コメント: {metrics.get('total_comments', 0):,}
 
-【解説】このチャンネルの総合的な評価と今後の方向性を説明してください。
-【推奨アクション】3つの具体的な改善提案を提示してください。"""
+このチャンネルから以下を診断してください:
+1) このチャンネルの『顧客獲得における役割』は何か
+2) 現在の構造が達成できていることと、できていないことは何か
+3) このチャンネルの『戦略的な弱点』は何か
+4) 次にどのレベル・どのテーマのコンテンツを優先すべきか
+5) 長期的なコンテンツロードマップの提案
+
+※回答は「状態診断」として、スコアの説明ではなく、チャンネルが果たしている役割、その限界、次に何をすべきかを述べてください。"""
         return self._call_gpt(prompt)
     
     def explain_funnel_stage_analysis(self, lecture_id, funnel_data):

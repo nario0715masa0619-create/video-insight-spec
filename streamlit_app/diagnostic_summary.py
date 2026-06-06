@@ -72,3 +72,65 @@ def extract_diagnostic_summary(insight_spec: dict) -> dict:
     result["content_structure"] = f"{diff_desc}の基礎講座、{theme_desc}中心"
     
     return result
+
+def extract_channel_diagnostic_summary(lectures: list) -> dict:
+    """
+    複数の insight_spec から、チャンネル全体の「状態診断」を作成する。
+    """
+    result = {
+        "dominant_themes": {},
+        "difficulty_distribution": {},
+        "funnel_coverage": {},
+        "total_lectures": len(lectures),
+        "content_gap": "",
+        "channel_strength": "",
+        "strategic_weakness": "",
+        "next_action": ""
+    }
+    
+    if not lectures:
+        return result
+        
+    for insight_spec in lectures:
+        diag = extract_diagnostic_summary(insight_spec)
+        
+        for t, pct in diag.get("themes", {}).items():
+            result["dominant_themes"][t] = result["dominant_themes"].get(t, 0) + pct
+            
+        for d, pct in diag.get("difficulty", {}).items():
+            result["difficulty_distribution"][d] = result["difficulty_distribution"].get(d, 0) + pct
+            
+        for f, pct in diag.get("funnel_stages", {}).items():
+            result["funnel_coverage"][f] = result["funnel_coverage"].get(f, 0) + pct
+            
+    num = len(lectures)
+    for t in result["dominant_themes"]:
+        result["dominant_themes"][t] = round(result["dominant_themes"][t] / num)
+    for d in result["difficulty_distribution"]:
+        result["difficulty_distribution"][d] = round(result["difficulty_distribution"][d] / num)
+    for f in result["funnel_coverage"]:
+        result["funnel_coverage"][f] = round(result["funnel_coverage"][f] / num)
+        
+    diff_sorted = sorted(result["difficulty_distribution"].items(), key=lambda x: x[1], reverse=True)
+    top_diff = diff_sorted[0][0] if diff_sorted else "不明"
+    if top_diff == "beginner": diff_desc = "初心者向け"
+    elif top_diff == "intermediate": diff_desc = "中級者向け"
+    elif top_diff == "advanced": diff_desc = "上級者向け"
+    else: diff_desc = "対象不明"
+    
+    funnel_sorted = sorted(result["funnel_coverage"].items(), key=lambda x: x[1], reverse=True)
+    top_funnel = funnel_sorted[0][0] if funnel_sorted else "不明"
+    
+    result["channel_strength"] = f"{diff_desc}の『{top_funnel}』に特化"
+    
+    if len(funnel_sorted) > 1:
+        weak_funnel = funnel_sorted[-1][0]
+        result["strategic_weakness"] = f"『{weak_funnel}』層向けコンテンツが手薄"
+        result["content_gap"] = f"『{weak_funnel}』レベルのコンテンツが不足"
+        result["next_action"] = f"『{weak_funnel}』向けの補強コンテンツを制作"
+    else:
+        result["strategic_weakness"] = "顧客ジャーニーの多様な層へのアプローチが不足"
+        result["content_gap"] = "応用・実践レベルのコンテンツが不足"
+        result["next_action"] = "新たなファネル層向けのシリーズを展開"
+        
+    return result
