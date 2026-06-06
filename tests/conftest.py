@@ -1,8 +1,190 @@
-import pytest
-import tempfile
-import json
+"""
+pytest の共有フィクスチャを定義。
+lecture_id 01 の実データとダミーデータを管理。
+"""
+
 import os
+import json
+import sqlite3
+import tempfile
 from pathlib import Path
+import pytest
+import sys
+from pathlib import Path
+
+# リポジトリルートを PYTHONPATH に追加
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+
+# .env.test を読み込み
+import sys
+from pathlib import Path
+_repo_root = Path(__file__).resolve().parent.parent
+if str(_repo_root) not in sys.path:
+    sys.path.insert(0, str(_repo_root))
+from env_loader import load_env
+load_env()
+
+# テスト用の基本定数
+TEST_LECTURE_ID = "01"
+REAL_CORE_JSON_PATH = os.getenv("REAL_CORE_JSON_PATH")
+REAL_SIDECAR_DB_PATH = os.getenv("REAL_SIDECAR_DB_PATH")
+TEST_OUTPUT_DIR = os.getenv("TEST_OUTPUT_DIR", "./test_output")
+
+
+@pytest.fixture(scope="session")
+def test_output_dir():
+    """テスト出力用のディレクトリを作成・提供"""
+    output_path = Path(TEST_OUTPUT_DIR)
+    output_path.mkdir(exist_ok=True)
+    yield str(output_path)
+
+
+@pytest.fixture(scope="session")
+def real_core_json_path():
+    """実データの Mk2_Core_XX.json パス"""
+    if not os.path.exists(REAL_CORE_JSON_PATH):
+        pytest.skip(f"Real core JSON not found: {REAL_CORE_JSON_PATH}")
+    return REAL_CORE_JSON_PATH
+
+
+@pytest.fixture(scope="session")
+def real_sidecar_db_path():
+    """実データの Mk2_Sidecar_XX.db パス"""
+    if not os.path.exists(REAL_SIDECAR_DB_PATH):
+        pytest.skip(f"Real sidecar DB not found: {REAL_SIDECAR_DB_PATH}")
+    return REAL_SIDECAR_DB_PATH
+
+
+@pytest.fixture
+def sample_core_json_data():
+    """最小構成のダミー Mk2_Core_XX.json データ"""
+    return {
+        "center_pins": [
+            {
+                "element_id": "elem_001",
+                "type": "FACT",
+                "content": "テスト事実データ",
+                "base_purity_score": 95
+            },
+            {
+                "element_id": "elem_002",
+                "type": "LOGIC",
+                "content": "テスト論理データ",
+                "base_purity_score": 85
+            },
+            {
+                "element_id": "elem_003",
+                "type": "SOP",
+                "content": "テストSOPデータ",
+                "base_purity_score": 75
+            }
+        ]
+    }
+
+
+@pytest.fixture
+def sample_core_json_file(tmp_path, sample_core_json_data):
+    """ダミー JSON ファイルを tmp_path に作成して提供"""
+    json_file = tmp_path / "Mk2_Core_test.json"
+    with open(json_file, "w", encoding="utf-8") as f:
+        json.dump(sample_core_json_data, f, ensure_ascii=False, indent=2)
+    return str(json_file)
+
+
+
+import sqlite3
+
+
+import sqlite3
+
+
+import sqlite3
+
+
+import sqlite3
+
+@pytest.fixture
+def sample_sidecar_db_file(tmp_path):
+    """Sidecar DB with evidence_index table"""
+    db_file = tmp_path / "Mk2_Sidecar_test.db"
+    conn = sqlite3.connect(str(db_file))
+    cursor = conn.cursor()
+    
+    cursor.execute("""
+        CREATE TABLE evidence_index (
+            element_id TEXT PRIMARY KEY,
+            start_ms INTEGER,
+            end_ms INTEGER,
+            visual_text TEXT,
+            visual_score REAL,
+            source_video_path TEXT
+        )
+    """)
+    
+    test_data = [
+        ("elem_001", 0, 10000, "テスト1", 0.95, "path/to/video1.mp4"),
+        ("elem_002", 15000, 25000, "テスト2", 0.90, "path/to/video2.mp4"),
+        ("elem_003", 30000, 40000, "テスト3", 0.75, "path/to/video3.mp4"),
+    ]
+    
+    for data in test_data:
+        cursor.execute("""
+            INSERT INTO evidence_index 
+            (element_id, start_ms, end_ms, visual_text, visual_score, source_video_path)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, data)
+    
+    conn.commit()
+    conn.close()
+    
+    yield str(db_file)
+    if db_file.exists():
+        db_file.unlink()
+
+@pytest.fixture
+def temp_output_file(tmp_path):
+    """テスト出力用の一時ファイルパスを提供"""
+    return str(tmp_path / "output_insight_spec.json")
+
+
+@pytest.fixture
+def lecture_id():
+    """テスト用 lecture_id"""
+    return TEST_LECTURE_ID
+
+import pytest
+import sqlite3
+
+@pytest.fixture
+def sidecar_db():
+    """一時 evidence_index テーブルを作成"""
+    db_path = ":memory:"
+    conn = sqlite3.connect(db_path)
+    conn.execute("""
+        CREATE TABLE evidence_index (
+            element_id TEXT PRIMARY KEY,
+            start_ms INTEGER,
+            end_ms INTEGER,
+            visual_text TEXT,
+            visual_score REAL,
+            source_video_path TEXT
+        )
+    """)
+    conn.execute("INSERT INTO evidence_index VALUES (?, ?, ?, ?, ?, ?)",
+                 ("BRAIN_CENTERPIN_001", 0, 4920, "Sample visual text", 0.9, "path/to/video.mp4"))
+    conn.commit()
+    yield conn
+    conn.close()
+
+
+import streamlit as st
+import pytest
+
+@pytest.fixture(autouse=True)
+def clear_streamlit_cache():
+    st.cache_resource.clear()
+    st.cache_data.clear()
 
 @pytest.fixture
 def sample_complete_insight_spec():
@@ -64,12 +246,11 @@ def sample_insight_specs_dict(sample_complete_insight_spec, sample_minimal_insig
 
 @pytest.fixture
 def sample_empty_dir(tmp_path):
-    """pytestの tmp_path を空ディレクトリとして返す"""
     return tmp_path
 
 @pytest.fixture
 def sample_json_files_dir(tmp_path, sample_complete_insight_spec, sample_minimal_insight_spec):
-    """tmp_path に insight_spec_*.json ファイル群を配置して返す"""
+    import json
     file1 = tmp_path / "insight_spec_01.json"
     file2 = tmp_path / "insight_spec_02.json"
     file3 = tmp_path / "insight_spec_invalid.json"
@@ -84,10 +265,3 @@ def sample_json_files_dir(tmp_path, sample_complete_insight_spec, sample_minimal
         f.write("Not a JSON string")
         
     return tmp_path
-
-
-import streamlit as st
-@pytest.fixture(autouse=True)
-def clear_streamlit_cache():
-    st.cache_resource.clear()
-    st.cache_data.clear()
