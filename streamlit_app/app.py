@@ -325,23 +325,30 @@ else:
                 engagement_metrics = analytics.get_engagement_metrics(lecture_num)
                 efficiency = analytics.calculate_efficiency_score(lecture_num)
                 
+                from diagnostic_summary import extract_diagnostic_summary
+                diag = extract_diagnostic_summary(exec_data)
+                
+                theme_str = ", ".join([f"{k} {v}%" for k, v in diag.get("themes", {}).items()])
+                funnel_str = ", ".join([f"{k} {v}%" for k, v in diag.get("funnel_stages", {}).items()])
+                
                 prompt = f"""
-                この講座の基本指標:
-                - 講座ID: {lecture_num:02d}
-                - タイトル: {exec_data.get('title', '')}
-                - Semantic Purity: {f"{exec_data.get('semantic_purity_score'):.1f}" if exec_data.get('semantic_purity_score') is not None else "未算出"}
-                - Quality Score: {f"{exec_data.get('quality_score'):.1f}" if exec_data.get('quality_score') is not None else "未算出"}
-                - Ranking Score: {f"{exec_data.get('ranking_score'):.1f}" if exec_data.get('ranking_score') is not None else "未算出"}
+                この動画の構造:
+                - テーマ: {theme_str}
+                - 難易度: {diag.get('content_structure', '').split('の')[0]}
+                - ファネル: {funnel_str}
+                - コンテンツ: {diag.get('content_structure', '')}、ピン数 {diag.get('center_pins_count', 0)} 個
+                
+                参考指標（根拠としてのみ使用）:
                 - 再生数: {metadata.get('views', 0):,}
-                - いいね: {metadata.get('likes', 0):,} (1000再生あたり {engagement_metrics.get('likes_per_1000_views', 0):.2f})
-                - コメント: {metadata.get('comments', 0):,} (1000再生あたり {engagement_metrics.get('comments_per_1000_views', 0):.2f})
                 - エンゲージメント効率スコア: {efficiency:.1f}/100
                 
-                これらの指標から以下を分析してください:
-                1) この講座の現在の位置付け（成功/課題）
-                2) 視聴者層の特徴と反応傾向
-                3) コンテンツとしての強み
-                4) 短期的な改善ポイント
+                この構造から以下を分析してください:
+                1) この動画が得意とする役割は何か
+                2) この構造が視聴者にもたらす学習効果の質
+                3) この動画の弱点や補うべき領域は何か
+                4) 次に補うべき関連コンテンツは何か
+                
+                ※回答は「状態診断」として、数字の羅列ではなくビジネス上の意味を説明してください。
                 """
                 summary = narrative_engine._call_gpt(prompt)
                 st.info(summary)
