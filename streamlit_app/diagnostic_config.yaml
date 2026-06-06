@@ -1,0 +1,37 @@
+# 診断要約の設定ファイル
+# ラベルシステムの拡張やスコア閾値の調整に対応
+
+diagnostic_thresholds:
+  beginner_suitability:
+    high: 70  # 70 以上なら「初心者向けに特化」と言語化
+    medium: 40
+    low: 0
+  theme_diversity:
+    high: 60  # 複数テーマを扱う多角的コンテンツ
+    medium: 30
+    low: 0
+  content_diversity:
+    high: 70
+    medium: 40
+    low: 0
+
+# テーマラベルの翻訳テーブル
+theme_labels:
+  marketing: "マーケティング"
+  sales: "セールス"
+  customer_success: "カスタマーサクセス"
+  strategy: "事業戦略"
+
+# ファネルラベルの翻訳テーブル
+funnel_labels:
+  awareness: "認知"
+  interest: "関心"
+  consideration: "検討"
+  decision: "決定"
+  advocacy: "推奨"
+
+# 難易度ラベルの翻訳テーブル
+difficulty_labels:
+  beginner: "初心者向け"
+  intermediate: "中級者向け"
+  advanced: "上級者向け"

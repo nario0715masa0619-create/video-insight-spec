@@ -1,3 +1,6 @@
+import yaml
+from pathlib import Path
+
 def extract_diagnostic_summary(insight_spec: dict) -> dict:
     """
     insight_spec から AI 用の診断サマリーを抽出する。
@@ -135,10 +138,21 @@ def extract_channel_diagnostic_summary(lectures: list) -> dict:
         
     return result
 
+def load_diagnostic_config() -> dict:
+    """diagnostic_config.yaml を読み込む"""
+    config_path = Path(__file__).parent / "diagnostic_config.yaml"
+    if config_path.exists():
+        with open(config_path, "r", encoding="utf-8") as f:
+            return yaml.safe_load(f) or {}
+    return {}
+
 def extract_competitive_advantage_summary(advantage: dict) -> dict:
     """
-    競争優位性スコアを「状態診断」に翻訳する。
+    Config を参照しながら、競争優位性スコアを「状態診断」に翻訳する。
     """
+    config = load_diagnostic_config()
+    thresholds = config.get("diagnostic_thresholds", {})
+    
     result = {
         "beginner_focus": "",
         "theme_diversity_desc": "",
@@ -148,26 +162,29 @@ def extract_competitive_advantage_summary(advantage: dict) -> dict:
     if not advantage:
         return result
         
+    bs_th = thresholds.get("beginner_suitability", {"high": 70, "medium": 30})
     bs = advantage.get("beginner_suitability", 0)
-    if bs > 70:
+    if bs >= bs_th.get("high", 70):
         result["beginner_focus"] = "初心者向けに最適化された構成"
-    elif bs > 30:
+    elif bs >= bs_th.get("medium", 30):
         result["beginner_focus"] = "幅広い層（初〜中級者）に対応する構成"
     else:
         result["beginner_focus"] = "上級者・専門家向けに特化した構成"
         
+    td_th = thresholds.get("theme_diversity", {"high": 70, "medium": 40})
     td = advantage.get("theme_diversity", 0)
-    if td > 70:
+    if td >= td_th.get("high", 70):
         result["theme_diversity_desc"] = "多角的なテーマを扱う網羅的コンテンツ"
-    elif td > 40:
+    elif td >= td_th.get("medium", 40):
         result["theme_diversity_desc"] = "テーマの多様性は中程度"
     else:
         result["theme_diversity_desc"] = "単一テーマに特化した専門的コンテンツ"
         
+    cd_th = thresholds.get("content_diversity", {"high": 70, "medium": 40})
     cd = advantage.get("content_diversity", 0)
-    if cd > 70:
+    if cd >= cd_th.get("high", 70):
         result["content_richness"] = "コンテンツの豊かさは高い"
-    elif cd > 40:
+    elif cd >= cd_th.get("medium", 40):
         result["content_richness"] = "コンテンツの豊かさは標準的"
     else:
         result["content_richness"] = "コンテンツの豊かさは限定的"
@@ -178,17 +195,25 @@ def extract_competitive_advantage_summary(advantage: dict) -> dict:
 
 def extract_golden_pattern_summary(patterns: list) -> list:
     """
-    高反応パターンの数字を削除し、構造的な勝因のみ抽出。
+    Config の theme_labels / funnel_labels を参照し、高反応パターンの数字を削除して定性的な記述を生成。
     """
+    config = load_diagnostic_config()
+    theme_labels = config.get("theme_labels", {})
+    funnel_labels = config.get("funnel_labels", {})
+    
     results = []
     if not patterns:
         return results
         
     for idx, p in enumerate(patterns):
-        funnel = p.get('funnel_stage', '不明')
-        ctype = p.get('content_type', '不明')
-        theme = p.get('theme', '不明')
-        results.append(f"パターン{idx+1}: {funnel}層 × {ctype} × {theme}")
+        f_raw = p.get('funnel_stage', '不明')
+        c_raw = p.get('content_type', '不明')
+        t_raw = p.get('theme', '不明')
+        
+        funnel = funnel_labels.get(f_raw, f_raw)
+        theme = theme_labels.get(t_raw, t_raw)
+        
+        results.append(f"パターン{idx+1}: {funnel}層 × {c_raw} × {theme}")
         
     return results
 
@@ -196,10 +221,20 @@ def extract_hidden_weakness_diagnosis(weakness_data: dict) -> dict:
     """
     品質とエンゲージメントのギャップを「なぜ起きているのか」の文脈に翻訳。
     """
+    config = load_diagnostic_config()
+    funnel_labels = config.get("funnel_labels", {})
+    theme_labels = config.get("theme_labels", {})
+    
+    f_raw = weakness_data.get("funnel_stage", "不明")
+    t_raw = weakness_data.get("themes", "不明")
+    
+    funnel = funnel_labels.get(f_raw, f_raw)
+    theme = theme_labels.get(t_raw, t_raw)
+    
     result = {
         "state": "内容は充実しているが視聴者反応が期待値より低い",
-        "funnel": weakness_data.get("funnel_stage", "不明"),
-        "theme": weakness_data.get("themes", "不明"),
+        "funnel": funnel,
+        "theme": theme,
         "content_preview": weakness_data.get("content", "")
     }
     return result
