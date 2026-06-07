@@ -174,3 +174,42 @@ def format_evidence_for_prompt(evidence: dict) -> str:
         f"- 構造上の課題（不足・橋渡し）: {evidence['hidden_gaps'].get('gap', '')}"
     ]
     return "\n".join(lines)
+def extract_pattern_evidence(golden_patterns: list) -> str:
+    "\""高反応パターンを「構造的勝因」として言語化"\""
+    if not golden_patterns:
+        return "特定の高反応パターンは検出されていません。"
+        
+    lines = ["【構造的勝因の抽出】"]
+    for i, p in enumerate(golden_patterns[:3], 1):
+        lines.append(f"- 勝因パターン{i}: 『{p.get('funnel_stage', '')}』段階の視聴者に対して、『{p.get('theme', '')}』を『{p.get('content_type', '')}』で提示する構造が強く支持されています。")
+    
+    return "\n".join(lines)
+
+def extract_weakness_evidence(weaknesses: list) -> str:
+    "\""品質と反応のギャップを「状態」として言語化"\""
+    if not weaknesses:
+        return "特筆すべき構造的弱点は検出されていません。"
+        
+    lines = ["【隠れた弱点の状態】"]
+    for i, w in enumerate(weaknesses[:2], 1):
+        lines.append(f"- 課題{i}: 『{w.get('funnel_stage', '')}』層に向けた『{w.get('themes', '')}』のコンテンツは、内容は充実しているものの視聴者の期待や理解度とミスマッチを起こしており、反応が鈍い状態です。")
+        
+    return "\n".join(lines)
+
+def extract_competitive_evidence(competitive_data: dict) -> str:
+    "\""競争優位性を「ポジショニング」として言語化"\""
+    if not competitive_data:
+        return "競争優位性データが不足しています。"
+        
+    td = competitive_data.get('theme_diversity', 0)
+    cd = competitive_data.get('content_diversity', 0)
+    bs = competitive_data.get('beginner_suitability', 0)
+    ed = competitive_data.get('engagement_density', 0)
+    
+    lines = ["【市場でのポジショニングと競争優位性】"]
+    lines.append(f"- ターゲット適合度: {'初心者から中級者まで広くカバーする構成' if bs > 50 else '専門家・上級者に絞り込んだ尖った構成'}")
+    lines.append(f"- テーマの網羅性: {'複数のテーマを横断的に扱う総合型' if td > 50 else '特定テーマに特化した専門型'}")
+    lines.append(f"- コンテンツの厚み: {'多様な形式（概念、事例、ワーク等）で深く学べる構成' if cd > 50 else 'シンプルな形式で要点を絞った構成'}")
+    lines.append(f"- 視聴者の熱量: {'非常に高く、活発なコミュニティが形成されている' if ed > 50 else 'まだ発展途上であり、働きかけが必要'}")
+    
+    return "\n".join(lines)
