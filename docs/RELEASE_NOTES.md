@@ -1,3 +1,39 @@
+## v1.4.0 - Language‑First Complete: Diagnostic Evidence Integration (2026-06-07)
+
+### What's New
+- **Diagnostic Evidence Framework**: 新たに `diagnostic_evidence.py` を実装し、`insight_spec_{id}.json` から言語ベースの中間材料を抽出（`theme_core`, `learning_roles`, `funnel_profile`, `difficulty_profile`, `audience_clarity`, `bridge_gaps`, `message_consistency`, `hidden_strengths`, `hidden_gaps`, `evidence_metrics`）。
+- **Dashboard Tab Integration**: 全6タブ（個別動画4タブ + チャネル全体2タブ）で中間材料ベースのプロンプト呼び出しへ統一。数値説明を完全排除し、「結論 → 意味 → 課題 → 次アクション」の構造を徹底。
+- **Console Debug Tool**: `scripts/debug_diagnostic_evidence.py` を追加、`--no-llm` オプションで中間材料のみ検証可能。
+
+### Changed
+- `streamlit_app/narrative_engine.py`: `explain_channel_overview` 署名変更、`explain_single_video` 追加、中間材料を受け取るプロンプト実装。
+- `streamlit_app/app.py`: 全タブを新しい抽出関数へ切り替え（`extract_pattern_evidence`, `extract_weakness_evidence`, `extract_competitive_evidence`）。
+- `streamlit_app/diagnostic_evidence.py`: 追加関数3件（pattern/weakness/competitive）、言語化完全化。
+
+### Technical Impact
+- Numeric explanations eliminated completely across all tabs.
+- Diagnostic output is now pure textual state‑analysis (no percentages, scores, or raw counts in conclusions).
+- Intermediate material is inspectable via debug script, enabling maintenance and future extensions.
+- Prompt generation is fully decoupled from raw scores; LLM receives only structural/linguistic evidence.
+
+### Test Coverage
+- pytest: 101/101 cases PASS (no failures).
+- All dashboard tabs verified; output validated for language consistency and state diagnosis.
+
+### Next Phase (Backlog)
+- E2E integration tests (UI → AI → output full flow).
+- UI/UX refinement (card components, visual hierarchy for executives).
+- Config expansion (threshold fine‑tuning, custom role definitions).
+
+### Breaking Changes
+- None. Backward compatible with v1.3.2.
+
+### Known Limitations
+- Debug script `--show-prompt` may expose full LLM context (development mode only).
+- Config system in `diagnostic_config.yaml` is still basic; further modularization recommended for 50+ themes.
+
+---
+
 ## v1.3.2 - AI要約プロンプトの自然な日本語化 (2026-06-07)
 
 ### Changed
