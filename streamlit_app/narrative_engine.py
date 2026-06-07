@@ -8,8 +8,8 @@ from pathlib import Path
 repo_root = Path(__file__).resolve().parent.parent
 if str(repo_root) not in sys.path:
     sys.path.insert(0, str(repo_root))
-from env_loader import load_env
-load_env()
+from env_loader import ensure_env_loaded
+ensure_env_loaded()
 
 class NarrativeEngine:
     """GPT-4o を活用した言語化エンジン"""
