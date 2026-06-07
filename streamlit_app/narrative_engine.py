@@ -55,29 +55,29 @@ class NarrativeEngine:
         diff_str = ", ".join([f"{k} {v}%" for k, v in channel_diag.get("difficulty_distribution", {}).items()])
         funnel_str = ", ".join([f"{k} {v}%" for k, v in channel_diag.get("funnel_coverage", {}).items()])
         
-        prompt = f"""このチャンネルの全体構造:
-- 主要テーマ: {theme_str}
-- コンテンツレベル: {diff_str}
-- ファネルカバレッジ: {funnel_str}
+        prompt = f"""このチャンネルの全体像:
+- 扱っているテーマ: {theme_str}
+- 動画のレベル分布: {diff_str}
+- カバーしている学習段階: {funnel_str}
 - 合計動画数: {channel_diag.get('total_lectures', 0)} 本
-- チャンネルの強み: {channel_diag.get('channel_strength', '')}
-- チャンネルの弱み: {channel_diag.get('strategic_weakness', '')}
+- チャンネルの得意なこと: {channel_diag.get('channel_strength', '')}
+- チャンネルの課題: {channel_diag.get('strategic_weakness', '')}
 
-参考指標（根拠としてのみ使用）:
-- 平均Quality Score: {f"{metrics.get('avg_quality'):.1f}" if metrics.get('avg_quality') is not None else "データ準備中"}
-- 平均Semantic Purity: {f"{metrics.get('avg_semantic_purity'):.1f}" if metrics.get('avg_semantic_purity') is not None else "データ準備中"}
+参考データ:
+- 品質評価: 平均 {f"{metrics.get('avg_quality'):.1f}" if metrics.get('avg_quality') is not None else "データ準備中"} / 100
+- 情報の密度: 平均 {f"{metrics.get('avg_semantic_purity'):.1f}" if metrics.get('avg_semantic_purity') is not None else "データ準備中"} / 100
 - 総再生数: {metrics.get('total_views', 0):,}
 - 総いいね: {metrics.get('total_likes', 0):,}
 - 総コメント: {metrics.get('total_comments', 0):,}
 
-このチャンネルから以下を診断してください:
-1) このチャンネルの『顧客獲得における役割』は何か
-2) 現在の構造が達成できていることと、できていないことは何か
-3) このチャンネルの『戦略的な弱点』は何か
-4) 次にどのレベル・どのテーマのコンテンツを優先すべきか
-5) 長期的なコンテンツロードマップの提案
+以下を診断してください:
+1) このチャンネルが、視聴者の学習や選択過程でどのような役割を果たしているか
+2) 現在の動画構成で成功している点と、カバーできていない点はどこか
+3) チャンネル運営上の戦略的な弱点は何か
+4) 次のステップとして、誰に向けてどのようなテーマの動画を作るべきか
+5) 今後半年〜1年を見据えたコンテンツ展開のロードマップ
 
-※回答は「状態診断」として、スコアの説明ではなく、チャンネルが果たしている役割、その限界、次に何をすべきかを述べてください。"""
+※結論・意味を先に述べ、数字やスコアは最後の根拠としてのみ使用してください。"""
         return self._call_gpt(prompt)
     
     def explain_funnel_stage_analysis(self, lecture_id, funnel_data):

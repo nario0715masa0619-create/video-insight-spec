@@ -336,23 +336,21 @@ else:
                 funnel_str = ", ".join([f"{k} {v}%" for k, v in diag.get("funnel_stages", {}).items()])
                 
                 prompt = f"""
-                この動画の構造:
-                - テーマ: {theme_str}
-                - 難易度: {diag.get('content_structure', '').split('の')[0]}
-                - ファネル: {funnel_str}
-                - コンテンツ: {diag.get('content_structure', '')}、ピン数 {diag.get('center_pins_count', 0)} 個
+                この動画の基本的な特徴:
+                - 取り扱うテーマ: {theme_str}
+                - 誰に向けた内容か: {diag.get('content_structure', '').split('の')[0]}
+                - 内容の進み方: {funnel_str}
+                - 用意されている解説の数: {diag.get('center_pins_count', 0)} 個の重要なポイントをカバー ({diag.get('content_structure', '')})
                 
-                参考指標（根拠としてのみ使用）:
-                - 再生数: {metadata.get('views', 0):,}
-                - エンゲージメント効率スコア: {efficiency:.1f}/100
+                参考: 再生数は {metadata.get('views', 0):,} 回で、視聴者の反応スコアは {efficiency:.1f}/100 です
                 
-                この構造から以下を分析してください:
-                1) この動画が得意とする役割は何か
-                2) この構造が視聴者にもたらす学習効果の質
-                3) この動画の弱点や補うべき領域は何か
-                4) 次に補うべき関連コンテンツは何か
+                以下を診断してください:
+                1) この動画が果たしている役割は何か
+                2) この構造を通じて視聴者が何を学べるか
+                3) この動画で不足している視点は何か
+                4) 次に制作すべき関連動画はどのようなものか
                 
-                ※回答は「状態診断」として、数字の羅列ではなくビジネス上の意味を説明してください。
+                ※結論・意味を先に述べ、数字やスコアは最後の根拠としてのみ使用してください。
                 """
                 summary = narrative_engine._call_gpt(prompt)
                 st.info(summary)
@@ -425,11 +423,13 @@ else:
                     patterns_str = "\n                    - ".join(gp_diag)
                     
                     prompt = f"""
-                    高反応パターンの構造的特徴:
+                    視聴者の反応が良い動画パターンの構造的な特徴:
                     - {patterns_str}
                     
-                    これらの構造がなぜビジネス上有効なのか、
-                    次にどの企画へ横展開すべきかを診断してください。
+                    これらの構造がなぜビジネスにおいて成果を生んでいるのか、
+                    そして、この勝ちパターンを次にどのような企画へ横展開すべきかを診断してください。
+                    
+                    ※結論・意味を先に述べ、数字は最後の根拠としてのみ使用してください。
                     """
                     explanation = narrative_engine._call_gpt(prompt)
                     st.markdown(explanation)
@@ -456,12 +456,15 @@ else:
                         hw_diag = extract_hidden_weakness_diagnosis(w)
                         
                         prompt = f"""
-                        コンテンツの状態:
+                        コンテンツの現在の状態:
                         - {hw_diag['state']}
-                        - ファネル層: {hw_diag['funnel']}
-                        - テーマ: {hw_diag['theme']}
+                        - 対象とする視聴者層: {hw_diag['funnel']}
+                        - 主なテーマ: {hw_diag['theme']}
                         
-                        なぜこの状態が生じているのか、どう構成を改善すべきか診断してください。
+                        なぜこのような状況（品質は高いが反応が鈍い）が生じているのか、
+                        視聴者の視点に立って原因を分析し、どのように構成を改善すべきか診断してください。
+                        
+                        ※結論・意味を先に述べ、数字は最後の根拠としてのみ使用してください。
                         """
                         explanation = narrative_engine._call_gpt(prompt)
                         st.markdown(explanation)
@@ -534,13 +537,15 @@ else:
                 with st.spinner("分析中..."):
                     adv_diag = extract_competitive_advantage_summary(advantage)
                     prompt = f"""
-                    この動画の構造的特徴:
-                    - {adv_diag.get('beginner_focus')} (beginner_suitability {advantage.get('beginner_suitability', 0):.1f})
-                    - {adv_diag.get('theme_diversity_desc')}
-                    - {adv_diag.get('content_richness')}
+                    この動画の構造的な特徴:
+                    - ターゲット層への最適化: {adv_diag.get('beginner_focus')}
+                    - テーマの扱う範囲: {adv_diag.get('theme_diversity_desc')}
+                    - コンテンツの充実度: {adv_diag.get('content_richness')}
                     
-                    この構造から、市場ポジショニング、強み領域、改善方向を診断してください。
-                    根拠は構造情報のみ。スコアは最後に。
+                    このような構造の動画が、市場でどのような位置づけにあるかを診断してください。
+                    また、他と比べた際の強みと、今後補強すべき領域についても解説してください。
+                    
+                    ※結論・意味を先に述べ、数字は最後の根拠としてのみ使用してください。
                     """
                     explanation = narrative_engine._call_gpt(prompt)
                     st.markdown(explanation)
