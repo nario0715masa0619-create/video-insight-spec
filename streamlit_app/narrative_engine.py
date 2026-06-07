@@ -8,8 +8,8 @@ from pathlib import Path
 repo_root = Path(__file__).resolve().parent.parent
 if str(repo_root) not in sys.path:
     sys.path.insert(0, str(repo_root))
-from env_loader import load_env
-load_env()
+from env_loader import ensure_env_loaded
+ensure_env_loaded()
 
 class NarrativeEngine:
     """GPT-4o を活用した言語化エンジン"""
@@ -46,38 +46,58 @@ class NarrativeEngine:
         except Exception as e:
             return f"⚠️ GPT エラー: {str(e)}"
     
-    def explain_channel_overview(self, metrics, channel_diag=None):
-        """チャンネル全体の解説"""
-        if channel_diag is None:
-            channel_diag = {}
-            
-        theme_str = ", ".join([f"{k} {v}%" for k, v in channel_diag.get("dominant_themes", {}).items()])
-        diff_str = ", ".join([f"{k} {v}%" for k, v in channel_diag.get("difficulty_distribution", {}).items()])
-        funnel_str = ", ".join([f"{k} {v}%" for k, v in channel_diag.get("funnel_coverage", {}).items()])
+    def explain_channel_overview(self, insights_data: list) -> str:
+        """
+        診断用中間材料から AI が「状態診断」を生成する
+        （数値説明ではなく、構造的な気付きを提供）
+        """
+        from diagnostic_evidence import extract_diagnostic_evidence, format_evidence_for_prompt
         
-        prompt = f"""このチャンネルの全体像:
-- 扱っているテーマ: {theme_str}
-- 動画のレベル分布: {diff_str}
-- カバーしている学習段階: {funnel_str}
-- 合計動画数: {channel_diag.get('total_lectures', 0)} 本
-- チャンネルの得意なこと: {channel_diag.get('channel_strength', '')}
-- チャンネルの課題: {channel_diag.get('strategic_weakness', '')}
+        # 1. insight_spec から診断用中間材料を抽出
+        evidence = extract_diagnostic_evidence(insights_data)
+        
+        # 2. 中間材料を AI プロンプト用フォーマットに
+        evidence_text = format_evidence_for_prompt(evidence)
+        
+        # 3. プロンプトを構成（数値説明ではなく、証拠ベース）
+        prompt = f"""
+あなたはビジネスコンサルタントです。
+以下は、ビデオチャンネルの構造分析の結果です。
+数字や指標の説明ではなく、チャンネルの「役割」「強み」「弱点」「次にとるべき方向」を診断してください。
 
-参考データ:
-- 品質評価: 平均 {f"{metrics.get('avg_quality'):.1f}" if metrics.get('avg_quality') is not None else "データ準備中"} / 100
-- 情報の密度: 平均 {f"{metrics.get('avg_semantic_purity'):.1f}" if metrics.get('avg_semantic_purity') is not None else "データ準備中"} / 100
-- 総再生数: {metrics.get('total_views', 0):,}
-- 総いいね: {metrics.get('total_likes', 0):,}
-- 総コメント: {metrics.get('total_comments', 0):,}
+【診断証拠（中間材料）】
+{evidence_text}
 
-以下を診断してください:
-1) このチャンネルが、視聴者の学習や選択過程でどのような役割を果たしているか
-2) 現在の動画構成で成功している点と、カバーできていない点はどこか
-3) チャンネル運営上の戦略的な弱点は何か
-4) 次のステップとして、誰に向けてどのようなテーマの動画を作るべきか
-5) 今後半年〜1年を見据えたコンテンツ展開のロードマップ
+以下の形式で診断してください：
+1. 役割と強み：このチャンネルが現在果たしている役割と、構造上の強みは何か
+2. 課題と弱点：構造上の弱点は何か（特に橋渡しの不足）
+3. 次のアクション：視聴者のジャーニーを完成させるため、次に何を作るべきか
+4. 根拠：必要に応じて、上記の分析の根拠となる具体的な構造要素を簡潔に示す
+"""
+        
+        # 4. LLM に渡す
+        return self._call_gpt(prompt)
 
-※結論・意味を先に述べ、数字やスコアは最後の根拠としてのみ使用してください。"""
+    def explain_single_video(self, insights_data: list, lecture_id: str) -> str:
+        """個別動画の基本分析"""
+        from diagnostic_evidence import extract_diagnostic_evidence, format_evidence_for_prompt
+        evidence = extract_diagnostic_evidence(insights_data, lecture_id=lecture_id)
+        evidence_text = format_evidence_for_prompt(evidence)
+        
+        prompt = f"""
+あなたはビジネスコンサルタントです。
+以下は、特定の個別動画の構造分析の結果です。
+数字や指標の説明ではなく、この動画の「役割」「強み」「弱点」「次にとるべき方向」を診断してください。
+
+【診断証拠（中間材料）】
+{evidence_text}
+
+以下の形式で診断してください：
+1. 役割と強み：この動画が果たしている学習上の役割と強みは何か
+2. 課題と弱点：構造上の課題や、不足している橋渡しは何か
+3. 次のアクション：視聴者を次のステップへ導くため、次に追加・案内すべき内容は何か
+4. 根拠：必要に応じて、上記の分析の根拠となる具体的な構造要素を簡潔に示す
+"""
         return self._call_gpt(prompt)
     
     def explain_funnel_stage_analysis(self, lecture_id, funnel_data):

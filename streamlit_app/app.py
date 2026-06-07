@@ -80,9 +80,7 @@ if analysis_mode == "チャンネル全体分析":
         st.subheader("📝 チャンネルの現状とサマリー")
         if analysis_available:
             with st.spinner("分析中..."):
-                from diagnostic_summary import extract_channel_diagnostic_summary
-                channel_diag = extract_channel_diagnostic_summary(list(lectures_dict.values()))
-                overview = narrative_engine.explain_channel_overview(metrics, channel_diag)
+                overview = narrative_engine.explain_channel_overview(list(insight_specs.values()))
                 st.info(overview)
         else:
             st.info("💡 **【総合評価】** 高い品質を維持していますが、まだ改善の余地があります。以下のKPIに基づき次のアクションを検討してください。")
@@ -146,9 +144,7 @@ if analysis_mode == "チャンネル全体分析":
         st.subheader("改善提案")
         if analysis_available:
             with st.spinner("分析中..."):
-                from diagnostic_summary import extract_channel_diagnostic_summary
-                channel_diag = extract_channel_diagnostic_summary(list(lectures_dict.values()))
-                proposal = narrative_engine.explain_channel_overview(metrics, channel_diag)
+                proposal = narrative_engine.explain_channel_overview(list(insight_specs.values()))
                 st.info(proposal)
     
     with tab4:
@@ -326,33 +322,7 @@ else:
         
         if analysis_available and exec_data:
             with st.spinner("分析中..."):
-                engagement_metrics = analytics.get_engagement_metrics(lecture_num)
-                efficiency = analytics.calculate_efficiency_score(lecture_num)
-                
-                from diagnostic_summary import extract_diagnostic_summary
-                diag = extract_diagnostic_summary(exec_data)
-                
-                theme_str = ", ".join([f"{k} {v}%" for k, v in diag.get("themes", {}).items()])
-                funnel_str = ", ".join([f"{k} {v}%" for k, v in diag.get("funnel_stages", {}).items()])
-                
-                prompt = f"""
-                この動画の基本的な特徴:
-                - 取り扱うテーマ: {theme_str}
-                - 誰に向けた内容か: {diag.get('content_structure', '').split('の')[0]}
-                - 内容の進み方: {funnel_str}
-                - 用意されている解説の数: {diag.get('center_pins_count', 0)} 個の重要なポイントをカバー ({diag.get('content_structure', '')})
-                
-                参考: 再生数は {metadata.get('views', 0):,} 回で、視聴者の反応スコアは {efficiency:.1f}/100 です
-                
-                以下を診断してください:
-                1) この動画が果たしている役割は何か
-                2) この構造を通じて視聴者が何を学べるか
-                3) この動画で不足している視点は何か
-                4) 次に制作すべき関連動画はどのようなものか
-                
-                ※結論・意味を先に述べ、数字やスコアは最後の根拠としてのみ使用してください。
-                """
-                summary = narrative_engine._call_gpt(prompt)
+                summary = narrative_engine.explain_single_video(list(insight_specs.values()), f"{lecture_num:02d}")
                 st.info(summary)
         else:
             st.info("💡 **【総合評価】** データを基にした分析結果がここに表示されます。（デモモード等ではテキストが制限されています）")
@@ -417,20 +387,19 @@ else:
             if analysis_available:
                 st.markdown("---")
                 st.subheader("分析")
-                from diagnostic_summary import extract_golden_pattern_summary
+                from diagnostic_evidence import extract_pattern_evidence
                 with st.spinner("分析中..."):
-                    gp_diag = extract_golden_pattern_summary(golden[:3])
-                    patterns_str = "\n                    - ".join(gp_diag)
+                    patterns_evidence = extract_pattern_evidence(golden[:3])
                     
                     prompt = f"""
-                    視聴者の反応が良い動画パターンの構造的な特徴:
-                    - {patterns_str}
-                    
-                    これらの構造がなぜビジネスにおいて成果を生んでいるのか、
-                    そして、この勝ちパターンを次にどのような企画へ横展開すべきかを診断してください。
-                    
-                    ※結論・意味を先に述べ、数字は最後の根拠としてのみ使用してください。
-                    """
+あなたはビジネスコンサルタントです。
+以下の「構造的勝因」を元に診断を行ってください。
+
+{patterns_evidence}
+
+なぜこの構造が高い反応を得ているのか、そして、この勝ちパターンを次にどのような企画へ横展開すべきか診断してください。
+※結論・意味を先に述べ、数字は最後の根拠としてのみ使用してください。
+"""
                     explanation = narrative_engine._call_gpt(prompt)
                     st.markdown(explanation)
     
@@ -449,25 +418,23 @@ else:
             
             if analysis_available:
                 st.markdown("---")
-                from diagnostic_summary import extract_hidden_weakness_diagnosis
+                from diagnostic_evidence import extract_weakness_evidence
                 st.subheader("改善ポイント")
-                for idx, w in enumerate(weaknesses[:2], 1):
-                    with st.spinner(f"分析中..."):
-                        hw_diag = extract_hidden_weakness_diagnosis(w)
-                        
-                        prompt = f"""
-                        コンテンツの現在の状態:
-                        - {hw_diag['state']}
-                        - 対象とする視聴者層: {hw_diag['funnel']}
-                        - 主なテーマ: {hw_diag['theme']}
-                        
-                        なぜこのような状況（品質は高いが反応が鈍い）が生じているのか、
-                        視聴者の視点に立って原因を分析し、どのように構成を改善すべきか診断してください。
-                        
-                        ※結論・意味を先に述べ、数字は最後の根拠としてのみ使用してください。
-                        """
-                        explanation = narrative_engine._call_gpt(prompt)
-                        st.markdown(explanation)
+                with st.spinner("分析中..."):
+                    weakness_evidence = extract_weakness_evidence(weaknesses[:2])
+                    
+                    prompt = f"""
+あなたはビジネスコンサルタントです。
+以下の「隠れた弱点」の診断材料を元に診断を行ってください。
+
+{weakness_evidence}
+
+この状態（品質は高いが反応が鈍い）がなぜ生じているのか、
+視聴者の視点に立って原因を分析し、どのように構成を改善すべきか診断してください。
+※結論・意味を先に述べ、数字は最後の根拠としてのみ使用してください。
+"""
+                    explanation = narrative_engine._call_gpt(prompt)
+                    st.markdown(explanation)
         else:
             st.info("✅ 隠れた弱点は検出されませんでした。品質とエンゲージメントのバランスが良好です。")
     
@@ -533,20 +500,20 @@ else:
             if analysis_available:
                 st.markdown("---")
                 st.subheader("詳細分析")
-                from diagnostic_summary import extract_competitive_advantage_summary
+                from diagnostic_evidence import extract_competitive_evidence
                 with st.spinner("分析中..."):
-                    adv_diag = extract_competitive_advantage_summary(advantage)
+                    competitive_evidence = extract_competitive_evidence(advantage)
                     prompt = f"""
-                    この動画の構造的な特徴:
-                    - ターゲット層への最適化: {adv_diag.get('beginner_focus')}
-                    - テーマの扱う範囲: {adv_diag.get('theme_diversity_desc')}
-                    - コンテンツの充実度: {adv_diag.get('content_richness')}
-                    
-                    このような構造の動画が、市場でどのような位置づけにあるかを診断してください。
-                    また、他と比べた際の強みと、今後補強すべき領域についても解説してください。
-                    
-                    ※結論・意味を先に述べ、数字は最後の根拠としてのみ使用してください。
-                    """
+あなたはビジネスコンサルタントです。
+以下の「市場ポジショニングと競争優位性」の診断材料を元に診断を行ってください。
+
+{competitive_evidence}
+
+このような構造の動画が、市場でどのような位置づけにあるかを診断してください。
+また、他と比べた際の強みと、今後補強すべき領域についても解説してください。
+
+※結論・意味を先に述べ、数字は最後の根拠としてのみ使用してください。
+"""
                     explanation = narrative_engine._call_gpt(prompt)
                     st.markdown(explanation)
             
