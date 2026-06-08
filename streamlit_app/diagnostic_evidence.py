@@ -175,7 +175,7 @@ def format_evidence_for_prompt(evidence: dict) -> str:
     ]
     return "\n".join(lines)
 def extract_pattern_evidence(golden_patterns: list) -> str:
-    "\""高反応パターンを「構造的勝因」として言語化"\""
+    """高反応パターンを構造的勝因として言語化"""
     if not golden_patterns:
         return "特定の高反応パターンは検出されていません。"
         
@@ -186,7 +186,7 @@ def extract_pattern_evidence(golden_patterns: list) -> str:
     return "\n".join(lines)
 
 def extract_weakness_evidence(weaknesses: list) -> str:
-    "\""品質と反応のギャップを「状態」として言語化"\""
+    """品質と反応のギャップを状態として言語化"""
     if not weaknesses:
         return "特筆すべき構造的弱点は検出されていません。"
         
@@ -197,7 +197,7 @@ def extract_weakness_evidence(weaknesses: list) -> str:
     return "\n".join(lines)
 
 def extract_competitive_evidence(competitive_data: dict) -> str:
-    "\""競争優位性を「ポジショニング」として言語化"\""
+    """競争優位性をポジショニングとして言語化"""
     if not competitive_data:
         return "競争優位性データが不足しています。"
         

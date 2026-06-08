@@ -51,7 +51,7 @@ class NarrativeEngine:
         診断用中間材料から AI が「状態診断」を生成する
         （数値説明ではなく、構造的な気付きを提供）
         """
-        from diagnostic_evidence import extract_diagnostic_evidence, format_evidence_for_prompt
+        from streamlit_app.diagnostic_evidence import extract_diagnostic_evidence, format_evidence_for_prompt
         
         # 1. insight_spec から診断用中間材料を抽出
         evidence = extract_diagnostic_evidence(insights_data)
