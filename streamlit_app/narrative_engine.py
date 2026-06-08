@@ -46,37 +46,72 @@ class NarrativeEngine:
         except Exception as e:
             return f"⚠️ GPT エラー: {str(e)}"
     
-    def explain_channel_overview(self, insights_data: list) -> str:
+    def explain_channel_diagnosis(self, insights_data: list) -> str:
         """
-        診断用中間材料から AI が「状態診断」を生成する
-        （数値説明ではなく、構造的な気付きを提供）
+        現在のチャンネル状態を診断する（改善案は出さない）
         """
         from streamlit_app.diagnostic_evidence import extract_diagnostic_evidence, format_evidence_for_prompt
         
-        # 1. insight_spec から診断用中間材料を抽出
         evidence = extract_diagnostic_evidence(insights_data)
-        
-        # 2. 中間材料を AI プロンプト用フォーマットに
         evidence_text = format_evidence_for_prompt(evidence)
         
-        # 3. プロンプトを構成（数値説明ではなく、証拠ベース）
         prompt = f"""
 あなたはビジネスコンサルタントです。
-以下は、ビデオチャンネルの構造分析の結果です。
-数字や指標の説明ではなく、チャンネルの「役割」「強み」「弱点」「次にとるべき方向」を診断してください。
+以下の【診断用中間材料】を元に、現在のチャンネル構造から、以下だけを述べてください。
 
-【診断証拠（中間材料）】
 {evidence_text}
 
-以下の形式で診断してください：
-1. 役割と強み：このチャンネルが現在果たしている役割と、構造上の強みは何か
-2. 課題と弱点：構造上の弱点は何か（特に橋渡しの不足）
-3. 次のアクション：視聴者のジャーニーを完成させるため、次に何を作るべきか
-4. 根拠：必要に応じて、上記の分析の根拠となる具体的な構造要素を簡潔に示す
+1. 現在の役割：このチャンネルは誰の、どのステップ向けに機能しているか
+2. 構造上の強み：テーマ・難易度・検討段階の観点から、何が充実しているか
+3. 構造上の弱み：テーマ・難易度・検討段階の観点から、何が不足しているか
+4. 欠けている橋渡し：ステップ間のギャップはどこか
+
+【禁止】以下は絶対に書かないこと：
+- 「～すべき」「次は～」などのアクション指示
+- 「〜を追加する」「〜を増やす」などの改善提案
+- 今後やるべきことの説明
+
+【形式】
+- 段落形式、日本語自然文
+- 数値は参考情報として末尾に補足
 """
-        
-        # 4. LLM に渡す
         return self._call_gpt(prompt)
+
+    def explain_channel_improvements(self, insights_data: list) -> str:
+        """
+        チャンネルの次のアクションを提案する（現状は説明しない）
+        """
+        from streamlit_app.diagnostic_evidence import extract_diagnostic_evidence, format_evidence_for_prompt
+        
+        evidence = extract_diagnostic_evidence(insights_data)
+        evidence_text = format_evidence_for_prompt(evidence)
+        
+        prompt = f"""
+あなたはビジネスコンサルタントです。
+以下の【診断用中間材料】を踏まえて、以下だけを述べてください。
+
+{evidence_text}
+
+1. 最優先のアクション：最初に何を作るべきか、その理由
+2. 次点のアクション：その次に何を作るべきか、その理由
+3. 対応順：なぜその順番か
+4. 期待される効果：その順で作ることで、チャンネルはどう変わるか
+
+【禁止】以下は絶対に書かないこと：
+- 現状の長い説明（「入門に強い」「比較検討が弱い」など）
+- 診断文の焼き直しや繰り返し
+- 「現在〜である」という状態説明
+- 数値やスコアの再説明
+
+【形式】
+- 段落形式、日本語自然文
+- 「短期（1～3ヶ月）」「中期（3～6ヶ月）」などの時間軸があれば示す
+"""
+        return self._call_gpt(prompt)
+
+    def explain_channel_overview(self, insights_data: list) -> str:
+        """非推奨: explain_channel_diagnosis + explain_channel_improvements を使用すること"""
+        pass
 
     def explain_single_video(self, insights_data: list, lecture_id: str) -> str:
         """個別動画の基本分析"""
