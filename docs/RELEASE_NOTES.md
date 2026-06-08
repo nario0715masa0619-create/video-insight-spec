@@ -1,3 +1,23 @@
+## v1.5.2 - Enhanced Persuasiveness (2026-06-08)
+
+### What's New
+- Added explanatory paragraphs to diagnosis and improvement output
+- Strengthened business impact descriptions
+
+### Changed
+- Diagnosis: Added "why this matters" context to each item
+- Improvement: Added reasoning and expected effects
+- Output now suitable for executive reporting
+
+### Impact
+- Increased credibility and persuasiveness
+- Better for stakeholder communication
+- Professional report quality
+
+### Testing
+- pytest: 8/8 PASS
+- Dashboard verification complete
+
 ## v1.5.1 - Readability Improvement (2026-06-08)
 
 ### What's New
