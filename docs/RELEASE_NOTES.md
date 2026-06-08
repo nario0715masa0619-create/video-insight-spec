@@ -1,3 +1,22 @@
+## v1.5.1 - Readability Improvement (2026-06-08)
+
+### What's New
+- Structured output format with headings and bullet points
+- Improved readability for quick scanning
+
+### Changed
+- Diagnosis output: 【見出し】+ bullet points format
+- Improvement output: 【見出し】+ bullet points format
+
+### Impact
+- Easier to understand at a glance
+- Maintains content depth and role separation
+- Better for executive reporting
+
+### Testing
+- pytest: 8/8 PASS
+- Dashboard: All tabs display correctly
+
 ## v1.5.0 - Diagnosis & Improvement Separation (2026-06-08)
 
 ### What's New
