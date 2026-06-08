@@ -1,3 +1,25 @@
+## v1.5.0 - Diagnosis & Improvement Separation (2026-06-08)
+
+### What's New
+- Separated "Quality Diagnosis" tab from "Improvement Suggestion" tab
+- Diagnosis tab now focuses on current state analysis only
+- Improvement tab now focuses on next actions and priorities
+- Eliminated redundancy between tabs; content is no longer repeated
+
+### Changed
+- `explain_channel_diagnosis()`: New function for state diagnosis
+- `explain_channel_improvements()`: New function for action planning
+- Prompts now have explicit "DO NOT" instructions per role
+
+### Impact
+- Users can now read tab 1 and tab 3 without duplicate information
+- Clear distinction between "where we are" and "where we go"
+- More actionable improvement suggestions
+
+### Testing
+- pytest: 8/8 PASS
+- Dashboard verification: All tabs working correctly
+
 ## v1.4.0 - Language‑First Complete: Diagnostic Evidence Integration (2026-06-07)
 
 ### What's New
