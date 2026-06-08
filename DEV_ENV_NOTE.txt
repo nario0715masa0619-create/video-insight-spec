@@ -1,0 +1,5 @@
+本番安定版（Git 親リポジトリ）: D:\AI_スクリプト成果物\video-insight-spec
+開発環境（Worktree）: D:\AI_スクリプト成果物\video-insight-spec-dev
+
+※ 開発環境でコードを修正し、テストを通過した後に main ブランチへマージしてください。
+※ 本番環境の起動には run_prod.bat を使用します。
