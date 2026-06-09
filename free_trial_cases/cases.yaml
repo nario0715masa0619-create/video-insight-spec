@@ -1,0 +1,26 @@
+# 無料1本解析 案件管理ファイル
+# 新しい案件を追加する際はこの形式で記述してください
+
+cases:
+  # サンプル1: 完了済み
+  - case_id: trial_companyx_20260609
+    client_name: Company X
+    video_file: sample_20260609_company_x.mp4
+    status: completed
+    date_created: 2026-06-09
+    date_completed: 2026-06-09
+    focus: 初心者向けコンテンツの品質診断
+    notes: 営業A氏より依頼
+    assigned_to: 営業部 A氏
+    expected_delivery: 2026-06-10
+
+  # サンプル2: 処理中
+  - case_id: trial_vendora_20260610
+    client_name: Vendor A
+    video_file: marketing_20260610_vendor_a.mp4
+    status: processing
+    date_created: 2026-06-10
+    focus: マーケティング特化の推移診断
+    notes: 新規営業案件
+    assigned_to: 営業部 B氏
+    expected_delivery: 2026-06-11
