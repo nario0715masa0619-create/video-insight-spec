@@ -16,6 +16,7 @@ from pathlib import Path
 # VIS 既存モジュールをインポート
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from streamlit_app.narrative_engine import NarrativeEngine
 
 
 class FreeTrialOneVideoProcessor:
@@ -64,24 +65,21 @@ class FreeTrialOneVideoProcessor:
         video_file = case["video_file"]
         video_path = self.free_trial_root / "incoming" / video_file
         
-        # ダミー解析ロジック（実際にはVISの既存フローを使用）
-        insight_spec = {
-            "video_meta": {
-                "title": video_file.replace(".mp4", ""),
-                "url": str(video_path),
-            },
-            "labels": {
-                "business_theme": "マーケティング",
-                "difficulty": "初級",
-                "funnel_stage": "認知"
-            },
-            "knowledge_core": {
-                "center_pins": ["基礎知識", "入門"],
-                "patterns": []
-            },
-            "views": {"competitive": {"metrics": {}}}
-        }
+        # TODO: 将来的にはGemini API等を利用して動画ファイル(video_path)から直接抽出するパイプラインを実装する
+        # 現在はダッシュボードの実装パターンを参考に、ダミーデータとして既存のJSONをロードして代用する
+        self.logger.info("🤖 ビデオファイルからメタデータを抽出中... (モック実行)")
         
+        mock_json_path = Path("D:/AI_Data/video-insight-spec/archive/insight_spec_01.json")
+        if mock_json_path.exists():
+            with open(mock_json_path, 'r', encoding='utf-8') as f:
+                insight_spec = json.load(f)
+            # lecture_id をダミーで付与（diagnostic_evidenceで必要な場合があるため）
+            insight_spec['lecture_id'] = "01"
+            # タイトルを案件に合わせて上書き
+            insight_spec['video_meta']['title'] = video_file.replace(".mp4", "")
+        else:
+            raise FileNotFoundError(f"モック用データが見つかりません: {mock_json_path}")
+            
         return insight_spec
         
     def generate_report(self, case, insight_spec):
@@ -89,22 +87,34 @@ class FreeTrialOneVideoProcessor:
         report_dir = self.free_trial_root / "deliverables" / self.case_id
         report_dir.mkdir(exist_ok=True, parents=True)
         
+        # AI解析を実行
+        self.logger.info("🤖 AI診断出力を生成中...")
+        engine = NarrativeEngine()
+        try:
+            diagnosis_text = engine.explain_channel_diagnosis([insight_spec])
+            improvement_text = engine.explain_channel_improvements([insight_spec])
+        except Exception as e:
+            self.logger.error(f"AI解析中にエラーが発生しました: {e}")
+            diagnosis_text = "AI診断の生成に失敗しました。"
+            improvement_text = "改善提案の生成に失敗しました。"
+
         # マークダウンレポート作成
         report_md = f"""# VIS 無料1本解析レポート
 
-**対象動画**: {case['video_file']}
-**顧客**: {case['client_name']}
-**解析日**: {datetime.now().strftime('%Y-%m-%d')}
+⚠️ 本資料はダッシュボード実演の補助資料です。
+正式な診断結果はダッシュボード画面の【品質診断】【改善提案】タブでご確認ください。
+
+**対象動画**: {case["video_file"]}
+**顧客**: {case["client_name"]}
+**解析日**: {datetime.now().strftime("%Y-%m-%d")}
 
 ## 品質診断
 
-このコンテンツは初心者向けの入門教材として機能しています。
-基礎知識の習得に必要な要素が網羅されており、段階的な学習が可能な構成になっています。
+{diagnosis_text}
 
 ## 改善提案
 
-次のステップとして、習得した基礎知識を実践に活かすための事例紹介コンテンツの追加を検討してください。
-これにより、視聴者の学習から実行への転換が加速します。
+{improvement_text}
 
 ---
 *VIS（Video Insight Spec）による自動解析*
@@ -144,6 +154,10 @@ class FreeTrialOneVideoProcessor:
             print(f"📄 返却物: {report_file}")
             print(f"📁 成果物フォルダ: {report_dir}")
             print(f"📋 ログ: {self.log_file}")
+            print(f"")
+            print(f"📊 次のステップ: ダッシュボードで対象動画を確認してください")
+            print(f"🖥️ コマンド: streamlit run streamlit_app/app.py")
+            print(f"📋 対象動画: {case['video_file']}")
             
             self.logger.info(f"✅ 解析完了")
             

@@ -181,7 +181,7 @@ video-insight-spec/
 
 ### ルート（バッチ・共通環境）
 バッチによるレポート生成や共通のロジック実行に必要な最小限のライブラリ（`pandas`, `numpy` 等）は、開発環境の `requirements-dev.txt` などに整備されています。
-- **営業利用の最小導線**: 商談時の無料1本解析については、専用の運用ガイド [FREE_TRIAL_ONE_VIDEO_OPERATION.md](docs/FREE_TRIAL_ONE_VIDEO_OPERATION.md) を参照してください。
+- **営業利用の最小導線（無料1本解析）**: 商談の無料1本解析については、ダッシュボードでの実演（デモ）を標準フローとしています。運用の詳細は [FREE_TRIAL_ONE_VIDEO_OPERATION.md](docs/FREE_TRIAL_ONE_VIDEO_OPERATION.md) を参照してください。
 
 ### ダッシュボード専用環境 (`streamlit_app/requirements.txt`)
 Web ダッシュボードおよび高度な AI 分析・可視化を動作させるために必要なパッケージが定義されています。ダッシュボードを起動する際は、必ず本ファイルを指定してインストールを行ってください。
