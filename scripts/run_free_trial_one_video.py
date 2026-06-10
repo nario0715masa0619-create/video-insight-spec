@@ -89,6 +89,12 @@ class FreeTrialOneVideoProcessor:
         try:
             diagnosis_text = engine.explain_channel_diagnosis([insight_spec])
             improvement_text = engine.explain_channel_improvements([insight_spec])
+            
+            # AI解析結果を insight_spec に格納
+            insight_spec["ai_analysis"] = {
+                "diagnosis": diagnosis_text,
+                "improvements": improvement_text
+            }
         except Exception as e:
             self.logger.error(f"AI解析中にエラーが発生しました: {e}")
             diagnosis_text = "AI診断の生成に失敗しました。"
