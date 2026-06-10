@@ -4,8 +4,8 @@ import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
-from config import COLOR_PALETTE, SCORE_LEVELS
-from data_loader import get_score_level
+from streamlit_app.config import COLOR_PALETTE, SCORE_LEVELS
+from streamlit_app.data_loader import get_score_level
 
 def render_metric_card(label, value, color="primary"):
     """メトリクス カードを描画"""
