@@ -117,7 +117,17 @@ if analysis_mode == "チャンネル全体分析":
             st.metric("総コメント", f"{metrics.get('total_comments', 0):,}")
     
     with tab2:
-        st.subheader("コンテンツ分析")
+        st.subheader("📈 AI チャンネル全体分析")
+        if analysis_available:
+            with st.spinner("分析中..."):
+                overview = narrative_engine.explain_channel_overview(list(insight_specs.values()))
+                st.info(overview)
+        else:
+            st.info("ℹ️ 分析データがありません。")
+            
+        st.markdown("---")
+        
+        st.subheader("コンテンツ分析（定量）")
         
         all_themes = {}
         for i in range(1, 6):

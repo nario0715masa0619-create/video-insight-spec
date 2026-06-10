@@ -149,8 +149,58 @@ class NarrativeEngine:
         return self._call_gpt(prompt)
 
     def explain_channel_overview(self, insights_data: list) -> str:
-        """非推奨: explain_channel_diagnosis + explain_channel_improvements を使用すること"""
-        pass
+        """チャンネル全体分析の概要（KPIおよびコンテンツ分析）"""
+        from streamlit_app.diagnostic_evidence import extract_diagnostic_evidence, format_evidence_for_prompt
+        
+        evidence = extract_diagnostic_evidence(insights_data)
+        evidence_text = format_evidence_for_prompt(evidence)
+        
+        # Extract KPIs from insights_data to provide to the prompt
+        total_views = 0
+        total_likes = 0
+        total_comments = 0
+        quality_scores = []
+        for spec in insights_data:
+            meta = spec.get('metadata', {})
+            total_views += meta.get('views', 0)
+            total_likes += meta.get('likes', 0)
+            total_comments += meta.get('comments', 0)
+            if 'quality_score' in spec and spec['quality_score'] is not None:
+                quality_scores.append(spec['quality_score'])
+        
+        avg_quality = round(sum(quality_scores)/len(quality_scores), 1) if quality_scores else 0
+        
+        kpi_text = f"""
+        - 総視聴回数: {total_views}
+        - 総いいね数: {total_likes}
+        - 総コメント数: {total_comments}
+        - 平均品質スコア: {avg_quality}
+        """
+        
+        prompt = f"""
+あなたEビジネスコンサルタントです。
+以下の【診断用中間材料】および【実績KPIデータ】を元に、チャンネル全体の状況を分析してください。
+
+【実績KPIデータ】
+{kpi_text}
+
+【診断用中間材料】
+{evidence_text}
+
+出力形式は以下の通りとしてください。
+必ず各セクションは【見出し】+【箇条書き】+【説明段落】の構成としてください。
+
+【根拠となる主要KPI】
+- 実績データから取得した数値（視聴回数、いいね数、平均品質スコアなど）を列挙し、その数値の出典（例：「実績データより」）を明記すること。
+- （説明段落でこれらのKPIが意味するチャンネルの現在地を簡潔に解説）
+
+【コンテンツ分析】
+- コンテンツタイプ別の構成
+- 時間軸別（または難易度・ファネル別）のコンテンツの推移や傾向
+- 具体的な事例（どのテーマがどう機能しているか）
+- （説明段落でコンテンツの網羅性や偏りについて解説）
+"""
+        return self._call_gpt(prompt)
 
     def explain_single_video(self, insights_data: list, lecture_id: str) -> str:
         """個別動画の基本分析"""
