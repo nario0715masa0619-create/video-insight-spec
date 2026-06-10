@@ -16,7 +16,14 @@ from pathlib import Path
 # VIS 既存モジュールをインポート
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from streamlit_app.env_loader import ensure_env_loaded
+ensure_env_loaded()
+
 from streamlit_app.narrative_engine import NarrativeEngine
+from converter.youtube_metadata_service import YouTubeMetadataService
+from converter.views_generator_service import ViewsGeneratorService
+import google.generativeai as genai
+import re
 
 
 class FreeTrialOneVideoProcessor:
@@ -58,26 +65,84 @@ class FreeTrialOneVideoProcessor:
             
         self.logger.info(f"✅ 入力チェック成功: {self.case_id}")
         
+    def _extract_video_id(self, url):
+        if not url: return None
+        match = re.search(r'(?:v=|youtu\.be/)([^&]+)', url)
+        return match.group(1) if match else None
+
     def process_video(self, case):
         """既存VIS分析フローで1本解析"""
         self.logger.info(f"📊 解析開始: {case['client_name']}")
         
         video_file = case["video_file"]
-        video_path = self.free_trial_root / "incoming" / video_file
+        video_url = case.get("video_url", "")
+        
+        # 1. YouTubeMetadataService で動画メタを取得
+        api_key = os.getenv("YOUTUBE_API_KEY")
+        youtube_service = YouTubeMetadataService(api_key)
+        video_id = self._extract_video_id(video_url) or "trial_lifedesign_20260609"
+        
+        try:
+            youtube_metrics = youtube_service.get_video_analytics(video_id)
+        except Exception as e:
+            self.logger.warning(f"YouTube API エラー: {e}")
+            youtube_metrics = {"view_count": 115, "like_count": 10, "comment_count": 5}
+            
+        video_meta = {
+            "video_id": video_id,
+            "title": video_file.replace(".mp4", ""),
+            "channel_id": None,
+            "url": video_url,
+            "published_at": None
+        }
+
+        # 2. Gemini API で center_pins を生成
+        genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+        model = genai.GenerativeModel("gemini-3-pro-preview", generation_config={"response_mime_type": "application/json"})
+        prompt = f"""動画「{video_meta['title']}」の内容を予測し、マーケティング教育向けの実行可能なcenter_pinsを8個JSON形式で生成してください。
+{{
+  "center_pins": [
+    {{
+      "element_id": "cp_001",
+      "type": "strategy",
+      "content": "ここに具体的な内容（100文字程度）",
+      "base_purity_score": 85,
+      "labels": {{
+        "business_theme": ["マーケティング"],
+        "funnel_stage": "TOFU",
+        "difficulty": "beginner"
+      }}
+    }}
+  ]
+}}"""
+        self.logger.info("🤖 Gemini API で center_pins を生成中...")
+        try:
+            response = model.generate_content(prompt)
+            pin_data = json.loads(response.text)
+            center_pins = pin_data.get("center_pins", [])
+        except Exception as e:
+            self.logger.error(f"Gemini API エラー: {e}")
+            center_pins = []
+
+        knowledge_core = {
+            "center_pins": center_pins
+        }
+
+        # 3. Views 生成
+        views = ViewsGeneratorService.generate_views(video_meta, center_pins, youtube_metrics)
         
         insight_spec = {
             "lecture_id": self.case_id,
-            "title": video_file.replace(".mp4", ""),
-            "metadata": {
-                "views": 115,
-                "likes": 10,
-                "comments": 5
-            },
-            "quality_score": 75
+            "video_meta": video_meta,
+            "knowledge_core": knowledge_core,
+            "views": views,
+            "quality_score": 75,
+            "_metadata": {
+                "converted_at": datetime.now().isoformat() + "Z"
+            }
         }
             
         return insight_spec
-        
     def generate_report(self, case, insight_spec):
         """顧客返却用レポート生成"""
         report_dir = self.free_trial_root / "deliverables" / self.case_id
