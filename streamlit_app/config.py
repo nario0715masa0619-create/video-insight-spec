@@ -3,8 +3,19 @@
 from pathlib import Path
 from datetime import datetime
 
-PROJECT_ROOT = Path(__file__).parent
+import os
+PROJECT_ROOT = Path(__file__).parent.parent
 DATA_DIR = Path("D:/AI_Data/video-insight-spec/archive")
+
+VIS_MODE = os.getenv("VIS_MODE", "normal")  # デフォルトは normal
+if VIS_MODE == "free_trial":
+    FREE_TRIAL_ROOT = PROJECT_ROOT / "free_trial_cases"
+    FREE_TRIAL_INCOMING = FREE_TRIAL_ROOT / "incoming"
+    FREE_TRIAL_DELIVERABLES = FREE_TRIAL_ROOT / "deliverables"
+else:
+    FREE_TRIAL_ROOT = None
+    FREE_TRIAL_INCOMING = None
+    FREE_TRIAL_DELIVERABLES = None
 APP_TITLE = "📊 YouTubeチャンネル品質分析ダッシュボード"
 APP_SUBTITLE = "Streamlit Dashboard v1.0"
 VERSION = "v1.0"
