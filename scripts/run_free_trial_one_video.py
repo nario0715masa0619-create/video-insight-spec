@@ -155,9 +155,11 @@ class FreeTrialOneVideoProcessor:
             print(f"📁 成果物フォルダ: {report_dir}")
             print(f"📋 ログ: {self.log_file}")
             print(f"")
-            print(f"📊 次のステップ: ダッシュボードで対象動画を確認してください")
-            print(f"🖥️ コマンド: streamlit run streamlit_app/app.py")
-            print(f"📋 対象動画: {case['video_file']}")
+            print(f"📊 ダッシュボード起動:")
+            print(f"  $env:VIS_MODE='free_trial'")
+            print(f"  streamlit run streamlit_app/app.py")
+            print(f"")
+            print(f"ℹ️  上記コマンドでダッシュボードが起動し、対象動画が自動選択されます。")
             
             self.logger.info(f"✅ 解析完了")
             

@@ -295,3 +295,18 @@ $env:PYTHONIOENCODING="utf-8"
 4. ダッシュボード実演準備
 5. 商談でのダッシュボード実演
 6. 後送資料の送付（必要な場合のみ）
+
+## ダッシュボード起動方法
+
+### 通常モード（既存デモ・講座）
+```bash
+streamlit run streamlit_app/app.py
+```
+既存の講座01～05 が表示されます。
+
+### 無料1本解析モード（対象動画実演）
+```bash
+$env:VIS_MODE="free_trial"
+streamlit run streamlit_app/app.py
+```
+対象動画が自動選択された状態で表示されます。 営業はこのモードで顧客に【品質診断】【改善提案】を説明してください。

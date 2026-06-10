@@ -39,6 +39,13 @@
 
 - **詳細運用手順・商談前チェックリスト**: [FREE_TRIAL_ONE_VIDEO_OPERATION.md](FREE_TRIAL_ONE_VIDEO_OPERATION.md) を参照してください。
 
+**無料1本解析モードと通常モードの使い分け**:
+ダッシュボード起動時に環境変数 `VIS_MODE` を指定することで、以下の2つのモードを切り替えます。
+- **通常モード（デフォルト）**: `streamlit run streamlit_app/app.py`
+  既存のデモ用5講座が表示されます。
+- **無料1本解析モード**: `$env:VIS_MODE="free_trial"` してから `streamlit run streamlit_app/app.py`
+  無料1本解析の対象動画が自動選択されます。顧客との商談デモ時は必ずこのモードを使用してください。
+
 ## 4. Backlog（今後の機能拡張・課題リスト）
 
 v1.4.0 時点での残課題および今後の拡張予定（Phase 5以降）は以下の通りです。着手時は本リストから優先順位を判断します。

@@ -85,8 +85,16 @@ python competitor_analytics_generator.py --lecture-ids "01,02,03,04,05" --archiv
 ### 概要
 すでに生成・蓄積されている JSON や DB データを読み込み、Streamlit を用いて直感的かつグラフィカルに可視化・分析します。
 
-### 実行コマンド
+### 実行コマンド（通常モード）
+既存のデモ用5講座を表示します。
 ```bash
+streamlit run streamlit_app/app.py
+```
+
+### 実行コマンド（無料1本解析モード）
+無料1本解析の対象動画が自動選択された状態で起動します。
+```bash
+$env:VIS_MODE="free_trial"
 streamlit run streamlit_app/app.py
 ```
 

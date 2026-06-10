@@ -50,7 +50,7 @@ class AnalyticsEngine:
 
     def get_funnel_stage_analysis(self, lecture_id):
         """ファネルステージ別分析"""
-        spec = self.insight_specs.get(f"{lecture_id:02d}")
+        spec = self.insight_specs.get(str(lecture_id))
         if not spec:
             return None
 
@@ -74,7 +74,7 @@ class AnalyticsEngine:
 
     def get_content_type_analysis(self, lecture_id):
         """コンテンツタイプ別分析"""
-        spec = self.insight_specs.get(f"{lecture_id:02d}")
+        spec = self.insight_specs.get(str(lecture_id))
         if not spec:
             return None
 
@@ -97,7 +97,7 @@ class AnalyticsEngine:
 
     def get_theme_distribution(self, lecture_id):
         """テーマ分布"""
-        spec = self.insight_specs.get(f"{lecture_id:02d}")
+        spec = self.insight_specs.get(str(lecture_id))
         if not spec:
             return {}
         
@@ -105,7 +105,7 @@ class AnalyticsEngine:
 
     def get_engagement_metrics(self, lecture_id):
         """エンゲージメント効率メトリクス"""
-        spec = self.insight_specs.get(f"{lecture_id:02d}")
+        spec = self.insight_specs.get(str(lecture_id))
         if not spec:
             return {}
         
