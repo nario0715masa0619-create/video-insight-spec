@@ -120,7 +120,7 @@ if analysis_mode == "チャンネル全体分析":
         st.subheader("📈 AI チャンネル全体分析")
         if analysis_available:
             with st.spinner("分析中..."):
-                overview = narrative_engine.explain_channel_overview(list(insight_specs.values()))
+                overview = narrative_engine.explain_channel_overview(list(insight_specs.values()), metrics=metrics)
                 st.info(overview)
         else:
             st.info("ℹ️ 分析データがありません。")

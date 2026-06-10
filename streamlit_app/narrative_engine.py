@@ -148,27 +148,34 @@ class NarrativeEngine:
 """
         return self._call_gpt(prompt)
 
-    def explain_channel_overview(self, insights_data: list) -> str:
+    def explain_channel_overview(self, insights_data: list, metrics: dict = None) -> str:
         """チャンネル全体分析の概要（KPIおよびコンテンツ分析）"""
         from streamlit_app.diagnostic_evidence import extract_diagnostic_evidence, format_evidence_for_prompt
         
         evidence = extract_diagnostic_evidence(insights_data)
         evidence_text = format_evidence_for_prompt(evidence)
         
-        # Extract KPIs from insights_data to provide to the prompt
-        total_views = 0
-        total_likes = 0
-        total_comments = 0
-        quality_scores = []
-        for spec in insights_data:
-            meta = spec.get('metadata', {})
-            total_views += meta.get('views', 0)
-            total_likes += meta.get('likes', 0)
-            total_comments += meta.get('comments', 0)
-            if 'quality_score' in spec and spec['quality_score'] is not None:
-                quality_scores.append(spec['quality_score'])
-        
-        avg_quality = round(sum(quality_scores)/len(quality_scores), 1) if quality_scores else 0
+        # Use provided metrics if available, otherwise calculate fallback
+        if metrics:
+            total_views = metrics.get('総ビュー数', 0)
+            total_likes = metrics.get('総いいね数', 0)
+            total_comments = metrics.get('総コメント数', 0)
+            avg_quality = metrics.get('平均品質スコア', 0.0)
+        else:
+            total_views = 0
+            total_likes = 0
+            total_comments = 0
+            quality_scores = []
+            for spec in insights_data:
+                # Fallback extraction from raw spec
+                views_data = spec.get('views', {}).get('competitive', {}).get('metrics', {})
+                total_views += views_data.get('view_count', 0)
+                total_likes += views_data.get('like_count', 0)
+                total_comments += views_data.get('comment_count', 0)
+                if 'quality_score' in spec and spec['quality_score'] is not None:
+                    quality_scores.append(spec['quality_score'])
+            
+            avg_quality = round(sum(quality_scores)/len(quality_scores), 1) if quality_scores else 0
         
         kpi_text = f"""
         - 総視聴回数: {total_views}
