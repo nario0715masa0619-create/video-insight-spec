@@ -32,6 +32,15 @@ if st.button("🔄 キャッシュクリア"):
 st.markdown(f"**{APP_SUBTITLE}** | 最終更新: {GENERATED_AT}")
 
 # モード表示
+import os
+from streamlit_app.config import VIS_MODE
+
+st.sidebar.info(f"""
+🔍 **デバッグ情報**
+- VIS_MODE: {VIS_MODE}
+- os.getenv('VIS_MODE'): {os.getenv('VIS_MODE', 'not set')}
+""")
+
 if VIS_MODE == "free_trial":
     st.sidebar.info("📊 モード: 無料1本解析（Free Trial Demo）")
 else:
@@ -121,25 +130,26 @@ if analysis_mode == "チャンネル全体分析":
             st.metric("総コメント", f"{metrics.get('total_comments', 0):,}")
     
     with tab2:
-        st.subheader("📈 AI チャンネル全体分析")
-        
-        selected_lecture = list(insight_specs.values())[0] if insight_specs else {}
-        st.write("### デバッグ: 現在のデータ")
-        st.json({
-            "lecture_id": selected_lecture.get("video_meta", {}).get("video_id", "Unknown"),
-            "title": selected_lecture.get("video_meta", {}).get("title", "Unknown"),
-            "metadata": selected_lecture.get("views", {}).get("competitive", {}).get("metrics", {}),
-            "quality_score": selected_lecture.get("quality_score")
-        })
-
-        if analysis_available:
-            with st.spinner("分析中..."):
-                overview = narrative_engine.explain_channel_overview(list(insight_specs.values()), metrics=metrics)
-                st.info(overview)
-        else:
-            st.info("ℹ️ 分析データがありません。")
+        if VIS_MODE != "free_trial":
+            st.subheader("📈 AI チャンネル全体分析")
             
-        st.markdown("---")
+            selected_lecture = list(insight_specs.values())[0] if insight_specs else {}
+            st.write("### デバッグ: 現在のデータ")
+            st.json({
+                "lecture_id": selected_lecture.get("video_meta", {}).get("video_id", "Unknown"),
+                "title": selected_lecture.get("video_meta", {}).get("title", "Unknown"),
+                "metadata": selected_lecture.get("views", {}).get("competitive", {}).get("metrics", {}),
+                "quality_score": selected_lecture.get("quality_score")
+            })
+
+            if analysis_available:
+                with st.spinner("分析中..."):
+                    overview = narrative_engine.explain_channel_overview(list(insight_specs.values()), metrics=metrics)
+                    st.info(overview)
+            else:
+                st.info("ℹ️ 分析データがありません。")
+                
+            st.markdown("---")
         
         st.subheader("コンテンツ分析（定量）")
         
