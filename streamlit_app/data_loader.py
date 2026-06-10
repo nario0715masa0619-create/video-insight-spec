@@ -5,7 +5,7 @@ import sqlite3
 import pandas as pd
 from pathlib import Path
 import streamlit as st
-from config import DATA_DIR, SCORE_LEVELS
+from streamlit_app.config import DATA_DIR, SCORE_LEVELS
 
 @st.cache_resource
 def load_executive_report():
