@@ -25,6 +25,10 @@ from streamlit_app.narrative_engine import NarrativeEngine
 
 st.set_page_config(page_title=APP_TITLE, page_icon="📊", layout="wide")
 st.title(APP_TITLE)
+if st.button("🔄 キャッシュクリア"):
+    st.cache_data.clear()
+    st.cache_resource.clear()
+    st.rerun()
 st.markdown(f"**{APP_SUBTITLE}** | 最終更新: {GENERATED_AT}")
 
 # モード表示
@@ -118,6 +122,16 @@ if analysis_mode == "チャンネル全体分析":
     
     with tab2:
         st.subheader("📈 AI チャンネル全体分析")
+        
+        selected_lecture = list(insight_specs.values())[0] if insight_specs else {}
+        st.write("### デバッグ: 現在のデータ")
+        st.json({
+            "lecture_id": selected_lecture.get("video_meta", {}).get("video_id", "Unknown"),
+            "title": selected_lecture.get("video_meta", {}).get("title", "Unknown"),
+            "metadata": selected_lecture.get("views", {}).get("competitive", {}).get("metrics", {}),
+            "quality_score": selected_lecture.get("quality_score")
+        })
+
         if analysis_available:
             with st.spinner("分析中..."):
                 overview = narrative_engine.explain_channel_overview(list(insight_specs.values()), metrics=metrics)
