@@ -84,12 +84,12 @@
 必須:
 - `case_id`
 - `client_name`
-- `video_file_name`
+- `video_file`
 
 任意:
 - `focus`（見てほしい観点）
 - `memo`（担当者メモ）
-- `due_date`（返却期限）
+- `expected_delivery`（返却期限）
 
 ---
 
@@ -113,10 +113,10 @@
 ```yaml
 - case_id: trial_abccompany_20260609
   client_name: ABC Company
-  video_file_name: trial_abccompany_20260609_source.mp4
+  video_file: trial_abccompany_20260609_source.mp4
   focus: "この動画の強み・弱みと、次に作るべき動画の方向性を見たい"
   memo: "営業商談用の無料診断"
-  due_date: "2026-06-12"
+  expected_delivery: "2026-06-12"
 ```
 
 ### Step 3. 動画配置
@@ -129,10 +129,11 @@
 ### Step 4. 実行
 無料1本解析用スクリプトを実行する。
 
-実行例:
+実行例（プロジェクトのルートディレクトリから実行）:
 ```bash
 python scripts/run_free_trial_one_video.py --case-id trial_abccompany_20260609
 ```
+※ Windowsで文字化けやエラーが出る場合は `$env:PYTHONIOENCODING="utf-8"` を実行してから実行してください。
 Windows補助バッチを使う場合:
 ```bash
 run_free_trial.bat trial_abccompany_20260609
@@ -268,7 +269,23 @@ run_free_trial.bat trial_abccompany_20260609
 
 ---
 
-## 13. まとめ
+## 13. FAQ / トラブルシューティング
+
+### Q1. `ModuleNotFoundError: No module named 'config'` などの Import エラーが出る
+**A1.** 実行時のカレントディレクトリが間違っているか、不要な Import が残っている可能性があります。
+- 必ずプロジェクトの**ルートディレクトリ**（`video-insight-spec-dev` または `video-insight-spec`）でターミナルを開き、`python scripts/run_free_trial_one_video.py` を実行してください。
+- `scripts/` ディレクトリの中に `cd` してから実行するとエラーになります。
+
+### Q2. 実行時に `UnicodeEncodeError: 'cp932' codec can't encode character...` が出る
+**A2.** Windows のデフォルトエンコーディングによるエラーです。
+PowerShell で実行する前に以下のコマンドを入力して文字コードを UTF-8 に設定してください。
+```powershell
+$env:PYTHONIOENCODING="utf-8"
+```
+
+---
+
+## 14. まとめ
 無料1本解析は、VISの価値を最短で返すための運用である。
 
 基本の流れは以下の通り:

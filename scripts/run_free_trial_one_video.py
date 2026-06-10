@@ -16,9 +16,7 @@ from pathlib import Path
 # VIS 既存モジュールをインポート
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from streamlit_app.data_loader import load_channel_lectures
-from streamlit_app.diagnostic_evidence import extract_diagnostic_evidence
-from streamlit_app.narrative_engine import NarrativeEngine
+
 
 class FreeTrialOneVideoProcessor:
     def __init__(self, case_id, free_trial_root="free_trial_cases"):
@@ -31,7 +29,7 @@ class FreeTrialOneVideoProcessor:
         import logging
         logger = logging.getLogger(__name__)
         logger.setLevel(logging.DEBUG)
-        handler = logging.FileHandler(self.log_file)
+        handler = logging.FileHandler(self.log_file, encoding='utf-8')
         handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
         logger.addHandler(handler)
         return logger
@@ -39,7 +37,7 @@ class FreeTrialOneVideoProcessor:
     def load_case_metadata(self):
         """cases.yaml から案件情報を読み込み"""
         cases_file = self.free_trial_root / "cases.yaml"
-        with open(cases_file) as f:
+        with open(cases_file, encoding="utf-8") as f:
             data = yaml.safe_load(f)
         for case in data.get("cases", []):
             if case["case_id"] == self.case_id:
