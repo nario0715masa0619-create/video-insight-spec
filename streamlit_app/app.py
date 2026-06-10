@@ -290,49 +290,52 @@ if analysis_mode == "チャンネル全体分析":
     with tab5:
         st.subheader("🎯 競合分析エグゼクティブサマリー")
         
-        # 最新の競合分析データをロード
-        competitor_data = load_latest_competitor_analytics()
-        
-        if competitor_data is not None:
-            # 共通ロジックを使ってサマリーを生成
-            summary = ExecutiveSummaryFormatter.generate_executive_summary(competitor_data)
-            
-            # 美しく HTML 表示 (CSSが効いた美しい1枚レポートを埋め込み)
-            st.components.v1.html(summary["html"], height=700, scrolling=True)
-            
-            st.markdown("---")
-            st.subheader("💾 サマリーレポートダウンロード")
-            
-            # PDF 出力 (共通ロジックのテキストをそのまま流し込む)
-            try:
-                from fpdf import FPDF
-                import os
-                
-                pdf = FPDF(orientation='P', unit='mm', format='A4')
-                pdf.add_page()
-                
-                font_path = r'C:\Windows\Fonts\NotoSansJP-VF.ttf'
-                if os.path.exists(font_path):
-                    pdf.add_font('NotoSansJP', '', font_path)
-                    pdf.set_font('NotoSansJP', '', 10)
-                else:
-                    pdf.set_font('Helvetica', '', 10)
-                
-                # テキストデータをそのまま流し込む
-                pdf.multi_cell(0, 5, summary["text"])
-                
-                pdf_bytes = bytes(pdf.output())
-                
-                col1, col2 = st.columns(2)
-                with col1:
-                    st.download_button('📄 PDF でサマリーをダウンロード', pdf_bytes, 'executive_summary.pdf', 'application/pdf')
-                with col2:
-                    st.download_button('📝 Text でサマリーをダウンロード', summary["text"].encode('utf-8'), 'executive_summary.txt', 'text/plain')
-                    
-            except Exception as e:
-                st.error(f'サマリーPDF生成エラー: {str(e)}')
+        if VIS_MODE == "free_trial":
+            st.info("💡 無料1本解析では、対象動画の強み・弱みと改善提案を【品質診断】【改善提案】タブでご確認ください。")
         else:
-            st.info("💡 競合分析データが存在しません。バッチ処理を実行してデータを生成してください。")
+            # 最新の競合分析データをロード
+            competitor_data = load_latest_competitor_analytics()
+            
+            if competitor_data is not None:
+                # 共通ロジックを使ってサマリーを生成
+                summary = ExecutiveSummaryFormatter.generate_executive_summary(competitor_data)
+                
+                # 美しく HTML 表示 (CSSが効いた美しい1枚レポートを埋め込み)
+                st.components.v1.html(summary["html"], height=700, scrolling=True)
+                
+                st.markdown("---")
+                st.subheader("💾 サマリーレポートダウンロード")
+                
+                # PDF 出力 (共通ロジックのテキストをそのまま流し込む)
+                try:
+                    from fpdf import FPDF
+                    import os
+                    
+                    pdf = FPDF(orientation='P', unit='mm', format='A4')
+                    pdf.add_page()
+                    
+                    font_path = r'C:\Windows\Fonts\NotoSansJP-VF.ttf'
+                    if os.path.exists(font_path):
+                        pdf.add_font('NotoSansJP', '', font_path)
+                        pdf.set_font('NotoSansJP', '', 10)
+                    else:
+                        pdf.set_font('Helvetica', '', 10)
+                    
+                    # テキストデータをそのまま流し込む
+                    pdf.multi_cell(0, 5, summary["text"])
+                    
+                    pdf_bytes = bytes(pdf.output())
+                    
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.download_button('📄 PDF でサマリーをダウンロード', pdf_bytes, 'executive_summary.pdf', 'application/pdf')
+                    with col2:
+                        st.download_button('📝 Text でサマリーをダウンロード', summary["text"].encode('utf-8'), 'executive_summary.txt', 'text/plain')
+                        
+                except Exception as e:
+                    st.error(f'サマリーPDF生成エラー: {str(e)}')
+            else:
+                st.info("💡 競合分析データが存在しません。バッチ処理を実行してデータを生成してください。")
 
 
 # ================================================================
