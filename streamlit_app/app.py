@@ -8,11 +8,10 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import json
-from config import *
-from data_loader import *
+from streamlit_app.config import *
+from streamlit_app.data_loader import *
 from streamlit_app.config import DATA_DIR, SCORE_LEVELS, VIS_MODE
-from ui_components import UIComponents
-from analytics_engine import AnalyticsEngine
+from streamlit_app.analytics_engine import AnalyticsEngine
 import sys
 from pathlib import Path
 
@@ -21,8 +20,8 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from converter.executive_summary_formatter import ExecutiveSummaryFormatter
-from advanced_analytics_engine import AdvancedAnalyticsEngine
-from narrative_engine import NarrativeEngine
+from streamlit_app.advanced_analytics_engine import AdvancedAnalyticsEngine
+from streamlit_app.narrative_engine import NarrativeEngine
 
 st.set_page_config(page_title=APP_TITLE, page_icon="📊", layout="wide")
 st.title(APP_TITLE)
