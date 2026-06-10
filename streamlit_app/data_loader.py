@@ -32,16 +32,29 @@ def build_executive_report_from_specs(insight_specs):
         purity_scores = [pin.get("base_purity_score", 0) for pin in center_pins if isinstance(pin.get("base_purity_score"), (int, float))]
         semantic_purity_score = round(sum(purity_scores) / len(purity_scores), 2) if purity_scores else None
         
-        # quality & ranking
-        from scoring import calculate_quality_score
-        quality_score = calculate_quality_score(spec)
+        # for quality
+        if "quality_score" in spec:
+            quality_score = spec["quality_score"]
+        else:
+            from streamlit_app.scoring import calculate_quality_score
+            quality_score = calculate_quality_score(spec)
         ranking_score = None
         
         # views metrics
         metrics = spec.get("views", {}).get("competitive", {}).get("metrics", {})
-        views = metrics.get("view_count", 0)
-        likes = metrics.get("like_count", 0)
-        comments = metrics.get("comment_count", 0)
+        if metrics:
+            views = metrics.get("view_count", 0)
+            likes = metrics.get("like_count", 0)
+            comments = metrics.get("comment_count", 0)
+        else:
+            meta = spec.get("metadata", {})
+            views = meta.get("views", 0)
+            likes = meta.get("likes", 0)
+            comments = meta.get("comments", 0)
+            
+        # title handling for flat mock format
+        if "title" in spec and not title:
+            title = spec.get("title")
         
         lectures[lecture_id] = {
             "title": title,
@@ -87,16 +100,18 @@ def load_insight_specs():
                 video_name = video_file.name
                 case_id = video_name.replace("_source.mp4", "").replace(".mp4", "")
                 metadata_file = deliverables_dir / case_id / "metadata.json"
+                insight_spec_file = deliverables_dir / case_id / "insight_spec.json"
                 
-                if metadata_file.exists():
+                if metadata_file.exists() and insight_spec_file.exists():
                     try:
                         with open(metadata_file, 'r', encoding='utf-8') as f:
                             metadata = json.load(f)
-                            spec = metadata.get("insight_spec")
+                        with open(insight_spec_file, 'r', encoding='utf-8') as f:
+                            spec = json.load(f)
                             if spec:
                                 insight_specs[case_id] = spec
                     except Exception as e:
-                        st.warning(f"⚠️ 無料解析データのロードエラー: {metadata_file}")
+                        st.warning(f"⚠️ 無料解析データのロードエラー: {insight_spec_file}")
                         
     return insight_specs
 
