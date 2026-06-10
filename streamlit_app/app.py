@@ -299,8 +299,16 @@ if analysis_mode == "チャンネル全体分析":
 else:
     st.header("🎥 個別動画分析")
     
-    lecture_options = {f"講座{i:02d}": i for i in range(1, 6)}
-    selected_label = st.selectbox("**講座を選択:**", list(lecture_options.keys()))
+    lecture_options = {}
+    for key, data in lectures_dict.items():
+        title = data.get("title", f"動画 {key}")
+        lecture_options[title] = key
+
+    if not lecture_options:
+        st.warning("動画が見つかりません。")
+        st.stop()
+
+    selected_label = st.selectbox("**動画を選択**", list(lecture_options.keys()))
     lecture_num = lecture_options[selected_label]
     
     st.markdown("---")
@@ -315,14 +323,14 @@ else:
     
     # ========== Tab 1: 基本分析 ==========
     with tab1:
-        exec_data = lectures_dict.get(f"{lecture_num:02d}")
+        exec_data = lectures_dict.get(str(lecture_num))
         metadata = exec_data.get('metadata', {}) if exec_data else {}
         
         st.subheader("📝 総合評価・結論")
         
         if analysis_available and exec_data:
             with st.spinner("分析中..."):
-                summary = narrative_engine.explain_single_video(list(insight_specs.values()), f"{lecture_num:02d}")
+                summary = narrative_engine.explain_single_video(list(insight_specs.values()), str(lecture_num))
                 st.info(summary)
         else:
             st.info("💡 **【総合評価】** データを基にした分析結果がここに表示されます。（デモモード等ではテキストが制限されています）")

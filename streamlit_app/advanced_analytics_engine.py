@@ -15,7 +15,7 @@ class AdvancedAnalyticsEngine:
 
     # ========== 唯一無二分析 1: 「黄金の組み合わせ」検出 ==========
     def detect_golden_combination(self, lecture_id):
-        spec = self.insight_specs.get(f"{lecture_id:02d}")
+        spec = self.insight_specs.get(str(lecture_id))
         if not spec:
             return None
 
@@ -50,7 +50,7 @@ class AdvancedAnalyticsEngine:
 
     # ========== 唯一無二分析 2: 「隠れた弱点」検出 ==========
     def detect_hidden_weaknesses(self, lecture_id):
-        spec = self.insight_specs.get(f"{lecture_id:02d}")
+        spec = self.insight_specs.get(str(lecture_id))
         if not spec:
             return None
 
@@ -80,7 +80,7 @@ class AdvancedAnalyticsEngine:
     # ========== 唯一無二分析 3: 「視聴者心理ロードマップ」生成（バグ修正版）==========
     def generate_viewer_psychology_roadmap(self, lecture_id):
         """【視聴者心理ロードマップ】"""
-        spec = self.insight_specs.get(f"{lecture_id:02d}")
+        spec = self.insight_specs.get(str(lecture_id))
         if not spec:
             return None
 
@@ -127,7 +127,7 @@ class AdvancedAnalyticsEngine:
 
     # ========== 唯一無二分析 4: 「競争優位性スコア」計算 ==========
     def calculate_competitive_advantage_score(self, lecture_id):
-        spec = self.insight_specs.get(f"{lecture_id:02d}")
+        spec = self.insight_specs.get(str(lecture_id))
         if not spec:
             return None
 
@@ -170,7 +170,7 @@ class AdvancedAnalyticsEngine:
 
     # ========== 唯一無二分析 5: 「次のステップ提案」自動生成 ==========
     def generate_next_step_recommendation(self, lecture_id):
-        spec = self.insight_specs.get(f"{lecture_id:02d}")
+        spec = self.insight_specs.get(str(lecture_id))
         if not spec:
             return None
 
@@ -231,7 +231,7 @@ class AdvancedAnalyticsEngine:
             return '要改善：複数領域で対策が必要'
 
     def _get_missing_content_types(self, lecture_id, target_stage):
-        spec = self.insight_specs.get(f"{lecture_id:02d}")
+        spec = self.insight_specs.get(str(lecture_id))
         if not spec:
             return []
         

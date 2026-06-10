@@ -59,8 +59,10 @@ def build_executive_report_from_specs(insight_specs):
 
 @st.cache_resource
 def load_insight_specs():
-    """Insight Spec JSON をロード（全5講座）"""
+    """Insight Spec JSON をロード"""
     insight_specs = {}
+    
+    # 既存の5講座をロードする処理（互換性）
     for lecture_id in range(1, 6):
         spec_file = DATA_DIR / f"insight_spec_{lecture_id:02d}.json"
         try:
@@ -68,9 +70,31 @@ def load_insight_specs():
                 data = json.load(f)
                 insight_specs[f"{lecture_id:02d}"] = data
         except FileNotFoundError:
-            st.warning(f"⚠️ 不見つかり: {spec_file}")
+            pass
         except json.JSONDecodeError as e:
             st.warning(f"⚠️ JSON エラー: {spec_file}")
+            
+    # free_trial_cases のデータをロードする処理
+    from streamlit_app.config import PROJECT_ROOT
+    incoming_dir = PROJECT_ROOT / "free_trial_cases" / "incoming"
+    deliverables_dir = PROJECT_ROOT / "free_trial_cases" / "deliverables"
+    
+    if incoming_dir.exists() and deliverables_dir.exists():
+        for video_file in incoming_dir.glob("*.mp4"):
+            video_name = video_file.name
+            case_id = video_name.replace("_source.mp4", "").replace(".mp4", "")
+            metadata_file = deliverables_dir / case_id / "metadata.json"
+            
+            if metadata_file.exists():
+                try:
+                    with open(metadata_file, 'r', encoding='utf-8') as f:
+                        metadata = json.load(f)
+                        spec = metadata.get("insight_spec")
+                        if spec:
+                            insight_specs[case_id] = spec
+                except Exception as e:
+                    st.warning(f"⚠️ 無料解析データのロードエラー: {metadata_file}")
+                    
     return insight_specs
 
 @st.cache_resource
