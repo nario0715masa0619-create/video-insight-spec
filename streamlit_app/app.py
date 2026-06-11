@@ -479,15 +479,19 @@ else:
                 with st.spinner("分析中..."):
                     patterns_evidence = extract_pattern_evidence(golden[:3])
                     
-                    # insight_spec から実績データを取得
-                    spec = insight_specs.get(str(lecture_num))
-                    if spec:
-                        metrics = spec.get('metrics', {})
+                    # free_trial_cases から insight_spec.json を直接読み込み
+                    import json
+                    import os
+                    spec_path = f"free_trial_cases/deliverables/trial_lifedesign_{lecture_num}/insight_spec.json"
+                    if os.path.exists(spec_path):
+                        with open(spec_path, 'r', encoding='utf-8') as f:
+                            spec_data = json.load(f)
+                        metrics = spec_data.get('metrics', {})
+                        view_count = metrics.get('view_count', 'N/A')
+                        like_count = metrics.get('like_count', 'N/A')
+                        comment_count = metrics.get('comment_count', 'N/A')
                         engagement_rate = metrics.get('engagement_rate', 0)
-                        view_count = metrics.get('view_count', 0)
-                        like_count = metrics.get('like_count', 0)
-                        comment_count = metrics.get('comment_count', 0)
-                        engagement_rate_pct = f"{engagement_rate * 100:.1f}%"
+                        engagement_rate_pct = f"{engagement_rate * 100:.1f}%" if engagement_rate else "N/A"
                     else:
                         engagement_rate_pct = "N/A"
                         view_count = like_count = comment_count = "N/A"
