@@ -219,3 +219,4 @@ def extract_competitive_evidence(competitive_data: dict) -> str:
     lines.append(f"- 視聴者の熱量: {'非常に高く、活発なコミュニティが形成されている' if ed > 50 else 'まだ発展途上であり、働きかけが必要'}")
     
     return "\n".join(lines)
+
