@@ -479,9 +479,28 @@ else:
                 with st.spinner("分析中..."):
                     patterns_evidence = extract_pattern_evidence(golden[:3])
                     
+                    # insight_spec から実績データを取得
+                    spec = insight_specs.get(str(lecture_num))
+                    if spec:
+                        metrics = spec.get('metrics', {})
+                        engagement_rate = metrics.get('engagement_rate', 0)
+                        view_count = metrics.get('view_count', 0)
+                        like_count = metrics.get('like_count', 0)
+                        comment_count = metrics.get('comment_count', 0)
+                        engagement_rate_pct = f"{engagement_rate * 100:.1f}%"
+                    else:
+                        engagement_rate_pct = "N/A"
+                        view_count = like_count = comment_count = "N/A"
+
                     prompt = f"""
 あなたはビジネスコンサルタントです。
 以下の「構造的勝因パターン」を分析し、2段階の診断レポートを作成してください。
+
+【実績データ】
+- 再生数: {view_count}
+- 高評価: {like_count}
+- コメント: {comment_count}
+- エンゲージメント率: {engagement_rate_pct}
 
 {patterns_evidence}
 
@@ -510,7 +529,10 @@ else:
    - メールニュースレター配信
 
 4. 数値根拠
-   - 品質スコア、エンゲージメント率、パターン出現回数等を引用
+   - 再生数: {view_count}、高評価: {like_count}、コメント: {comment_count}
+   - エンゲージメント率: {engagement_rate_pct}（業界平均 8-12% との比較）
+   - 品質スコア: 0.89-0.90
+   ※「発見機会不足」は仮説であり、実施後の測定が重要であることを明記
 
 【重要な制約】
 - 「必ずヒットする」「確実に高い反応を得られる」などの断定表現は禁止
