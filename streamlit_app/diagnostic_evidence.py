@@ -187,7 +187,7 @@ def extract_pattern_evidence(golden_patterns: list) -> str:
         
     lines = ["【構造的勝因の抽出】"]
     for i, p in enumerate(golden_patterns[:3], 1):
-        lines.append(f"- パターン{i}: 『{p.get('funnel_stage', '')}』ステージの視聴者が『{p.get('theme', '')}』テーマを『{p.get('content_type', '')}』形式で学習する構造が検出されました（出現回数: {p.get('count', 1)}回、スコア: {p.get('engagement_score', 0):.2f}）。")
+        lines.append(f"- パターン{i}: 『{p.get('funnel_stage', '')}』ステージの視聴者が『{p.get('theme', '')}』テーマを『{p.get('content_type', '')}』形式で学習する構造が検出されました（出現回数: {p.get('count', 1)}回、スコア: {p.get('avg_engagement', 0):.2f}）。")
     
     return "\n".join(lines)
 
