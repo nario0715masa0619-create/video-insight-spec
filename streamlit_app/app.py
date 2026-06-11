@@ -518,7 +518,25 @@ else:
 - 「発見機会不足」は仮説であり、実施後の測定が重要であることを明記
 """
                     explanation = narrative_engine._call_gpt(prompt)
-                    st.markdown(explanation)
+                    
+                    # Executive Summary を抽出して目立たせる
+                    if "【第1段階" in explanation:
+                        parts = explanation.split("【第2段階")
+                        executive = parts[0]
+                        detailed = "【第2段階" + parts[1] if len(parts) > 1 else ""
+                        
+                        # Executive Summary を強調表示
+                        st.success("🎯 **重要：1分で分かる診断結果**")
+                        st.markdown(executive)
+                        
+                        # 区切り線
+                        st.markdown("---")
+                        
+                        # 詳細分析
+                        st.markdown("### 📊 詳細分析")
+                        st.markdown(detailed)
+                    else:
+                        st.markdown(explanation)
     
     # ========== Tab 3: 隠れた弱点 ==========
     with tab3:
