@@ -469,7 +469,7 @@ else:
                         - **出現回数**: {combo['count']}回
                         """)
                     with col2:
-                        st.metric("反応度", f"{combo['avg_engagement']:.2f}")
+                        st.metric("品質スコア", f"{combo['avg_engagement']:.2f}")
                     st.divider()
             
             if analysis_available:
