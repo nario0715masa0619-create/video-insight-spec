@@ -69,10 +69,16 @@ def extract_learning_roles(center_pins: list) -> dict:
     roles = set()
     for pin in center_pins:
         t = pin.get('type', '')
-        if t == 'concept': roles.add("基礎概念の理解と整理")
-        elif t == 'framework': roles.add("判断基準・フレームワークの提供")
-        elif t == 'case_study': roles.add("実務事例からの学び")
-        else: roles.add("知識のインプット")
+        if t == 'concept':
+            roles.add("基礎概念・理論の理解と整理")
+        elif t == 'framework':
+            roles.add("分析フレームワーク・判断基準の提供")
+        elif t == 'strategy':
+            roles.add("戦略・方針の示唆")
+        elif t == 'tactic':
+            roles.add("実行手法・タクティクスの提示")
+        else:
+            roles.add("知識の総合提供")
     
     return {
         "primary_role": list(roles)[0] if roles else "不明",
@@ -181,7 +187,7 @@ def extract_pattern_evidence(golden_patterns: list) -> str:
         
     lines = ["【構造的勝因の抽出】"]
     for i, p in enumerate(golden_patterns[:3], 1):
-        lines.append(f"- 勝因パターン{i}: 『{p.get('funnel_stage', '')}』段階の視聴者に対して、『{p.get('theme', '')}』を『{p.get('content_type', '')}』で提示する構造が強く支持されています。")
+        lines.append(f"- パターン{i}: 『{p.get('funnel_stage', '')}』ステージの視聴者が『{p.get('theme', '')}』テーマを『{p.get('content_type', '')}』形式で学習する構造が検出されました（出現回数: {p.get('count', 1)}回、スコア: {p.get('engagement_score', 0):.2f}）。")
     
     return "\n".join(lines)
 

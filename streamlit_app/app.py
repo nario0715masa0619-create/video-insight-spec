@@ -60,7 +60,8 @@ if is_demo_mode():
     )
 
 # データロード
-with st.spinner("📂 データをロード中..."):
+with st.spinner("🔄 データをロード中..."):
+    from streamlit_app.config import VIS_MODE
     exec_report = load_executive_report()
     insight_specs = load_insight_specs()
     analytics = AnalyticsEngine()
@@ -90,7 +91,7 @@ analysis_mode = st.radio("**分析モード選択:**",
 # ================================================================
 # チャンネル全体分析
 if analysis_mode == "チャンネル全体分析":
-    st.header("📊 チャンネル全体分析")
+    st.header("📊 チャンネル全体分析" if VIS_MODE != "free_trial" else "📊 チャンネル・動画総合分析")
     
     metrics = analytics.calculate_aggregate_metrics()
     
@@ -99,9 +100,24 @@ if analysis_mode == "チャンネル全体分析":
     with tab1:
         st.subheader("📝 チャンネルの現状とサマリー")
         if analysis_available:
-            with st.spinner("診断中..."):
-                diagnosis = narrative_engine.explain_channel_diagnosis(list(insight_specs.values()))
-                st.info(diagnosis)
+            # 既に生成済みのai_analysis.jsonを使用する
+            diagnosis_text = None
+            if VIS_MODE == "free_trial" and lectures_dict:
+                from streamlit_app.config import FREE_TRIAL_DELIVERABLES
+                first_key = list(lectures_dict.keys())[0]
+                ai_analysis_file = FREE_TRIAL_DELIVERABLES / first_key / "ai_analysis.json"
+                if ai_analysis_file.exists():
+                    import json
+                    with open(ai_analysis_file, "r", encoding="utf-8") as f:
+                        ai_data = json.load(f)
+                        diagnosis_text = ai_data.get('diagnosis')
+            
+            if diagnosis_text:
+                st.info(diagnosis_text)
+            else:
+                with st.spinner("診断中..."):
+                    diagnosis = narrative_engine.explain_channel_diagnosis(list(insight_specs.values()))
+                    st.info(diagnosis)
         else:
             st.info("💡 **【総合評価】** 高い品質を維持していますが、まだ改善の余地があります。以下のKPIに基づき次のアクションを検討してください。")
             
@@ -154,8 +170,8 @@ if analysis_mode == "チャンネル全体分析":
         st.subheader("コンテンツ分析（定量）")
         
         all_themes = {}
-        for i in range(1, 6):
-            themes = analytics.get_theme_distribution(i)
+        for key in lectures_dict.keys():
+            themes = analytics.get_theme_distribution(key)
             if themes:
                 for theme, count in themes.items():
                     all_themes[theme] = all_themes.get(theme, 0) + count
@@ -184,9 +200,23 @@ if analysis_mode == "チャンネル全体分析":
     with tab3:
         st.subheader("改善提案")
         if analysis_available:
-            with st.spinner("改善案を生成中..."):
-                improvements = narrative_engine.explain_channel_improvements(list(insight_specs.values()))
-                st.info(improvements)
+            improvements_text = None
+            if VIS_MODE == "free_trial" and lectures_dict:
+                from streamlit_app.config import FREE_TRIAL_DELIVERABLES
+                first_key = list(lectures_dict.keys())[0]
+                ai_analysis_file = FREE_TRIAL_DELIVERABLES / first_key / "ai_analysis.json"
+                if ai_analysis_file.exists():
+                    import json
+                    with open(ai_analysis_file, "r", encoding="utf-8") as f:
+                        ai_data = json.load(f)
+                        improvements_text = ai_data.get('improvements')
+                
+            if improvements_text:
+                st.info(improvements_text)
+            else:
+                with st.spinner("改善案を生成中..."):
+                    improvements = narrative_engine.explain_channel_improvements(list(insight_specs.values()))
+                    st.info(improvements)
     
     with tab4:
         st.subheader("📊 チャンネル品質分析レポート")
@@ -455,7 +485,7 @@ else:
 
 {patterns_evidence}
 
-なぜこの構造が高い反応を得ているのか、そして、この勝ちパターンを次にどのような企画へ横展開すべきか診断してください。
+このパターンが示す視聴者層のニーズを診断し、次にどのような企画へ横展開すべきか提案してください。エンゲージメント数値は現在の絶対値ではなく『ターゲット層の学習ニーズ』という観点から解釈してください。
 ※結論・意味を先に述べ、数字は最後の根拠としてのみ使用してください。
 """
                     explanation = narrative_engine._call_gpt(prompt)
