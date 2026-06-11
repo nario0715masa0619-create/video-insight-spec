@@ -203,20 +203,62 @@ def extract_weakness_evidence(weaknesses: list) -> str:
     return "\n".join(lines)
 
 def extract_competitive_evidence(competitive_data: dict) -> str:
-    """競争優位性をポジショニングとして言語化"""
+    """競争優位性を数値根拠と具体的分析で言語化"""
     if not competitive_data:
         return "競争優位性データが不足しています。"
-        
+
     td = competitive_data.get('theme_diversity', 0)
     cd = competitive_data.get('content_diversity', 0)
     bs = competitive_data.get('beginner_suitability', 0)
     ed = competitive_data.get('engagement_density', 0)
+    total = competitive_data.get('total_score', 0)
+
+    lines = ["【市場競争優位性の数値分析】"]
+    lines.append(f"総合スコア: {total:.1f}/100")
+    lines.append("")
     
-    lines = ["【市場でのポジショニングと競争優位性】"]
-    lines.append(f"- ターゲット適合度: {'初心者から中級者まで広くカバーする構成' if bs > 50 else '専門家・上級者に絞り込んだ尖った構成'}")
-    lines.append(f"- テーマの網羅性: {'複数のテーマを横断的に扱う総合型' if td > 50 else '特定テーマに特化した専門型'}")
-    lines.append(f"- コンテンツの厚み: {'多様な形式（概念、事例、ワーク等）で深く学べる構成' if cd > 50 else 'シンプルな形式で要点を絞った構成'}")
-    lines.append(f"- 視聴者の熱量: {'非常に高く、活発なコミュニティが形成されている' if ed > 50 else 'まだ発展途上であり、働きかけが必要'}")
+    lines.append("【各指標の具体的評価】")
     
+    # テーマ多様性
+    if td >= 80:
+        lines.append(f"1. テーマ多様性: {td:.1f}% - 非常に高い。複数の異なるビジネステーマをカバーしており、幅広い視聴者層にアプローチ可能。競合との差別化要因。")
+    elif td >= 50:
+        lines.append(f"1. テーマ多様性: {td:.1f}% - 中程度。バランスの取れた複数テーマ展開。")
+    else:
+        lines.append(f"1. テーマ多様性: {td:.1f}% - 低い。特定テーマに特化した専門性が特徴。深さを活かした差別化戦略が有効。")
+    
+    # コンテンツ多様性
+    if cd >= 75:
+        lines.append(f"2. コンテンツ多様性: {cd:.1f}% - 高い。複数の表現形式（概念・戦略・フレームワーク・タクティクス）で学習機会を提供。")
+    elif cd >= 50:
+        lines.append(f"2. コンテンツ多様性: {cd:.1f}% - 中程度。複数の形式を活用。")
+    else:
+        lines.append(f"2. コンテンツ多様性: {cd:.1f}% - 低い。特定形式（例：概念中心）に絞った一貫性がある。補強する余地あり。")
+    
+    # エンゲージメント効率
+    if ed >= 75:
+        lines.append(f"3. エンゲージメント効率: {ed:.1f}% - 非常に高い。視聴者の反応が活発で、高い関与度を示す。成熟したコミュニティの兆候。")
+    elif ed >= 50:
+        lines.append(f"3. エンゲージメント効率: {ed:.1f}% - 中程度。一定の視聴者反応がある成長段階。")
+    else:
+        lines.append(f"3. エンゲージメント効率: {ed:.1f}% - 低い。発見機会やプロモーション強化により改善可能。")
+    
+    # 初心者適性
+    if bs >= 50:
+        lines.append(f"4. 初心者向け適性: {bs:.1f}% - 初級者向け要素が充実。幅広い視聴者層に対応。")
+    elif bs >= 30:
+        lines.append(f"4. 初心者向け適性: {bs:.1f}% - 初心者～中級者のバランス。")
+    else:
+        lines.append(f"4. 初心者向け適性: {bs:.1f}% - 低い。中～上級者向けの専門性が特徴。ニッチ市場での強力なポジション。")
+    
+    lines.append("")
+    lines.append("【ポジショニング結論】")
+    if total >= 75:
+        lines.append("高い総合競争優位性。多様性と専門性のバランスが優れており、市場での確実なポジションを確保している。")
+    elif total >= 60:
+        lines.append("中程度の競争優位性。現在の強み領域を活かしながら、弱い指標の補強により差別化を強化できる段階。")
+    else:
+        lines.append("成長段階。現在の強みを明確化し、集中戦略で特定領域での優位性を確立する段階。")
+
     return "\n".join(lines)
 
