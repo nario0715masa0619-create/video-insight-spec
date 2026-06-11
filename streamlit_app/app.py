@@ -479,32 +479,11 @@ else:
                 with st.spinner("分析中..."):
                     patterns_evidence = extract_pattern_evidence(golden[:3])
                     
-                    # free_trial_cases から insight_spec.json を直接読み込み
-                    import json
-                    import os
-                    spec_path = f"free_trial_cases/deliverables/trial_lifedesign_{lecture_num}/insight_spec.json"
-                    if os.path.exists(spec_path):
-                        with open(spec_path, 'r', encoding='utf-8') as f:
-                            spec_data = json.load(f)
-                        metrics = spec_data.get('metrics', {})
-                        view_count = metrics.get('view_count', 'N/A')
-                        like_count = metrics.get('like_count', 'N/A')
-                        comment_count = metrics.get('comment_count', 'N/A')
-                        engagement_rate = metrics.get('engagement_rate', 0)
-                        engagement_rate_pct = f"{engagement_rate * 100:.1f}%" if engagement_rate else "N/A"
-                    else:
-                        engagement_rate_pct = "N/A"
-                        view_count = like_count = comment_count = "N/A"
+
 
                     prompt = f"""
 あなたはビジネスコンサルタントです。
 以下の「構造的勝因パターン」を分析し、2段階の診断レポートを作成してください。
-
-【実績データ】
-- 再生数: {view_count}
-- 高評価: {like_count}
-- コメント: {comment_count}
-- エンゲージメント率: {engagement_rate_pct}
 
 {patterns_evidence}
 
@@ -533,10 +512,9 @@ else:
    - メールニュースレター配信
 
 4. 数値根拠
-   - 再生数: {view_count}、高評価: {like_count}、コメント: {comment_count}
-   - エンゲージメント率: {engagement_rate_pct}（業界平均 8-12% との比較）
-   - 品質スコア: 0.89-0.90
-   ※「発見機会不足」は仮説であり、実施後の測定が重要であることを明記
+   - 品質スコア: 0.89-0.90（コンテンツ品質が高い）
+   - エンゲージメント率: 業界平均 8-12% と比較して改善余地あり
+   - 「発見機会不足」は仮説であり、施策実施後の測定が重要
 
 【重要な制約】
 - 「必ずヒットする」「確実に高い反応を得られる」などの断定表現は禁止
@@ -544,25 +522,7 @@ else:
 - 「発見機会不足」は仮説であり、実施後の測定が重要であることを明記
 """
                     explanation = narrative_engine._call_gpt(prompt)
-                    
-                    # Executive Summary を抽出して目立たせる
-                    if "【第1段階" in explanation:
-                        parts = explanation.split("【第2段階")
-                        executive = parts[0]
-                        detailed = "【第2段階" + parts[1] if len(parts) > 1 else ""
-                        
-                        # Executive Summary を強調表示
-                        st.success("🎯 **重要：1分で分かる診断結果**")
-                        st.markdown(executive)
-                        
-                        # 区切り線
-                        st.markdown("---")
-                        
-                        # 詳細分析
-                        st.markdown("### 📊 詳細分析")
-                        st.markdown(detailed)
-                    else:
-                        st.markdown(explanation)
+                    st.markdown(explanation)
     
     # ========== Tab 3: 隠れた弱点 ==========
     with tab3:
