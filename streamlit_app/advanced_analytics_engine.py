@@ -143,17 +143,17 @@ class AdvancedAnalyticsEngine:
                 all_themes[theme] = all_themes.get(theme, 0) + count
         
         lecture_themes = spec.get('views', {}).get('self_improvement', {}).get('business_theme_distribution', {})
-        unique_themes = sum(1 for t in lecture_themes.keys() if all_themes.get(t, 0) < 5)
-        theme_diversity = (unique_themes / len(lecture_themes)) * 100 if lecture_themes else 0
+        # テーマ多様性 = このチャンネルが扱うテーマの種類数 / 全体テーマ数（平均5個程度が標準）
+        theme_diversity = min(100, (len(lecture_themes) / 5) * 100) if lecture_themes else 0
         
-        content_types = set(translate_type(p.get('type')) for p in pins)
-        content_diversity = (len(content_types) / 4) * 100
+        content_types = set(p.get('type') for p in pins if p.get('type'))
+        # 最大 4 種類（concept, strategy, framework, tactic）
+        content_diversity = (len(content_types) / 4) * 100 if content_types else 0
         
-        engagement_density = (
-            (metrics.get('like_count', 0) + metrics.get('comment_count', 0)) / 
-            max(metrics.get('view_count', 1), 1) * 1000
-        )
-        engagement_density_score = min(100, engagement_density * 10)
+        # エンゲージメント効率 = (likes + comments) / views を業界平均と比較
+        engagement_rate = (metrics.get('like_count', 0) + metrics.get('comment_count', 0)) / max(metrics.get('view_count', 1), 1)
+        # 業界平均 ~0.08（8%）に対する相対値。低いと 50% 以下、高いと 80%+ 程度に調整
+        engagement_density_score = min(100, (engagement_rate / 0.08) * 50)  # 業界平均 8% を基準に正規化
         
         difficulty_dist = spec.get('views', {}).get('education', {}).get('difficulty_distribution', {})
         beginner_ratio = difficulty_dist.get('beginner', 0) / sum(difficulty_dist.values()) * 100 if sum(difficulty_dist.values()) > 0 else 0
