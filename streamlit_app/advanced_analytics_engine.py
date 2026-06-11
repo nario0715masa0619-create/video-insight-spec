@@ -4,6 +4,7 @@ from data_loader import load_insight_specs, load_executive_report
 from narrative_engine import NarrativeEngine
 from collections import defaultdict
 import json
+from streamlit_app.utils import translate_type
 
 class AdvancedAnalyticsEngine:
     """唯一無二の複合分析エンジン"""
@@ -25,7 +26,7 @@ class AdvancedAnalyticsEngine:
         for pin in pins:
             labels = pin.get('labels', {})
             funnel_stage = labels.get('funnel_stage', '不明')
-            content_type = pin.get('type', '不明')
+            content_type = translate_type(pin.get('type', '不明'))
             themes = labels.get('business_theme', [])
             engagement = pin.get('engagement_score', pin.get('base_purity_score', 0)) / 100.0
             
@@ -102,7 +103,7 @@ class AdvancedAnalyticsEngine:
                     engagement = p.get('engagement_score', p.get('base_purity_score', 0)) / 100.0
                     all_engagements.append(engagement)
                     
-                    ctype = p.get('type', '不明')
+                    ctype = translate_type(p.get('type', '不明'))
                     content_types[ctype].append(engagement)
                 
                 # ステージ全体の平均
@@ -145,7 +146,7 @@ class AdvancedAnalyticsEngine:
         unique_themes = sum(1 for t in lecture_themes.keys() if all_themes.get(t, 0) < 5)
         theme_diversity = (unique_themes / len(lecture_themes)) * 100 if lecture_themes else 0
         
-        content_types = set(p.get('type') for p in pins)
+        content_types = set(translate_type(p.get('type')) for p in pins)
         content_diversity = (len(content_types) / 4) * 100
         
         engagement_density = (
