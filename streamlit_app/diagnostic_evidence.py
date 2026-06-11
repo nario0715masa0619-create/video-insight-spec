@@ -203,7 +203,7 @@ def extract_weakness_evidence(weaknesses: list) -> str:
     return "\n".join(lines)
 
 def extract_competitive_evidence(competitive_data: dict) -> str:
-    """競争優位性を数値根拠と具体的分析で言語化"""
+    """競争優位性を数値根拠と計算方法を明記して言語化"""
     if not competitive_data:
         return "競争優位性データが不足しています。"
 
@@ -213,52 +213,69 @@ def extract_competitive_evidence(competitive_data: dict) -> str:
     ed = competitive_data.get('engagement_density', 0)
     total = competitive_data.get('total_score', 0)
 
-    lines = ["【市場競争優位性の数値分析】"]
-    lines.append(f"総合スコア: {total:.1f}/100")
+    lines = ["【市場競争優位性の詳細分析】"]
+    lines.append(f"総合スコア: {total:.1f}/100（テーマ 30% + コンテンツ形式 20% + エンゲージメント 30% + 初心者適性 20% で加重平均）")
     lines.append("")
     
-    lines.append("【各指標の具体的評価】")
+    lines.append("【各指標の詳細解説】")
+    lines.append("")
     
     # テーマ多様性
+    lines.append(f"【1】テーマ多様性: {td:.1f}%")
+    lines.append("  定義：このチャンネルが扱うビジネステーマの種類数を、標準的な 5 テーマを基準に指数化")
+    lines.append("  分析:")
     if td >= 80:
-        lines.append(f"1. テーマ多様性: {td:.1f}% - 非常に高い。複数の異なるビジネステーマをカバーしており、幅広い視聴者層にアプローチ可能。競合との差別化要因。")
+        lines.append(f"    - {td:.1f}% は非常に高い多様性を示す。20+ のテーマをカバーしており、幅広い視聴者にリーチ可能")
+        lines.append("    - 競合との差別化要因となり得る")
     elif td >= 50:
-        lines.append(f"1. テーマ多様性: {td:.1f}% - 中程度。バランスの取れた複数テーマ展開。")
+        lines.append(f"    - {td:.1f}% は中程度。複数テーマの均衡の取れた展開")
     else:
-        lines.append(f"1. テーマ多様性: {td:.1f}% - 低い。特定テーマに特化した専門性が特徴。深さを活かした差別化戦略が有効。")
+        lines.append(f"    - {td:.1f}% は低い。特定テーマへの深い専門性を示す")
+    lines.append("")
     
     # コンテンツ多様性
+    lines.append(f"【2】コンテンツ形式多様性: {cd:.1f}%")
+    lines.append("  定義：使用しているコンテンツ形式の種類（最大 4 種：概念、戦略、フレームワーク、タクティクス）")
+    lines.append("  分析:")
     if cd >= 75:
-        lines.append(f"2. コンテンツ多様性: {cd:.1f}% - 高い。複数の表現形式（概念・戦略・フレームワーク・タクティクス）で学習機会を提供。")
+        lines.append(f"    - {cd:.1f}% は 4 形式すべてを活用。学習者のニーズに多角的に対応")
     elif cd >= 50:
-        lines.append(f"2. コンテンツ多様性: {cd:.1f}% - 中程度。複数の形式を活用。")
+        lines.append(f"    - {cd:.1f}% は 2 形式程度。現在は『{cd:.0f}%』の形式多様性。補強ポテンシャルあり")
     else:
-        lines.append(f"2. コンテンツ多様性: {cd:.1f}% - 低い。特定形式（例：概念中心）に絞った一貫性がある。補強する余地あり。")
+        lines.append(f"    - {cd:.1f}% は 1 形式のみ。特定形式に一貫性を持たせた戦略")
+    lines.append("")
     
     # エンゲージメント効率
+    lines.append(f"【3】エンゲージメント効率: {ed:.1f}%")
+    lines.append("  定義：（高評価 + コメント数）/ 再生数を、業界平均（8%）との相対値で指数化")
+    lines.append("  分析:")
     if ed >= 75:
-        lines.append(f"3. エンゲージメント効率: {ed:.1f}% - 非常に高い。視聴者の反応が活発で、高い関与度を示す。成熟したコミュニティの兆候。")
+        lines.append(f"    - {ed:.1f}% は業界平均を大きく上回る高エンゲージメント")
     elif ed >= 50:
-        lines.append(f"3. エンゲージメント効率: {ed:.1f}% - 中程度。一定の視聴者反応がある成長段階。")
+        lines.append(f"    - {ed:.1f}% は業界平均と同等程度。成長段階で改善の余地あり")
     else:
-        lines.append(f"3. エンゲージメント効率: {ed:.1f}% - 低い。発見機会やプロモーション強化により改善可能。")
+        lines.append(f"    - {ed:.1f}% は業界平均（8%）を下回る。プロモーション強化や発見機会拡大で改善可能")
+    lines.append("")
     
     # 初心者適性
+    lines.append(f"【4】初心者向け適性: {bs:.1f}%")
+    lines.append("  定義：初級レベルコンテンツの比率（初心者向け / 全コンテンツ）")
+    lines.append("  分析:")
     if bs >= 50:
-        lines.append(f"4. 初心者向け適性: {bs:.1f}% - 初級者向け要素が充実。幅広い視聴者層に対応。")
+        lines.append(f"    - {bs:.1f}% は初心者層向けが充実。新規視聴者獲得に有利")
     elif bs >= 30:
-        lines.append(f"4. 初心者向け適性: {bs:.1f}% - 初心者～中級者のバランス。")
+        lines.append(f"    - {bs:.1f}% は中級者メインで初心者層もカバー。バランス型")
     else:
-        lines.append(f"4. 初心者向け適性: {bs:.1f}% - 低い。中～上級者向けの専門性が特徴。ニッチ市場での強力なポジション。")
-    
+        lines.append(f"    - {bs:.1f}% は上級者向け。ニッチ市場で専門性を活かした強いポジション")
     lines.append("")
-    lines.append("【ポジショニング結論】")
+    
+    lines.append("【総合ポジショニング】")
     if total >= 75:
-        lines.append("高い総合競争優位性。多様性と専門性のバランスが優れており、市場での確実なポジションを確保している。")
+        lines.append("高い総合競争優位性を確保。多様性と専門性のバランスが優れている。")
     elif total >= 60:
-        lines.append("中程度の競争優位性。現在の強み領域を活かしながら、弱い指標の補強により差別化を強化できる段階。")
+        lines.append("中程度の優位性。強み領域を活かしながら、弱い指標を補強することで差別化を強化可能。")
     else:
-        lines.append("成長段階。現在の強みを明確化し、集中戦略で特定領域での優位性を確立する段階。")
+        lines.append("成長段階。現在の強み（テーマ多様性など）を活かしつつ、エンゲージメント向上に注力する段階。")
 
     return "\n".join(lines)
 
