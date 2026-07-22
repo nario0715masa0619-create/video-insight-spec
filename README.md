@@ -238,3 +238,14 @@ pip install -r streamlit_app/requirements.txt
 - **API キー管理**: `YOUTUBE_API_KEY` および `OPENAI_API_KEY` は `.env` ファイルでローカルに管理し、Git には絶対にコミットしません。
 - **PII（個人情報）の保護**: GDPR および個人情報保護基準に従い、生成されるすべての公開用レポートおよび JSON 統計データは匿名化処理が施されており、個人を特定できるデータは含まれていません。
 - **データ分離**: クライアントごとの視聴ログとチャンネル統計データは厳密に論理分離され、セキュリティが担保されています。
+- **シークレットのコミット防止（pre-commit フック）**: `.gitignore` だけに頼らず、コミット時点で `gitleaks` によるシークレットスキャンを強制しています。人手・AIエージェントを問わず、`.env` 等の秘密情報を誤って `git add` した場合もコミット自体がブロックされます。
+  - 初回セットアップ（開発環境ごとに1回）:
+    ```bash
+    pip install pre-commit
+    pre-commit install
+    ```
+  - 導入後は `git commit` のたびに自動でスキャンが走ります。手動で全ファイルをチェックしたい場合は以下を実行してください:
+    ```bash
+    pre-commit run --all-files
+    ```
+  - なお GitHub 側でも Secret Scanning / Push Protection を有効化済みです。ローカルのフックはその手前で防ぐ保険として機能します。
